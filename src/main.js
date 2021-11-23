@@ -1,7 +1,7 @@
 let config = {
     type: Phaser.WEBGL,
-    width: 1000,
-    height: 750,
+    width: 1280,
+    height: 720,
     scene: [Preload, Play],
     physics: {
         default: 'arcade',
@@ -18,8 +18,8 @@ let config = {
         },
   
         max: {
-          width: 1000,
-          height: 750
+          width: 1280,
+          height: 720
         },
     },
     parent: "game_container"

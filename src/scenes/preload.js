@@ -6,8 +6,9 @@ class Preload extends Phaser.Scene
 
     preload ()
     {   
-        this.load.image('Head', './assets/ColinHead.jpg');
-        //
+
+        this.load.image("pentagon", "./assets/ui/pentagon.png");
+        this.load.image("pentagon cover", "./assets/ui/pentagon_cover.png");
 
         this.createProgressbar(game.config.width / 2, game.config.height / 2);
     }
