@@ -5,9 +5,10 @@
  * name: String,
  * text: String,
  * requirement: Function,
- * Effect: Function,
- * Multitarget: Boolean,
- * Allies: Boolean 
+ * effect: Function,
+ * multitarget: Boolean,
+ * allies: Boolean,
+ * selfTarget: Boolean
  * }} Ability
  */
 /**
@@ -24,8 +25,18 @@ class Unit extends Phaser.GameObjects.Sprite{
         this.queuedAction = {target: null, ability: null, speed: 0}
         this.hp = hp
     }
-    //this really doesn't need to be a function on this level
-    //act(target, ability){
-    //    ability(target)
-    //}
+    
+
+    act(target, ability){
+        if(ability.multitarget){
+            if(ability.allies){
+                this.scene.playerUnits.forEach(ability)
+            }
+            else
+                this.scene.enemyUnits.forEach(ability)
+        }
+        if (ability.selfTarget)
+            ability(this)
+        ability(target)
+    }
 }
