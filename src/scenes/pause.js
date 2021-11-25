@@ -17,7 +17,7 @@ class Pause extends Phaser.Scene {
     }
 
     create(){
-
+        this.currentTar = null;
         let graphics = this.add.graphics();
         
         // CENTER WINDOW START //
@@ -174,7 +174,7 @@ class Pause extends Phaser.Scene {
             this.scene.resume(this.pausedScene);
             let scene = this.scene.get("playScene")
             if (this.selection != -1){
-                let action = {target: 0, ability: this.selection, speed: this.currentSpeed}
+                let action = {target: this.currentTar, ability: this.selection, speed: this.currentSpeed}
                 scene.receiveAction(action, this.charNum);
             }
             this.scene.stop();
@@ -207,9 +207,27 @@ class Pause extends Phaser.Scene {
             this.moveThreeFill.fillColor = 0xFF00FF;
         }
         this.selection = i - 1;
+
+        if (this.selection >= 0 && this.selection < 2){
+            let multi = this.currentCharacter.abilities[this.selection].multitarget;
+            let self = this.currentCharacter.abilities[this.selection].self;
+            let ally = this.currentCharacter.abilities[this.selection].allies;
+        
+            if (!multi && !self){
+                this.scene.sleep();
+                this.scene.resume(this.pausedScene);
+                let scene = this.scene.get("playScene")
+                scene.target(!ally);
+            }
+        }
+        
     }
 
     updateText(){
         this.speedText.text = this.currentSpeed;
+    }
+
+    receiveTarget(tar){
+        this.currentTar = tar;
     }
 }

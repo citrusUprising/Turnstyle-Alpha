@@ -351,6 +351,10 @@ class Play extends Phaser.Scene {
         })
         //tar.setTint(0x000000);
         tar.setScale(2);
+
+        this.scene.wake("pauseScene");
+        let scene = this.scene.get("pauseScene")
+        scene.receiveTarget(tar);
     }
 
     arrangePlayers(){
