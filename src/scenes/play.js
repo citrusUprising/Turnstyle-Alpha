@@ -4,14 +4,46 @@ class Play extends Phaser.Scene {
     }
 
     init(){
-
+        key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+        key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+        key4 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
+        key5 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE);
+        keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     }
 
     create(){
+        this.currentlyRotating = false;
+        this.targeting = false;
+        //console.log("We did it!")
+
+        this.playerUnits = [];
+        this.playerUnits.forEach((player) => {
+            player.on('pointerdown', () => {
+                if (this.targeting){
+                    this.receiveTarget(player);
+                } else {
+                    console.log("Go to ability select screen");
+                }
+            }, this);
+        });
 
         // makes a grey background
         this.bgImage = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xaaaaaa, 1).setOrigin(0,0);
 
+        let enemyA = this.add.rectangle(1100, 360, 64, 64, 0x654597, 1);
+        let enemyB = this.add.rectangle(1100, 480, 64, 64, 0x654597, 1);
+        let enemyC = this.add.rectangle(1100, 240, 64, 64, 0x654597, 1);
+
+        this.enemyUnits = [enemyA, enemyB, enemyC];
+        this.enemyUnits.forEach((enemy) => {
+            enemy.on('pointerdown', () => {
+                this.receiveTarget(enemy);
+            }, this);
+        });
+      
         // this is the center of the pentagon UI which contains information about the party members
         this.pentagonCenterX = game.config.width * .2;
         this.pentagonCenterY = game.config.height * .6;
@@ -73,7 +105,6 @@ class Play extends Phaser.Scene {
             this.pentagonCenterY,
             "pentagon cover",
         ).setAlpha(.8);
-
         // this creates the UI that the player uses to rotate the pentagon
         // we should probably put an intro or something to space out the game at the start but idk it works like this
         this.createRotateUI();
@@ -157,11 +188,13 @@ class Play extends Phaser.Scene {
         }
         // clears the text box
         this.textBoxText.text = "";
+
     }
 
     // this rotates all of the pentagram UI counter clockwise
     rotatePentagonUp(){
-
+        this.currentlyRotating = true;
+        //console.log("rotate UP");
         // this goes from 1-5 and loops around
         this.pentagonRotationState--;
         if (this.pentagonRotationState == 0) {
@@ -181,17 +214,26 @@ class Play extends Phaser.Scene {
             angleTarget = angle - 72;
         }
 
-        // do the tween :-)
+        //console.log("rotation state:", this.pentagonRotationState);
+        //console.log("angle is:", 72*(this.pentagonRotationState - 1));
         this.tweens.add({
             targets: this.pentagonContainer,
             angle: angleTarget,
             duration: 250,
-        });   
+            onComplete: function(){
+                this.currentlyRotating = false;
+                console.log("Should be able to rotate again");
+            },
+            onCompleteScope: this
+        });
+        //this.pentagonContainer.angle = 72*(this.pentagonRotationState - 1);
     }
 
     // it's late and i don't want to comment this. it's the same as the last function except with inversed numbers
     // it rotates the other way
     rotatePentagonDown(){
+        this.currentlyRotating = true;
+        //console.log("rotate DOWN");
         this.pentagonRotationState++;
         if (this.pentagonRotationState == 6) {
             this.pentagonRotationState = 1;
@@ -204,11 +246,52 @@ class Play extends Phaser.Scene {
         if (angleTarget == -angle) {
             angleTarget = angle + 72;
         }
-
+        //console.log("rotation state:", this.pentagonRotationState);
+        //console.log("angle is:", angleTarget);
         this.tweens.add({
             targets: this.pentagonContainer,
             angle: angleTarget,
             duration: 250,
+            onComplete: function(){
+                this.currentlyRotating = false;
+                console.log("Should be able to rotate again");
+            },
+            onCompleteScope: this
         });
+    }
+
+    pause() {
+        this.scene.launch('pauseScene', { srcScene: "playScene" });
+        this.scene.pause();
+    }
+
+    target(tarEnemy = true) {
+        this.targeting = true;
+        if (tarEnemy){
+            this.enemyUnits.forEach((enemy) => {
+                enemy.setInteractive();
+            })
+        }
+        else {
+            this.playerUnits.forEach((player) => {
+                player.setInteractive();
+            })
+        }
+
+
+        
+        //let TARGETBOX = this.add.rectangle(0, 0, game.config.width, game.config.height, 0x654597, 0.1).setOrigin(0,0);
+    }
+
+    receiveTarget(tar) {
+        this.targeting = false;
+        this.enemyUnits.forEach((enemy) => {
+            enemy.removeInteractive();
+        })
+        this.playerUnits.forEach((player) => {
+            player.removeInteractive();
+        })
+        //tar.setTint(0x000000);
+        tar.setScale(2);
     }
 }
