@@ -14,9 +14,11 @@ class Pause extends Phaser.Scene {
         this.originalSelection = data.currSelect + 1;
         this.selection = data.currSelect;
         // Variables: Max Speed, available abilities, current selections
+        
     }
 
     create(){
+        console.log("Is this happening again on wake?");
         this.currentTar = null;
         let graphics = this.add.graphics();
         

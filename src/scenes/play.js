@@ -32,7 +32,7 @@ class Play extends Phaser.Scene {
         this.playerUnits = [playerA, playerE, playerD];
         this.playerUnitsBench = [playerB, playerC];
         this.playerUnits.forEach((player) => {
-            player.on('pointerdown', () => {
+            player.on('pointerup', () => {
                 if (this.targeting){
                     this.receiveTarget(player);
                 } else {
@@ -42,7 +42,7 @@ class Play extends Phaser.Scene {
         });
 
         this.playerUnitsBench.forEach((player) => {
-            player.on('pointerdown', () => {
+            player.on('pointerup', () => {
                 if (this.targeting){
                     this.receiveTarget(player);
                 } else {
@@ -61,7 +61,7 @@ class Play extends Phaser.Scene {
 
         this.enemyUnits = [enemyA, enemyB, enemyC];
         this.enemyUnits.forEach((enemy) => {
-            enemy.on('pointerdown', () => {
+            enemy.on('pointerup', () => {
                 this.receiveTarget(enemy);
             }, this);
         });
@@ -350,7 +350,7 @@ class Play extends Phaser.Scene {
             player.removeInteractive();
         })
         //tar.setTint(0x000000);
-        tar.setScale(2);
+        //tar.setScale(2);
 
         this.scene.wake("pauseScene");
         let scene = this.scene.get("pauseScene")
