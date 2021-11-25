@@ -15,6 +15,15 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+        
+
+
+
+
+
+
+
+
         this.currentlyRotating = false;
         this.targeting = false;
         //console.log("We did it!")
@@ -109,6 +118,8 @@ class Play extends Phaser.Scene {
         // we should probably put an intro or something to space out the game at the start but idk it works like this
         this.createRotateUI();
 
+        
+
     }
 
     update(){
@@ -136,7 +147,9 @@ class Play extends Phaser.Scene {
 
         // this makes it actually do something when you click it
         this.rotateButtonUp.on("pointerup", () => {
-            this.rotatePentagonUp();
+            if (!this.currentlyRotating){
+                this.rotatePentagonUp();
+            }
         });
 
         // adds it to the array of sprites
@@ -156,7 +169,9 @@ class Play extends Phaser.Scene {
 
         // makes the it do something when you click it
         this.rotateButtonDown.on("pointerup", () => {
-            this.rotatePentagonDown();
+            if (!this.currentlyRotating){
+                this.rotatePentagonDown();
+            }
         });
 
         // add it to the array of sprites
