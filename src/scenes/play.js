@@ -308,12 +308,14 @@ class Play extends Phaser.Scene {
             pentagonCenterX: this.pentagonCenterX,
             pentagonCenterY: this.pentagonCenterY,
             currentCharacter: char,
-            charnum: num,
+            charNum: num,
             maxSpeed: this.speedBudget,
             currSpeed: 0,
             currSelect: 0
         }
+        console.log(char.queuedAction);
         if (char.queuedAction.ability != null){
+            console.log(char.queuedAction.speed);
             selectData.currSelect = char.queuedAction.ability;
             selectData.currSpeed = char.queuedAction.speed;
         }
@@ -367,6 +369,9 @@ class Play extends Phaser.Scene {
     }
 
     receiveAction(action, num){
+        console.log(num);
+        let budgetChange = action.speed - this.playerUnits[num].queuedAction.speed;
         this.playerUnits[num].queuedAction = action;
+        this.speedBudget -= budgetChange;
     }
 }

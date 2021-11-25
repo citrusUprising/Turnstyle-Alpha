@@ -171,13 +171,14 @@ class Pause extends Phaser.Scene {
         ).setOrigin(.5, 1);
 
         this.input.keyboard.on("keydown-ESC", () => {
-            let scene = this.scene.resume(this.pausedScene);
+            this.scene.resume(this.pausedScene);
+            let scene = this.scene.get("playScene")
             if (this.selection != -1){
-                let action = {target: 0, action: this.selection, speed: this.currentSpeed}
+                let action = {target: 0, ability: this.selection, speed: this.currentSpeed}
                 scene.receiveAction(action, this.charNum);
             }
             this.scene.stop();
-        });
+        }, this);
 
         this.selectMove(this.originalSelection);
 

@@ -22,9 +22,9 @@ class Unit extends Phaser.GameObjects.Sprite{
         this.name = name;
         this.passive = passive;
         this.abilities = abilities;
-        this.queuedAction = {target: null, ability: null, speed: 0}
-        this.hp = hp
-        this.alliedArray = null
+        this.queuedAction = {target: null, ability: null, speed: 0};
+        this.hp = hp;
+        this.alliedArray = null;
         this.enemyArray = null;
         this.maxHP = hp;
 
