@@ -19,6 +19,17 @@ class Play extends Phaser.Scene {
         this.targeting = false;
         //console.log("We did it!")
 
+        this.playerUnits = [];
+        this.playerUnits.forEach((player) => {
+            player.on('pointerdown', () => {
+                if (this.targeting){
+                    this.receiveTarget(player);
+                } else {
+                    console.log("Go to ability select screen");
+                }
+            }, this);
+        });
+
         
 
         this.bgImage = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xaaaaaa, 1).setOrigin(0,0);
@@ -27,8 +38,8 @@ class Play extends Phaser.Scene {
         let enemyB = this.add.rectangle(1100, 480, 64, 64, 0x654597, 1);
         let enemyC = this.add.rectangle(1100, 240, 64, 64, 0x654597, 1);
 
-        this.enemies = [enemyA, enemyB, enemyC];
-        this.enemies.forEach((enemy) => {
+        this.enemyUnits = [enemyA, enemyB, enemyC];
+        this.enemyUnits.forEach((enemy) => {
             enemy.on('pointerdown', () => {
                 this.receiveTarget(enemy);
             }, this);
@@ -139,18 +150,31 @@ class Play extends Phaser.Scene {
         this.scene.pause();
     }
 
-    target() {
+    target(tarEnemy = true) {
         this.targeting = true;
-        this.enemies.forEach((enemy) => {
-            enemy.setInteractive();
-        })
+        if (tarEnemy){
+            this.enemyUnits.forEach((enemy) => {
+                enemy.setInteractive();
+            })
+        }
+        else {
+            this.playerUnits.forEach((player) => {
+                player.setInteractive();
+            })
+        }
+
+
+        
         //let TARGETBOX = this.add.rectangle(0, 0, game.config.width, game.config.height, 0x654597, 0.1).setOrigin(0,0);
     }
 
     receiveTarget(tar) {
         this.targeting = false;
-        this.enemies.forEach((enemy) => {
+        this.enemyUnits.forEach((enemy) => {
             enemy.removeInteractive();
+        })
+        this.playerUnits.forEach((player) => {
+            player.removeInteractive();
         })
         //tar.setTint(0x000000);
         tar.setScale(2);

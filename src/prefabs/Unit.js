@@ -39,4 +39,13 @@ class Unit extends Phaser.GameObjects.Sprite{
             ability(this)
         ability(target)
     }
+
+    turnEnd(){
+        // For resolving anything that happens once per turn at turn end
+        this.queuedAction = {target: null, ability: null, speed: 0}
+    }
+
+    turnStart(){
+        // For resolving anything that happens once per turn at turn start
+    }
 }
