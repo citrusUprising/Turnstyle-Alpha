@@ -18,9 +18,9 @@ class Pause extends Phaser.Scene {
         var JMBackground = graphics.fillStyle(0xBFAFA6, 1).fillRoundedRect(game.config.width/2 - JMBackgroundWidth/2, game.config.height/2 - JMBackgroundLength/2 + 25, JMBackgroundWidth, JMBackgroundLength, 8);
         let BGBorder = graphics.lineStyle(6, 0xAA968A, 1).strokeRoundedRect(game.config.width/2 - JMBackgroundWidth/2, game.config.height/2 - JMBackgroundLength/2 + 25, JMBackgroundWidth, JMBackgroundLength, 8).setScrollFactor(0);
 
-        // Add Menu text & button
-        this.input.keyboard.on("keydown-UP", () => {
-            this.rotatePentagonUp();
+        this.input.keyboard.on("keydown-ESC", () => {
+            this.scene.resume(this.pausedScene);
+            this.scene.stop();
         });
 
         // Add Reset text & button

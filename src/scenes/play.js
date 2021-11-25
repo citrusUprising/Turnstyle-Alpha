@@ -38,6 +38,10 @@ class Play extends Phaser.Scene {
             this.pentagonCenterY,
             "pentagon cover",
         ).setAlpha(.8);
+
+        this.input.keyboard.on("keydown-ESC", () => {
+            this.pause();
+        });
     }
 
     update(){
@@ -111,5 +115,10 @@ class Play extends Phaser.Scene {
             },
             onCompleteScope: this
         });
+    }
+
+    pause() {
+        this.scene.launch('pauseScene', { srcScene: "playScene" });
+        this.scene.pause();
     }
 }
