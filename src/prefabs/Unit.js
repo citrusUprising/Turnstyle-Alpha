@@ -27,6 +27,8 @@ class Unit extends Phaser.GameObjects.Sprite{
         this.alliedArray = null
         this.enemyArray = null;
         this.maxHP = hp;
+
+        scene.add.existing(this);
     }
 
 

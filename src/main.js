@@ -36,7 +36,7 @@ let textConfig;
 /**
  * @type {Ability}
  */
- let basicAttack;
+ let basicAttack = {};
  basicAttack.name = "BasicAttack";
  basicAttack.text = "Deal 3 damage";
  basicAttack.requirement = function(){return true};
@@ -48,7 +48,7 @@ let textConfig;
  /**
  * @type {Ability}
  */
-  let basicHeal;
+  let basicHeal = {};
   basicHeal.name = "BasicHeal";
   basicHeal.text = "Heal 3 damage";
   basicHeal.requirement = function(){return true};
@@ -60,7 +60,7 @@ let textConfig;
   /*
  * @type {Ability}
  */
-   let groupAttack;
+   let groupAttack = {};
    groupAttack.name = "GroupAttack";
    groupAttack.text = "Deal 1 damage to all enemies";
    groupAttack.requirement = function(){return true};
@@ -72,7 +72,7 @@ let textConfig;
     /*
  * @type {Ability}
  */
-  let groupHeal;
+  let groupHeal = {};
   groupHeal.name = "Group Heal";
   groupHeal.text = "Heal 1 Damage to all allies";
   groupHeal.requirement = function(){return true};
@@ -84,7 +84,7 @@ let textConfig;
 /**
  * @type {Ability}
  */
- let heavyAttack;
+ let heavyAttack = {};
  heavyAttack.name = "heavyAttack";
  heavyAttack.text = "Deal 8 damage";
  heavyAttack.requirement = function(){return true};
@@ -96,8 +96,8 @@ let textConfig;
  /**
  * @type {Ability}
  */
-  let selfHeal;
-  selfHeal.name = "heavyHeal";
+  let selfHeal = {};
+  selfHeal.name = "selfHeal";
   selfHeal.text = "Heal 5 damage";
   selfHeal.requirement = function(){return true};
   selfHeal.effect = function(target){target.hp += 5};
