@@ -16,9 +16,23 @@ class Play extends Phaser.Scene {
 
     create(){
         this.currentlyRotating = false;
+        this.targeting = false;
         //console.log("We did it!")
 
+        
+
         this.bgImage = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xaaaaaa, 1).setOrigin(0,0);
+
+        let enemyA = this.add.rectangle(1100, 360, 64, 64, 0x654597, 1);
+        let enemyB = this.add.rectangle(1100, 480, 64, 64, 0x654597, 1);
+        let enemyC = this.add.rectangle(1100, 240, 64, 64, 0x654597, 1);
+
+        this.enemies = [enemyA, enemyB, enemyC];
+        this.enemies.forEach((enemy) => {
+            enemy.on('pointerdown', () => {
+                this.receiveTarget(enemy);
+            }, this);
+        });
 
         this.pentagonCenterX = game.config.width * .2;
         this.pentagonCenterY = game.config.height * .6;
@@ -41,6 +55,9 @@ class Play extends Phaser.Scene {
 
         this.input.keyboard.on("keydown-ESC", () => {
             this.pause();
+        });
+        this.input.keyboard.on("keydown-SPACE", () => {
+            this.target();
         });
     }
 
@@ -120,5 +137,22 @@ class Play extends Phaser.Scene {
     pause() {
         this.scene.launch('pauseScene', { srcScene: "playScene" });
         this.scene.pause();
+    }
+
+    target() {
+        this.targeting = true;
+        this.enemies.forEach((enemy) => {
+            enemy.setInteractive();
+        })
+        //let TARGETBOX = this.add.rectangle(0, 0, game.config.width, game.config.height, 0x654597, 0.1).setOrigin(0,0);
+    }
+
+    receiveTarget(tar) {
+        this.targeting = false;
+        this.enemies.forEach((enemy) => {
+            enemy.removeInteractive();
+        })
+        //tar.setTint(0x000000);
+        tar.setScale(2);
     }
 }
