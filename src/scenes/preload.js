@@ -9,6 +9,9 @@ class Preload extends Phaser.Scene
 
         this.load.image("pentagon", "./assets/ui/pentagon.png");
         this.load.image("pentagon cover", "./assets/ui/pentagon_cover.png");
+        this.load.image("text box", "./assets/ui/text_box.png");
+        this.load.image("arrow", "./assets/ui/arrow.png");
+        this.load.image("check", "./assets/ui/check.png");
 
         this.createProgressbar(game.config.width / 2, game.config.height / 2);
     }
