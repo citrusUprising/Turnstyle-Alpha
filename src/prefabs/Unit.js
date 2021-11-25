@@ -8,7 +8,7 @@
  * effect: Function,
  * multitarget: Boolean,
  * allies: Boolean,
- * selfTarget: Boolean
+ * selftarget: Boolean
  * }} Ability
  */
 /**

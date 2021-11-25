@@ -43,7 +43,7 @@ let textConfig;
  basicAttack.effect = function(target){target.hp -= 3};
  basicAttack.multitarget = false;
  basicAttack.allies = false;
- basicAttack.selfTarget = false;
+ basicAttack.selftarget = false;
 
  /**
  * @type {Ability}
@@ -55,7 +55,7 @@ let textConfig;
   basicHeal.effect = function(target){target.hp += 3};
   basicHeal.multitarget = false;
   basicHeal.allies = true;
-  basicHeal.selfTarget = false;
+  basicHeal.selftarget = false;
 
   /*
  * @type {Ability}
@@ -67,7 +67,7 @@ let textConfig;
    groupAttack.effect = function(target){target.hp -= 1};
    groupAttack.multitarget = true;
    groupAttack.allies = false;
-   groupAttack.selfTarget = false;
+   groupAttack.selftarget = false;
 
     /*
  * @type {Ability}
@@ -79,7 +79,7 @@ let textConfig;
   groupHeal.effect = function(target){target.hp += 1};
   groupHeal.multitarget = true;
   groupHeal.allies = true;
-  groupHeal.selfTarget = false;
+  groupHeal.selftarget = false;
  
 /**
  * @type {Ability}
@@ -91,7 +91,7 @@ let textConfig;
  heavyAttack.effect = function(target){target.hp -= 8};
  heavyAttack.multitarget = false;
  heavyAttack.allies = false;
- heavyAttack.selfTarget = false;
+ heavyAttack.selftarget = false;
  
  /**
  * @type {Ability}
@@ -103,4 +103,4 @@ let textConfig;
   selfHeal.effect = function(target){target.hp += 5};
   selfHeal.multitarget = false;
   selfHeal.allies = false;
-  selfHeal.selfTarget = true;
+  selfHeal.selftarget = true;

@@ -211,7 +211,7 @@ class Pause extends Phaser.Scene {
 
         if (this.selection >= 0 && this.selection < 2){
             let multi = this.currentCharacter.abilities[this.selection].multitarget;
-            let self = this.currentCharacter.abilities[this.selection].self;
+            let self = this.currentCharacter.abilities[this.selection].selftarget;
             let ally = this.currentCharacter.abilities[this.selection].allies;
         
             if (!multi && !self){

@@ -15,6 +15,9 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+        this.actionQ = [];
+
+
         this.speedBudget = 12;
         // makes a grey background
         this.bgImage = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xaaaaaa, 1).setOrigin(0,0);
@@ -379,7 +382,33 @@ class Play extends Phaser.Scene {
     receiveAction(action, num){
         //console.log(num);
         let budgetChange = action.speed - this.playerUnits[num].queuedAction.speed;
-        this.playerUnits[num].queuedAction = action;
+        
+        let char = this.playerUnits[num];
+        let revisedAct = (char.queuedAction.ability != null);
+
+        if (revisedAct){
+            console.log("Revising an action");
+            let i = this.actionQ.indexOf(char);
+            this.actionQ.splice(i,1);
+        }
+
+        let i = 0;
+        let correctPos = -1;
+        while (i < this.actionQ.length){
+            let compareTo = this.actionQ[i];
+            if (compareTo.queuedAction.speed < action.speed){
+                correctPos = i;
+                i = this.actionQ.length;
+            }
+            i++;
+        }
+        if (correctPos == -1){
+            correctPos = this.actionQ.length;
+        }
+        this.actionQ.splice(correctPos, 0, char);
+        char.queuedAction = action;
         this.speedBudget -= budgetChange;
+
+        console.log(this.actionQ);
     }
 }
