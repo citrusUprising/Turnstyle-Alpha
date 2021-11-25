@@ -129,14 +129,16 @@ class Play extends Phaser.Scene {
         // this creates the UI that the player uses to rotate the pentagon
         // we should probably put an intro or something to space out the game at the start but idk it works like this
         this.createRotateUI();
-
-        this.input.keyboard.on("keydown-ESC", () => {
-            this.pause();
-        });
     }
 
     update(){
-        
+        if (Phaser.Input.Keyboard.JustDown(key1)){
+            this.pause(this.playerUnits[0]);
+        } else if (Phaser.Input.Keyboard.JustDown(key2)){
+            this.pause(this.playerUnits[1]);
+        } else if (Phaser.Input.Keyboard.JustDown(key3)){
+            this.pause(this.playerUnits[2]);
+        }
     }
 
     createRotateUI(){
@@ -221,8 +223,6 @@ class Play extends Phaser.Scene {
 
     // this rotates all of the pentagram UI counter clockwise
     rotatePentagonUp(){
-
-
         this.currentlyRotating = true;
         //console.log("rotate UP");
         // this goes from 1-5 and loops around
@@ -300,13 +300,13 @@ class Play extends Phaser.Scene {
         });
     }
 
-    pause() {
+    pause(char) {
         this.deleteRotateUI();
         this.scene.launch('pauseScene', { 
             srcScene: "playScene",
             pentagonCenterX: this.pentagonCenterX,
             pentagonCenterY: this.pentagonCenterY,
-            currentCharacter: "square"
+            currentCharacter: char,
         });
         this.scene.pause();
     }
@@ -316,12 +316,12 @@ class Play extends Phaser.Scene {
         if (tarEnemy){
             this.enemyUnits.forEach((enemy) => {
                 enemy.setInteractive();
-            })
+            });
         }
         else {
             this.playerUnits.forEach((player) => {
                 player.setInteractive();
-            })
+            });
         }
 
 

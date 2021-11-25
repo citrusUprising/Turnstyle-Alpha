@@ -83,6 +83,14 @@ class Pause extends Phaser.Scene {
             8
         ).setScrollFactor(0);
 
+        this.add.text();
+        this.add.text(
+            this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
+            this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing, 
+            this.currentCharacter.abilities[0].name,
+            textConfig
+        );
+
         this.moveTwoFill = this.add.rectangle(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
             this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing*2 + this.moveHeight, 
@@ -94,6 +102,7 @@ class Pause extends Phaser.Scene {
         }).setOrigin(0, 0).on("pointerup", () => {
             this.selectedMove = 2;
         });
+        
 
 
         this.moveTwoStroke = graphics.lineStyle(6, 0x000000, 5).strokeRect(
@@ -102,6 +111,14 @@ class Pause extends Phaser.Scene {
             this.moveWidth, 
             this.moveHeight
         ).setScrollFactor(0);
+
+        this.add.text();
+        this.add.text(
+            this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
+            this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing*2 + this.moveHeight, 
+            this.currentCharacter.abilities[1].name,
+            textConfig
+        );
 
         this.moveThreeFill = this.add.rectangle(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
@@ -125,7 +142,7 @@ class Pause extends Phaser.Scene {
         this.characterSprite = this.add.sprite(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2,
             this.moveSelectFrameY + this.moveSelectFrameHeight - this.spacing,
-            this.currentCharacter
+            this.currentCharacter.texture.key
         ).setOrigin(.5, 1);
 
         this.input.keyboard.on("keydown-ESC", () => {
