@@ -12,6 +12,9 @@ class Preload extends Phaser.Scene
         this.load.image("text box", "./assets/ui/text_box.png");
         this.load.image("arrow", "./assets/ui/arrow.png");
         this.load.image("check", "./assets/ui/check.png");
+        this.load.image("total speed", "./assets/ui/total_speed.png");
+        this.load.image("small arrow", "./assets/ui/small_arrow.png");
+        this.load.image("square", "./assets/ui/square_character.png");
 
         this.createProgressbar(game.config.width / 2, game.config.height / 2);
     }

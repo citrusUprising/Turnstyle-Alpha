@@ -109,6 +109,9 @@ class Play extends Phaser.Scene {
         // we should probably put an intro or something to space out the game at the start but idk it works like this
         this.createRotateUI();
 
+        this.input.keyboard.on("keydown-ESC", () => {
+            this.pause();
+        });
     }
 
     update(){
@@ -261,7 +264,13 @@ class Play extends Phaser.Scene {
     }
 
     pause() {
-        this.scene.launch('pauseScene', { srcScene: "playScene" });
+        this.deleteRotateUI();
+        this.scene.launch('pauseScene', { 
+            srcScene: "playScene",
+            pentagonCenterX: this.pentagonCenterX,
+            pentagonCenterY: this.pentagonCenterY,
+            currentCharacter: "square"
+        });
         this.scene.pause();
     }
 
