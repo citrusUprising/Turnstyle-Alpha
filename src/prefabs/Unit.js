@@ -22,6 +22,7 @@ class Unit extends Phaser.GameObjects.Sprite{
         this.name = name;
         this.passive = passive;
         this.abilities = abilities;
+        // Target is the character object, ability is the index of this characters ability, speed is a number
         this.queuedAction = {target: null, ability: null, speed: 0};
         this.hp = hp;
         this.alliedArray = null;
@@ -32,6 +33,7 @@ class Unit extends Phaser.GameObjects.Sprite{
     }
 
 
+    // Perform the players queued action
     act(){
         this.getTeams();
         if(this.abilities[this.queuedAction.ability].multitarget){
@@ -57,6 +59,8 @@ class Unit extends Phaser.GameObjects.Sprite{
         }
     }
 
+    // Get the up to date lists of active characters.
+    // This is overwritten by the children classes, enemy & friendly
     getTeams(){
         this.alliedArray = this.scene.playerUnits;
         this.enemyArray = this.scene.enemyUnits;

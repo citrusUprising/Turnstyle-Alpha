@@ -33,6 +33,12 @@ let keyUP, keyDOWN, keyLEFT, keyRIGHT, keySPACE, keyESC;
 let key0, key1, key2, key3, key4, key5, key6, key7, key8, key9;
 let textConfig;
 
+/*
+
+BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
+
+*/
+
 /**
  * @type {Ability}
  */
@@ -40,7 +46,9 @@ let textConfig;
  basicAttack.name = "BasicAttack";
  basicAttack.text = "Deal 3 damage";
  basicAttack.requirement = function(){return true};
- basicAttack.effect = function(target){target.hp -= 3};
+ basicAttack.effect = function(target){
+   target.hp -= 3
+  };
  basicAttack.multitarget = false;
  basicAttack.allies = false;
  basicAttack.selftarget = false;
@@ -53,7 +61,6 @@ let textConfig;
   basicHeal.text = "Heal 3 damage";
   basicHeal.requirement = function(){return true};
   basicHeal.effect = function(target){
-    
     target.hp += 3
   };
   basicHeal.multitarget = false;
@@ -67,7 +74,9 @@ let textConfig;
    groupAttack.name = "GroupAttack";
    groupAttack.text = "Deal 1 damage to all enemies";
    groupAttack.requirement = function(){return true};
-   groupAttack.effect = function(target){target.hp -= 1};
+   groupAttack.effect = function(target){
+     target.hp -= 1
+    };
    groupAttack.multitarget = true;
    groupAttack.allies = false;
    groupAttack.selftarget = false;
@@ -80,8 +89,6 @@ let textConfig;
   groupHeal.text = "Heal 1 Damage to all allies";
   groupHeal.requirement = function(){return true};
   groupHeal.effect = function(target){
-    console.log("I'm in group heal");
-    console.log(target);
     target.hp += 1;
   };
   groupHeal.multitarget = true;
@@ -95,7 +102,9 @@ let textConfig;
  heavyAttack.name = "heavyAttack";
  heavyAttack.text = "Deal 8 damage";
  heavyAttack.requirement = function(){return true};
- heavyAttack.effect = function(target){target.hp -= 8};
+ heavyAttack.effect = function(target){
+   target.hp -= 8
+  };
  heavyAttack.multitarget = false;
  heavyAttack.allies = false;
  heavyAttack.selftarget = false;
@@ -107,7 +116,9 @@ let textConfig;
   selfHeal.name = "selfHeal";
   selfHeal.text = "Heal 5 damage";
   selfHeal.requirement = function(){return true};
-  selfHeal.effect = function(target){target.hp += 5};
+  selfHeal.effect = function(target){
+    target.hp += 5
+  };
   selfHeal.multitarget = false;
   selfHeal.allies = false;
   selfHeal.selftarget = true;

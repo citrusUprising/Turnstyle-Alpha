@@ -4,6 +4,7 @@ class Play extends Phaser.Scene {
     }
 
     init(){
+        // Save a bunch of keys
         key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
@@ -16,39 +17,55 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+        // This will store
         this.actionQ = [];
 
+        // Player variables for tracking speed resource.
+        this.speedPerTurn = 12;
+        this.speedBudget = this.speedPerTurn;
 
-        this.speedBudget = 12;
+        // If the pentagon is currently spinning
+        this.currentlyRotating = false;
+        // If we are in the phase of the game that the player can rotate
+        this.rotationPhase = false;
+        // If we are in targeting mode.
+        this.targeting = false;
+
         // makes a grey background
         this.bgImage = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xaaaaaa, 1).setOrigin(0,0);
 
-        this.currentlyRotating = false;
-        this.rotationPhase = false;
-        this.targeting = false;
-        //console.log("We did it!")
-
+        
         this.playerUnits = [];
+        this.playerUnitsBench = [];
         this.enemyUnits = [];
 
+        // Create all the playr game objects.
         let playerA = new Friendly(this, 800, 120, 'circle', 0, "RoundBoi", null, [basicAttack, basicHeal], 30);
         let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Illuminati", null, [basicHeal, groupAttack], 25);
         let playerC = new Friendly(this, 800, 360, 'square', 0, "Boring", null, [groupAttack, heavyAttack], 20);
         let playerD = new Friendly(this, 800, 480, 'hexagon', 0, "Bestagon", null, [groupHeal, selfHeal], 35);
         let playerE = new Friendly(this, 800, 600, 'star', 0, "Starwalker", null, [basicAttack, basicHeal], 100);
 
+        // PlayerUnits -> playerUnitsBench store all the player team in clockwise order.
         this.playerUnits = [playerA, playerE, playerD];
         this.playerUnitsBench = [playerB, playerC];
+
+        // This gives all the players an onclick function that either targets them, or goes to their ability select screen.
         this.playerUnits.forEach((player) => {
             player.on('pointerup', () => {
                 if (this.targeting){
                     this.receiveTarget(player);
                 } else {
+                    // Currently! This never happens becaus the player is never set interactive outside of the targeting phase.
+                    // To make that work, we'd need carefully set/remove interactive so players are
+                        // Interactive during: Targeting Allies & Ability picking
+                        // Non-interactive during: rotation & targeting enemies
                     console.log("Go to ability select screen");
                 }
             }, this);
         });
 
+        // Same as above for bench characters.
         this.playerUnitsBench.forEach((player) => {
             player.on('pointerup', () => {
                 if (this.targeting){
@@ -59,14 +76,15 @@ class Play extends Phaser.Scene {
             }, this);
         });
 
-
+        // This positions the player sprites in a vertical line, top->bottom matching clockwise order
         this.arrangePlayers();
         
-
-        let enemyA = new Enemy(this, 1100, 640, 'circle', 0, "EnemyA", null, [basicAttack], 10);
+        // Create the 3 enemies at fixed positions
+        let enemyA = new Enemy(this, 1100, 240, 'circle', 0, "EnemyA", null, [basicAttack], 10);
         let enemyB = new Enemy(this, 1100, 480, 'circle', 0, "EnemyB", null, [basicAttack], 10);
-        let enemyC = new Enemy(this, 1100, 320, 'circle', 0, "EnemyC", null, [basicAttack], 10);
+        let enemyC = new Enemy(this, 1100, 360, 'circle', 0, "EnemyC", null, [basicAttack], 10);
 
+        // Give each enemy an onclick behavior that returns them as a target
         this.enemyUnits = [enemyA, enemyB, enemyC];
         this.enemyUnits.forEach((enemy) => {
             enemy.on('pointerup', () => {
@@ -139,26 +157,32 @@ class Play extends Phaser.Scene {
         // we should probably put an intro or something to space out the game at the start but idk it works like this
         this.createRotateUI();
 
+        // When you press Escape, this prints the state (health) of all active characters
         this.input.keyboard.on("keydown-ESC", () => {
             this.printState();
         }, this);
     }
 
     update(){
+        // If we are not in the targeting phase & we are not in the rotation phase
         if (!this.targeting && !this.rotationPhase){
+            // Allow the player to queue actions
             if (Phaser.Input.Keyboard.JustDown(key1)){
-                this.pause(this.playerUnits[0], 0);
+                // This.pause takes a character object, and the index of that character to go to the ability select screen for that charactr
+                this.pause(0);
             } else if (Phaser.Input.Keyboard.JustDown(key2)){
-                this.pause(this.playerUnits[1], 1);
+                this.pause(1);
             } else if (Phaser.Input.Keyboard.JustDown(key3)){
-                this.pause(this.playerUnits[2], 2);
+                this.pause(2);
             }
+            // Or execute all queued actions
             else if (Phaser.Input.Keyboard.JustDown(keySPACE)){
                 this.execute();
             }
         }
     }
 
+    // Execute all queued actions, & empty the actionQ
     execute(){
         let i = 0;
         while (i < this.actionQ.length){
@@ -167,6 +191,7 @@ class Play extends Phaser.Scene {
         }
     }
 
+    // Creates the UI that rotates & sets this.RotationPhase = true
     createRotateUI(){
         this.rotationPhase = true;
 
@@ -237,6 +262,7 @@ class Play extends Phaser.Scene {
         this.rotateUIArray.push(this.checkButton);
     }
 
+    // Deletes the rotation UI & sets this.RotationPhase = false
     // this will need to have createUseMoveUI() or w/e added at the end of it
     deleteRotateUI(){
         // destroy all the sprites created by createRotateUI()
@@ -250,6 +276,7 @@ class Play extends Phaser.Scene {
 
     // this rotates all of the pentagram UI counter clockwise
     rotatePentagonUp(){
+        // Tell the game we are already spinning, and do not want to do more spins
         this.currentlyRotating = true;
         //console.log("rotate UP");
         // this goes from 1-5 and loops around
@@ -278,11 +305,14 @@ class Play extends Phaser.Scene {
             angle: angleTarget,
             duration: 250,
             onComplete: function(){
+                // Tween is complete, we are free to spin again.
                 this.currentlyRotating = false;
+                // The Bench/Units arrays are updated to reflect new positions
                 let A = this.playerUnits.shift();
                 let B = this.playerUnitsBench.shift();
                 this.playerUnits.push(B);
                 this.playerUnitsBench.push(A);
+                // Redraw with new order
                 this.arrangePlayers();
                 //console.log("Should be able to rotate again");
             },
@@ -315,20 +345,27 @@ class Play extends Phaser.Scene {
             angle: angleTarget,
             duration: 250,
             onComplete: function(){
+                // Tween is complete, we are free to spin again.
                 this.currentlyRotating = false;
+                // The Bench/Units arrays are updated to reflect new positions
                 let A = this.playerUnits.pop();
                 let B = this.playerUnitsBench.pop();
                 this.playerUnits.unshift(B);
                 this.playerUnitsBench.unshift(A);
+                // Redraw with new order
                 this.arrangePlayers();
-                console.log("Should be able to rotate again");
+                //console.log("Should be able to rotate again");
             },
             onCompleteScope: this
         });
     }
 
-    pause(char, num) {
-        this.deleteRotateUI();
+    // This goes to the ability select screen. It needs the index of the acting character from PlayerUnits
+    pause(num) {
+        // get the character
+        let char = this.playerUnits[num];
+
+        // Construct the data to form the ability select menu
         let selectData = { 
             srcScene: "playScene",
             pentagonCenterX: this.pentagonCenterX,
@@ -339,16 +376,18 @@ class Play extends Phaser.Scene {
             currSpeed: 0,
             currSelect: -1
         }
-        //console.log(char.queuedAction);
+        // Modify the data to form the ability select menu if the character already has an ability queued
         if (char.queuedAction.ability != null){
-            //console.log(char.queuedAction.speed);
             selectData.currSelect = char.queuedAction.ability;
             selectData.currSpeed = char.queuedAction.speed;
         }
+        // Launch the ability select menu.
         this.scene.launch('pauseScene', selectData);
         this.scene.pause();
     }
 
+    // Sets either all players or all enemies to interactive, & this.targeting to true
+    // So that clicking on one will return it as a target to this.receiveTarget
     target(tarEnemy = true) {
         this.targeting = true;
         if (tarEnemy){
@@ -361,12 +400,11 @@ class Play extends Phaser.Scene {
                 player.setInteractive();
             });
         }
-
-
-        
-        //let TARGETBOX = this.add.rectangle(0, 0, game.config.width, game.config.height, 0x654597, 0.1).setOrigin(0,0);
     }
 
+    // Turns targeting back to false, and removes interactive from all characters.
+    // Wakes Pause Scene back up, passes pause scene the chosen target
+    // Freezes this scene again
     receiveTarget(tar) {
         this.targeting = false;
         this.enemyUnits.forEach((enemy) => {
@@ -381,8 +419,11 @@ class Play extends Phaser.Scene {
         this.scene.wake("pauseScene");
         let scene = this.scene.get("pauseScene")
         scene.receiveTarget(tar);
+        this.scene.pause();
     }
 
+    // Sets all active players positions in a vertical line, top->bottom matching clockwise order on the pentagon.
+    // Ideally, this would be changed such that their positions are changed to match their slice of the pentagon.
     arrangePlayers(){
         let i = 0;
         while (i < 5){
@@ -398,19 +439,28 @@ class Play extends Phaser.Scene {
         }
     }
 
+    // This code receives a queued action from the ability select menu.
+    // It takes the actual action object, and the index of the relevant character
     receiveAction(action, num){
         //console.log(num);
+        // Calculate the change this new action would have on the speed budget
         let budgetChange = action.speed - this.playerUnits[num].queuedAction.speed;
         
+        // Get the character
         let char = this.playerUnits[num];
+
+        // Boolean representing if this action is a revision of a previously queued action
         let revisedAct = (char.queuedAction.ability != null);
 
+        // If it is a reevision
         if (revisedAct){
-            console.log("Revising an action");
+            //console.log("Revising an action");
+            // Remove the original from the actionQ
             let i = this.actionQ.indexOf(char);
             this.actionQ.splice(i,1);
         }
 
+        // Iterate over all queued actions to find the correct place to put this new action to maintain speed order.
         let i = 0;
         let correctPos = -1;
         while (i < this.actionQ.length){
@@ -425,12 +475,16 @@ class Play extends Phaser.Scene {
             correctPos = this.actionQ.length;
         }
         this.actionQ.splice(correctPos, 0, char);
+
+        // Give the character this new action
         char.queuedAction = action;
+        // Apply the budget change
         this.speedBudget -= budgetChange;
 
-        console.log(this.actionQ);
+        //console.log(this.actionQ);
     }
 
+    // Print out the health of all active characters.
     printState(){
         console.log("Player team:");
         let i = 0;
