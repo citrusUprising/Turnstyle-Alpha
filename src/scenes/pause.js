@@ -5,6 +5,7 @@ class Pause extends Phaser.Scene {
     
     init(data){
         this.pausedScene = data.srcScene;
+        // Variables: Max Speed, available abilities, current selections
     }
 
     create(){
