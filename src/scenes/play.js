@@ -216,8 +216,24 @@ class Play extends Phaser.Scene {
         this.rotateButtonUp.on("pointerup", () => {
             if (!this.currentlyRotating){
                 this.rotatePentagonUp();
+
+            // doesn't show the grey-over until the pentagon stops spinning
+                this.time.addEvent({
+                    delay: 550,
+                    callback: ()=>{
+                        if (!this.currentlyRotating){
+                            this.pentagonCover.setAlpha(.8);
+                        }
+                    },
+                    loop: false
+                })
             }
         });
+
+        // hides the grey-over for the pentagon immediately
+        this.rotateButtonUp.on("pointerdown", () => {
+            this.pentagonCover.setAlpha(.0);
+        })
 
         // adds it to the array of sprites
         this.rotateUIArray.push(this.rotateButtonUp);
@@ -238,8 +254,24 @@ class Play extends Phaser.Scene {
         this.rotateButtonDown.on("pointerup", () => {
             if (!this.currentlyRotating){
                 this.rotatePentagonDown();
+
+                // doesn't show the grey-over until the pentagon stops spinning
+                this.time.addEvent({
+                    delay: 550,
+                    callback: ()=>{
+                        if (!this.currentlyRotating){
+                            this.pentagonCover.setAlpha(.8);
+                        }
+                    },
+                    loop: false
+                })
             }
         });
+
+        // hides the grey-over for the pentagon immediately
+        this.rotateButtonDown.on("pointerdown", () => {
+            this.pentagonCover.setAlpha(.0);
+        })
 
         // add it to the array of sprites
         this.rotateUIArray.push(this.rotateButtonDown);
