@@ -182,7 +182,8 @@ class Pause extends Phaser.Scene {
         ).setOrigin(.5, 1);
 
         // On pressing escape, submit the queued action back to playScene
-        this.input.keyboard.on("keydown-ESC", this.submitAction());
+        this.input.keyboard.on("keydown-ESC", function() {
+            this.submitAction()}, this);
 
         // Highlight a selected move if there already was one
         this.selectMove(this.originalSelection);
