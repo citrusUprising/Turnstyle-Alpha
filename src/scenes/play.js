@@ -20,14 +20,15 @@ class Play extends Phaser.Scene {
         this.bgImage = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xaaaaaa, 1).setOrigin(0,0);
 
         this.currentlyRotating = false;
+        this.rotationPhase = false;
         this.targeting = false;
         //console.log("We did it!")
 
-        let playerA = new Friendly(this, 640, 120, 'circle', 0, "RoundBoi", null, [basicAttack, basicHeal], 30);
-        let playerB = new Friendly(this, 640, 240, 'triangle', 0, "Illuminati", null, [basicHeal, groupAttack], 25);
-        let playerC = new Friendly(this, 640, 360, 'square', 0, "Boring", null, [groupAttack, heavyAttack], 20);
-        let playerD = new Friendly(this, 640, 480, 'hexagon', 0, "Bestagon", null, [groupHeal, selfHeal], 35);
-        let playerE = new Friendly(this, 640, 600, 'star', 0, "Starwalker", null, [basicAttack, basicHeal], 100);
+        let playerA = new Friendly(this, 800, 120, 'circle', 0, "RoundBoi", null, [basicAttack, basicHeal], 30);
+        let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Illuminati", null, [basicHeal, groupAttack], 25);
+        let playerC = new Friendly(this, 800, 360, 'square', 0, "Boring", null, [groupAttack, heavyAttack], 20);
+        let playerD = new Friendly(this, 800, 480, 'hexagon', 0, "Bestagon", null, [groupHeal, selfHeal], 35);
+        let playerE = new Friendly(this, 800, 600, 'star', 0, "Starwalker", null, [basicAttack, basicHeal], 100);
 
         this.playerUnits = [playerA, playerE, playerD];
         this.playerUnitsBench = [playerB, playerC];
@@ -133,16 +134,19 @@ class Play extends Phaser.Scene {
     }
 
     update(){
-        if (Phaser.Input.Keyboard.JustDown(key1)){
-            this.pause(this.playerUnits[0], 0);
-        } else if (Phaser.Input.Keyboard.JustDown(key2)){
-            this.pause(this.playerUnits[1], 1);
-        } else if (Phaser.Input.Keyboard.JustDown(key3)){
-            this.pause(this.playerUnits[2], 2);
+        if (!this.targeting && !this.rotationPhase){
+            if (Phaser.Input.Keyboard.JustDown(key1)){
+                this.pause(this.playerUnits[0], 0);
+            } else if (Phaser.Input.Keyboard.JustDown(key2)){
+                this.pause(this.playerUnits[1], 1);
+            } else if (Phaser.Input.Keyboard.JustDown(key3)){
+                this.pause(this.playerUnits[2], 2);
+            }
         }
     }
 
     createRotateUI(){
+        this.rotationPhase = true;
 
         // this is used in deleteRotateUI(). it contains every sprite created in this function
         this.rotateUIArray = [];
@@ -219,7 +223,7 @@ class Play extends Phaser.Scene {
         }
         // clears the text box
         this.textBoxText.text = "";
-
+        this.rotationPhase = false;
     }
 
     // this rotates all of the pentagram UI counter clockwise
@@ -258,7 +262,7 @@ class Play extends Phaser.Scene {
                 this.playerUnits.push(B);
                 this.playerUnitsBench.push(A);
                 this.arrangePlayers();
-                console.log("Should be able to rotate again");
+                //console.log("Should be able to rotate again");
             },
             onCompleteScope: this
         });
@@ -313,9 +317,9 @@ class Play extends Phaser.Scene {
             currSpeed: 0,
             currSelect: -1
         }
-        console.log(char.queuedAction);
+        //console.log(char.queuedAction);
         if (char.queuedAction.ability != null){
-            console.log(char.queuedAction.speed);
+            //console.log(char.queuedAction.speed);
             selectData.currSelect = char.queuedAction.ability;
             selectData.currSpeed = char.queuedAction.speed;
         }
@@ -373,7 +377,7 @@ class Play extends Phaser.Scene {
     }
 
     receiveAction(action, num){
-        console.log(num);
+        //console.log(num);
         let budgetChange = action.speed - this.playerUnits[num].queuedAction.speed;
         this.playerUnits[num].queuedAction = action;
         this.speedBudget -= budgetChange;

@@ -18,7 +18,6 @@ class Pause extends Phaser.Scene {
     }
 
     create(){
-        console.log("Is this happening again on wake?");
         this.currentTar = null;
         let graphics = this.add.graphics();
         
