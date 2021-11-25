@@ -24,16 +24,18 @@ class Unit extends Phaser.GameObjects.Sprite{
         this.abilities = abilities;
         this.queuedAction = {target: null, ability: null, speed: 0}
         this.hp = hp
+        this.alliedArray = null
+        this.enemyArray = null;
     }
 
 
     act(){
         if(this.queuedAction.ability.multitarget){
             if(this.queuedAction.ability.allies){
-                this.scene.playerUnits.forEach(this.queuedAction.ability)
+                this.alliedArray.forEach(this.queuedAction.ability)
             }
             else
-                this.scene.enemyUnits.forEach(this.queuedAction.ability)
+                this.enemyArray.forEach(this.queuedAction.ability)
         }
         if (this.queuedAction.ability.selfTarget)
             this.queuedAction.ability(this)
