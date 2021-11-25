@@ -9,6 +9,7 @@ class Play extends Phaser.Scene {
         key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
         key4 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
         key5 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE);
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
@@ -26,6 +27,9 @@ class Play extends Phaser.Scene {
         this.rotationPhase = false;
         this.targeting = false;
         //console.log("We did it!")
+
+        this.playerUnits = [];
+        this.enemyUnits = [];
 
         let playerA = new Friendly(this, 800, 120, 'circle', 0, "RoundBoi", null, [basicAttack, basicHeal], 30);
         let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Illuminati", null, [basicHeal, groupAttack], 25);
@@ -59,9 +63,9 @@ class Play extends Phaser.Scene {
         this.arrangePlayers();
         
 
-        let enemyA = this.add.rectangle(1100, 360, 64, 64, 0x654597, 1);
-        let enemyB = this.add.rectangle(1100, 480, 64, 64, 0x654597, 1);
-        let enemyC = this.add.rectangle(1100, 240, 64, 64, 0x654597, 1);
+        let enemyA = new Enemy(this, 1100, 640, 'circle', 0, "EnemyA", null, [basicAttack], 10);
+        let enemyB = new Enemy(this, 1100, 480, 'circle', 0, "EnemyB", null, [basicAttack], 10);
+        let enemyC = new Enemy(this, 1100, 320, 'circle', 0, "EnemyC", null, [basicAttack], 10);
 
         this.enemyUnits = [enemyA, enemyB, enemyC];
         this.enemyUnits.forEach((enemy) => {
@@ -134,6 +138,10 @@ class Play extends Phaser.Scene {
         // this creates the UI that the player uses to rotate the pentagon
         // we should probably put an intro or something to space out the game at the start but idk it works like this
         this.createRotateUI();
+
+        this.input.keyboard.on("keydown-ESC", () => {
+            this.printState();
+        }, this);
     }
 
     update(){
@@ -145,6 +153,17 @@ class Play extends Phaser.Scene {
             } else if (Phaser.Input.Keyboard.JustDown(key3)){
                 this.pause(this.playerUnits[2], 2);
             }
+            else if (Phaser.Input.Keyboard.JustDown(keySPACE)){
+                this.execute();
+            }
+        }
+    }
+
+    execute(){
+        let i = 0;
+        while (i < this.actionQ.length){
+            this.actionQ[i].act();
+            this.actionQ.shift();
         }
     }
 
@@ -410,5 +429,20 @@ class Play extends Phaser.Scene {
         this.speedBudget -= budgetChange;
 
         console.log(this.actionQ);
+    }
+
+    printState(){
+        console.log("Player team:");
+        let i = 0;
+        while (i < this.playerUnits.length){
+            console.log(this.playerUnits[i].name + ": " + this.playerUnits[i].hp);
+            i++;
+        }
+        console.log("Enemy team: ");
+        i = 0;
+        while (i < this.enemyUnits.length){
+            console.log(this.enemyUnits[i].name + ": " + this.enemyUnits[i].hp);
+            i++;
+        }
     }
 }

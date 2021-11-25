@@ -52,7 +52,10 @@ let textConfig;
   basicHeal.name = "BasicHeal";
   basicHeal.text = "Heal 3 damage";
   basicHeal.requirement = function(){return true};
-  basicHeal.effect = function(target){target.hp += 3};
+  basicHeal.effect = function(target){
+    
+    target.hp += 3
+  };
   basicHeal.multitarget = false;
   basicHeal.allies = true;
   basicHeal.selftarget = false;
@@ -76,7 +79,11 @@ let textConfig;
   groupHeal.name = "Group Heal";
   groupHeal.text = "Heal 1 Damage to all allies";
   groupHeal.requirement = function(){return true};
-  groupHeal.effect = function(target){target.hp += 1};
+  groupHeal.effect = function(target){
+    console.log("I'm in group heal");
+    console.log(target);
+    target.hp += 1;
+  };
   groupHeal.multitarget = true;
   groupHeal.allies = true;
   groupHeal.selftarget = false;
