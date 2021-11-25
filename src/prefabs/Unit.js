@@ -33,16 +33,33 @@ class Unit extends Phaser.GameObjects.Sprite{
 
 
     act(){
-        if(this.queuedAction.ability.multitarget){
-            if(this.queuedAction.ability.allies){
-                this.alliedArray.forEach(this.queuedAction.ability)
+        this.getTeams();
+        if(this.abilities[this.queuedAction.ability].multitarget){
+            if(this.abilities[this.queuedAction.ability].allies){
+                console.log(this.alliedArray);
+                this.alliedArray.forEach((ally) => {
+                    console.log(ally);
+                    this.abilities[this.queuedAction.ability].effect(ally);
+                });
             }
-            else
-                this.enemyArray.forEach(this.queuedAction.ability)
+            else {
+                this.enemyArray.forEach((enemy) => {
+                    this.abilities[this.queuedAction.ability].effect(enemy);
+                });
+            }
+                
         }
-        if (this.queuedAction.ability.selfTarget)
-            this.queuedAction.ability(this)
-        this.queuedAction.ability(this.queuedAction.target)
+        else if (this.abilities[this.queuedAction.ability].selfTarget){
+            this.abilities[this.queuedAction.ability].effect(this)
+        }
+        else {
+            this.abilities[this.queuedAction.ability].effect(this.queuedAction.target);
+        }
+    }
+
+    getTeams(){
+        this.alliedArray = this.scene.playerUnits;
+        this.enemyArray = this.scene.enemyUnits;
     }
 
     turnEnd(){
