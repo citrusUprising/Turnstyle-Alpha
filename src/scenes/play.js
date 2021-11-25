@@ -15,11 +15,21 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+        // makes a grey background
+        this.bgImage = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xaaaaaa, 1).setOrigin(0,0);
+
         this.currentlyRotating = false;
         this.targeting = false;
         //console.log("We did it!")
 
-        this.playerUnits = [];
+        let playerA = new Friendly(this, 640, 120, 'circle', 0, "RoundBoi", null, [basicAttack, basicHeal], 30);
+        let playerB = new Friendly(this, 640, 240, 'triangle', 0, "Illuminati", null, [basicHeal, groupAttack], 25);
+        let playerC = new Friendly(this, 640, 360, 'square', 0, "Boring", null, [groupAttack, heavyAttack], 20);
+        let playerD = new Friendly(this, 640, 480, 'hexagon', 0, "Bestagon", null, [groupHeal, selfHeal], 35);
+        let playerE = new Friendly(this, 640, 600, 'star', 0, "Starwalker", null, [basicAttack, basicHeal], 100);
+
+        this.playerUnits = [playerA, playerE, playerD];
+        this.playerUnitsBench = [playerB, playerC];
         this.playerUnits.forEach((player) => {
             player.on('pointerdown', () => {
                 if (this.targeting){
@@ -30,8 +40,19 @@ class Play extends Phaser.Scene {
             }, this);
         });
 
-        // makes a grey background
-        this.bgImage = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xaaaaaa, 1).setOrigin(0,0);
+        this.playerUnitsBench.forEach((player) => {
+            player.on('pointerdown', () => {
+                if (this.targeting){
+                    this.receiveTarget(player);
+                } else {
+                    console.log("Go to ability select screen");
+                }
+            }, this);
+        });
+
+
+        this.arrangePlayers();
+        
 
         let enemyA = this.add.rectangle(1100, 360, 64, 64, 0x654597, 1);
         let enemyB = this.add.rectangle(1100, 480, 64, 64, 0x654597, 1);
@@ -139,7 +160,9 @@ class Play extends Phaser.Scene {
 
         // this makes it actually do something when you click it
         this.rotateButtonUp.on("pointerup", () => {
-            this.rotatePentagonUp();
+            if (!this.currentlyRotating){
+                this.rotatePentagonUp();
+            }
         });
 
         // adds it to the array of sprites
@@ -159,7 +182,9 @@ class Play extends Phaser.Scene {
 
         // makes the it do something when you click it
         this.rotateButtonDown.on("pointerup", () => {
-            this.rotatePentagonDown();
+            if (!this.currentlyRotating){
+                this.rotatePentagonDown();
+            }
         });
 
         // add it to the array of sprites
@@ -196,6 +221,8 @@ class Play extends Phaser.Scene {
 
     // this rotates all of the pentagram UI counter clockwise
     rotatePentagonUp(){
+
+
         this.currentlyRotating = true;
         //console.log("rotate UP");
         // this goes from 1-5 and loops around
@@ -225,6 +252,11 @@ class Play extends Phaser.Scene {
             duration: 250,
             onComplete: function(){
                 this.currentlyRotating = false;
+                let A = this.playerUnits.shift();
+                let B = this.playerUnitsBench.shift();
+                this.playerUnits.push(B);
+                this.playerUnitsBench.push(A);
+                this.arrangePlayers();
                 console.log("Should be able to rotate again");
             },
             onCompleteScope: this
@@ -257,6 +289,11 @@ class Play extends Phaser.Scene {
             duration: 250,
             onComplete: function(){
                 this.currentlyRotating = false;
+                let A = this.playerUnits.pop();
+                let B = this.playerUnitsBench.pop();
+                this.playerUnits.unshift(B);
+                this.playerUnitsBench.unshift(A);
+                this.arrangePlayers();
                 console.log("Should be able to rotate again");
             },
             onCompleteScope: this
@@ -302,5 +339,20 @@ class Play extends Phaser.Scene {
         })
         //tar.setTint(0x000000);
         tar.setScale(2);
+    }
+
+    arrangePlayers(){
+        let i = 0;
+        while (i < 5){
+            let index = i % 3;
+            let player;
+            if (i < 3){
+                player = this.playerUnits[index];
+            } else {
+                player = this.playerUnitsBench[index];
+            }
+            player.y = 120 + 120*i;
+            i += 1;
+        }
     }
 }
