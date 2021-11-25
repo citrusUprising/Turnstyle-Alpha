@@ -311,7 +311,7 @@ class Play extends Phaser.Scene {
             charNum: num,
             maxSpeed: this.speedBudget,
             currSpeed: 0,
-            currSelect: 0
+            currSelect: -1
         }
         console.log(char.queuedAction);
         if (char.queuedAction.ability != null){

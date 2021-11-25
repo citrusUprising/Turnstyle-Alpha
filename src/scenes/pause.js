@@ -206,7 +206,7 @@ class Pause extends Phaser.Scene {
         } else if (i == 3){
             this.moveThreeFill.fillColor = 0xFF00FF;
         }
-        this.selection = i;
+        this.selection = i - 1;
     }
 
     updateText(){
