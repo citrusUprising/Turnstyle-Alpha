@@ -8,6 +8,11 @@ class Pause extends Phaser.Scene {
         this.pentagonCenterX = data.pentagonCenterX;
         this.pentagonCenterY = data.pentagonCenterY;
         this.currentCharacter = data.currentCharacter;
+        this.charNum = data.charNum;
+        this.currentSpeed = data.currSpeed;
+        this.maxSpeed = data.maxSpeed;
+        this.originalSelection = data.currSelect + 1;
+        this.selection = data.currSelect;
         // Variables: Max Speed, available abilities, current selections
     }
 
@@ -32,7 +37,6 @@ class Pause extends Phaser.Scene {
         this.moveWidth = 215;
         this.moveHeight = 70;
         this.spacing = 15;
-        this.selectedMove = 0;
 
         this.moveSelectFill = graphics.fillStyle(0xFFFFFF, 1).fillRect(
             this.moveSelectFrameX,
@@ -54,14 +58,37 @@ class Pause extends Phaser.Scene {
             this.moveSelectFrameY + this.spacing,
             "small arrow"
         ).setOrigin(0, 0);
+        this.leftArrowSprite.setInteractive();
+        this.leftArrowSprite.on("pointerup", () => {
+            if (this.currentSpeed > 0){
+                this.currentSpeed -= 1;
+                this.updateText();
+            }
+        }, this)
 
         this.rightArrowSprite = this.add.sprite(
             this.moveSelectFrameX + this.moveSelectFrameWidth - this.spacing,
             this.moveSelectFrameY + this.spacing,
             "small arrow"
         ).setOrigin(1, 0);
-
         this.rightArrowSprite.flipX = true;
+        this.rightArrowSprite.setInteractive();
+        this.rightArrowSprite.on("pointerup", () => {
+            if (this.currentSpeed < this.maxSpeed){
+                this.currentSpeed += 1;
+                this.updateText();
+            }
+        }, this)
+
+        this.speedText = this.add.text(
+            this.moveSelectFrameX + this.moveSelectFrameWidth/2, 
+            this.moveSelectFrameY, 
+            this.currentSpeed,
+            textConfig
+        );
+        this.speedText.setOrigin(0,0)
+
+        
 
         this.moveOneFill = this.add.rectangle(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
@@ -72,7 +99,7 @@ class Pause extends Phaser.Scene {
         ).setInteractive({           
             useHandCursor: true
         }).setOrigin(0, 0).on("pointerup", () => {
-            this.selectedMove = 1;
+            this.selectMove(1);
         });
 
         this.moveOneStroke = graphics.lineStyle(6, 0x000000, 5).strokeRect(
@@ -83,7 +110,6 @@ class Pause extends Phaser.Scene {
             8
         ).setScrollFactor(0);
 
-        this.add.text();
         this.add.text(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
             this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing, 
@@ -100,7 +126,7 @@ class Pause extends Phaser.Scene {
         ).setInteractive({           
             useHandCursor: true
         }).setOrigin(0, 0).on("pointerup", () => {
-            this.selectedMove = 2;
+            this.selectMove(2);
         });
         
 
@@ -112,7 +138,6 @@ class Pause extends Phaser.Scene {
             this.moveHeight
         ).setScrollFactor(0);
 
-        this.add.text();
         this.add.text(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
             this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing*2 + this.moveHeight, 
@@ -129,7 +154,7 @@ class Pause extends Phaser.Scene {
         ).setInteractive({           
             useHandCursor: true
         }).setOrigin(0, 0).on("pointerup", () => {
-            this.selectedMove = 3;
+            this.selectMove(3);
         });
 
         this.moveThreeStroke = graphics.lineStyle(6, 0x000000, 5).strokeRect(
@@ -146,9 +171,15 @@ class Pause extends Phaser.Scene {
         ).setOrigin(.5, 1);
 
         this.input.keyboard.on("keydown-ESC", () => {
-            this.scene.resume(this.pausedScene);
+            let scene = this.scene.resume(this.pausedScene);
+            if (this.selection != -1){
+                let action = {target: 0, action: this.selection, speed: this.currentSpeed}
+                scene.receiveAction(action, this.charNum);
+            }
             this.scene.stop();
         });
+
+        this.selectMove(this.originalSelection);
 
         // Add Reset text & button
         /* var resetButton = this.add.bitmapText(game.config.width/2, game.config.height/2 - JMBackgroundLength/4 + spacing, 'gem', 'RESET', 32).setOrigin(0.5);
@@ -161,25 +192,23 @@ class Pause extends Phaser.Scene {
     }
 
     update() {
-        
-        if (this.selectedMove == 1) {
-            this.moveOneFill.fillColor = 0xFF00FF;
-            this.moveTwoFill.fillColor = 0xFFFFFF;
-            this.moveThreeFill.fillColor = 0xFFFFFF;
-        } else if (this.selectedMove == 2) {
-            this.moveOneFill.fillColor = 0xFFFFFF;
-            this.moveTwoFill.fillColor = 0xFF00FF;
-            this.moveThreeFill.fillColor = 0xFFFFFF;
-        } else if (this.selectedMove == 3) {
-            this.moveOneFill.fillColor = 0xFFFFFF;
-            this.moveTwoFill.fillColor = 0xFFFFFF;
-            this.moveThreeFill.fillColor = 0xFF00FF;
-        } else {
-            this.moveOneFill.fillColor = 0xFFFFFF;
-            this.moveTwoFill.fillColor = 0xFFFFFF;
-            this.moveThreeFill.fillColor = 0xFFFFFF;
-        }
-
     }
 
+    selectMove(i){
+        this.moveOneFill.fillColor = 0xFFFFFF;
+        this.moveTwoFill.fillColor = 0xFFFFFF;
+        this.moveThreeFill.fillColor = 0xFFFFFF;
+        if (i == 1){
+            this.moveOneFill.fillColor = 0xFF00FF;
+        } else if (i == 2){
+            this.moveTwoFill.fillColor = 0xFF00FF;
+        } else if (i == 3){
+            this.moveThreeFill.fillColor = 0xFF00FF;
+        }
+        this.selection = i;
+    }
+
+    updateText(){
+        this.speedText.text = this.currentSpeed;
+    }
 }

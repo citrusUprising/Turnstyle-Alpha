@@ -15,6 +15,7 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+        this.speedBudget = 12;
         // makes a grey background
         this.bgImage = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xaaaaaa, 1).setOrigin(0,0);
 
@@ -133,11 +134,11 @@ class Play extends Phaser.Scene {
 
     update(){
         if (Phaser.Input.Keyboard.JustDown(key1)){
-            this.pause(this.playerUnits[0]);
+            this.pause(this.playerUnits[0], 0);
         } else if (Phaser.Input.Keyboard.JustDown(key2)){
-            this.pause(this.playerUnits[1]);
+            this.pause(this.playerUnits[1], 1);
         } else if (Phaser.Input.Keyboard.JustDown(key3)){
-            this.pause(this.playerUnits[2]);
+            this.pause(this.playerUnits[2], 2);
         }
     }
 
@@ -300,14 +301,23 @@ class Play extends Phaser.Scene {
         });
     }
 
-    pause(char) {
+    pause(char, num) {
         this.deleteRotateUI();
-        this.scene.launch('pauseScene', { 
+        let selectData = { 
             srcScene: "playScene",
             pentagonCenterX: this.pentagonCenterX,
             pentagonCenterY: this.pentagonCenterY,
             currentCharacter: char,
-        });
+            charnum: num,
+            maxSpeed: this.speedBudget,
+            currSpeed: 0,
+            currSelect: 0
+        }
+        if (char.queuedAction.ability != null){
+            selectData.currSelect = char.queuedAction.ability;
+            selectData.currSpeed = char.queuedAction.speed;
+        }
+        this.scene.launch('pauseScene', selectData);
         this.scene.pause();
     }
 
@@ -354,5 +364,9 @@ class Play extends Phaser.Scene {
             player.y = 120 + 120*i;
             i += 1;
         }
+    }
+
+    receiveAction(action, num){
+        this.playerUnits[num].queuedAction = action;
     }
 }
