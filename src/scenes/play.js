@@ -40,11 +40,11 @@ class Play extends Phaser.Scene {
         this.enemyUnits = [];
 
         // Create all the playr game objects.
-        let playerA = new Friendly(this, 800, 120, 'circle', 0, "RoundBoi", null, [basicAttack, basicHeal], 30);
-        let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Illuminati", null, [basicHeal, groupAttack], 25);
-        let playerC = new Friendly(this, 800, 360, 'square', 0, "Boring", null, [groupAttack, heavyAttack], 20);
-        let playerD = new Friendly(this, 800, 480, 'hexagon', 0, "Bestagon", null, [groupHeal, selfHeal], 35);
-        let playerE = new Friendly(this, 800, 600, 'star', 0, "Starwalker", null, [basicAttack, basicHeal], 100);
+        let playerA = new Friendly(this, 800, 120, 'circle', 0, "Medic", null, [basicAttack, basicHeal], 11);
+        let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Bounty Hunter", null, [basicAttack, selfHeal], 16);
+        let playerC = new Friendly(this, 800, 360, 'square', 0, "Juggernaut", null, [swipe, heavyAttack], 20);
+        let playerD = new Friendly(this, 800, 480, 'hexagon', 0, "Telepath", null, [groupHeal, soothe, selfHeal], 14);
+        let playerE = new Friendly(this, 800, 600, 'star', 0, "Sniper", null, [basicAttack, basicHeal], 10);
 
         // PlayerUnits -> playerUnitsBench store all the player team in clockwise order.
         this.totalUnits = [playerA, playerB, playerC, playerD, playerE];
