@@ -47,6 +47,7 @@ class Play extends Phaser.Scene {
         let playerE = new Friendly(this, 800, 600, 'star', 0, "Starwalker", null, [basicAttack, basicHeal], 100);
 
         // PlayerUnits -> playerUnitsBench store all the player team in clockwise order.
+        this.totalUnits = [playerA, playerB, playerC, playerD, playerE];
         this.playerUnits = [playerA, playerE, playerD];
         this.playerUnitsBench = [playerB, playerC];
 
@@ -78,6 +79,32 @@ class Play extends Phaser.Scene {
 
         // This positions the player sprites in a vertical line, top->bottom matching clockwise order
         this.arrangePlayers();
+
+        // creating the health bars for each of the players
+        var startVal = 25 // distance from left of game boundary/objects
+        var spriteY = 660; // distance from top of game boundary
+        
+        for (var i = 0; i< this.playerUnits.length + this.playerUnitsBench.length; i++){
+            // creating icon of the shapes
+            this.healthSprite = this.add.sprite(
+                startVal - 15,
+                spriteY + 10,
+                this.totalUnits[i].texture
+            ).setOrigin(0, 0);
+
+            // spacing between icon and next health box
+            startVal += 10;
+
+            // creating blank health boxes
+            this.healthSprite = this.add.sprite(
+                startVal,
+                spriteY,
+                "total speed"
+            ).setOrigin(0, 0).setCrop(0,0,150,75);
+            this.healthSprite.scaleX *= 1.5;
+            this.healthSprite.scaleY *= 0.7;
+            startVal += this.healthSprite.width + 50;
+        }
         
         // Create the 3 enemies at fixed positions
         let enemyA = new Enemy(this, 1100, 240, 'circle', 0, "EnemyA", null, [basicAttack], 10);
