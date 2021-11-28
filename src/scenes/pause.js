@@ -206,8 +206,6 @@ class Pause extends Phaser.Scene {
     }
 
     update() {
-        this.speedTrackerText.text = this.maxSpeed - this.currentSpeed;
-        this.pausedSceneObject.speedTrackerText.text = this.maxSpeed - this.currentSpeed;
     }
 
     // Submits a queued action back to playScene, shutting this down
@@ -236,7 +234,7 @@ class Pause extends Phaser.Scene {
         this.selection = i - 1;
 
         // TEMPORARY: for purposes of testing, I only gave characters 2 abilities, and thus even though a 3rd ability can be highlighted, we shouldn't perform logic on it.
-        if (this.selection >= 0 && this.selection < 2 && !ignoreTar){
+        if (this.selection >= 0 && this.selection < 3 && !ignoreTar){
             let multi = this.currentCharacter.abilities[this.selection].multitarget;
             let self = this.currentCharacter.abilities[this.selection].selftarget;
             let ally = this.currentCharacter.abilities[this.selection].allies;
@@ -258,6 +256,9 @@ class Pause extends Phaser.Scene {
     // Update the text showing speed value
     updateText(){
         this.speedText.text = this.currentSpeed;
+
+        this.speedTrackerText.text = this.maxSpeed - this.currentSpeed;
+        this.pausedSceneObject.speedTrackerText.text = this.maxSpeed - this.currentSpeed;
     }
 
     // Receive targt data from playscene
