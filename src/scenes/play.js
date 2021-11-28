@@ -44,13 +44,14 @@ class Play extends Phaser.Scene {
         this.enemyUnits = [];
 
         // Create all the playr game objects.
-        let playerA = new Friendly(this, 800, 120, 'circle', 0, "RoundBoi", null, [basicAttack, basicHeal], 30);
-        let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Illuminati", null, [basicHeal, groupAttack], 25);
-        let playerC = new Friendly(this, 800, 360, 'square', 0, "Boring", null, [groupAttack, heavyAttack], 20);
-        let playerD = new Friendly(this, 800, 480, 'hexagon', 0, "Bestagon", null, [groupHeal, selfHeal], 35);
-        let playerE = new Friendly(this, 800, 600, 'star', 0, "Starwalker", null, [basicAttack, basicHeal], 100);
+        let playerA = new Friendly(this, 800, 120, 'circle', 0, "Medic", null, [basicAttack, basicHeal], 11);
+        let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Bounty Hunter", null, [basicAttack, selfHeal], 16);
+        let playerC = new Friendly(this, 800, 360, 'square', 0, "Juggernaut", null, [swipe, heavyAttack], 20);
+        let playerD = new Friendly(this, 800, 480, 'hexagon', 0, "Telepath", null, [groupHeal, soothe, selfHeal], 14);
+        let playerE = new Friendly(this, 800, 600, 'star', 0, "Sniper", null, [basicAttack, basicHeal], 10);
 
         // PlayerUnits -> playerUnitsBench store all the player team in clockwise order.
+        this.totalUnits = [playerA, playerB, playerC, playerD, playerE];
         this.playerUnits = [playerA, playerE, playerD];
         this.playerUnitsBench = [playerB, playerC];
 
@@ -82,6 +83,32 @@ class Play extends Phaser.Scene {
 
         // This positions the player sprites in a vertical line, top->bottom matching clockwise order
         this.arrangePlayers();
+
+        // creating the health bars for each of the players
+        var startVal = 25 // distance from left of game boundary/objects
+        var spriteY = 660; // distance from top of game boundary
+        
+        for (var i = 0; i< this.playerUnits.length + this.playerUnitsBench.length; i++){
+            // creating icon of the shapes
+            this.healthSprite = this.add.sprite(
+                startVal - 15,
+                spriteY + 10,
+                this.totalUnits[i].texture
+            ).setOrigin(0, 0);
+
+            // spacing between icon and next health box
+            startVal += 10;
+
+            // creating blank health boxes
+            this.healthSprite = this.add.sprite(
+                startVal,
+                spriteY,
+                "total speed"
+            ).setOrigin(0, 0).setCrop(0,0,150,75);
+            this.healthSprite.scaleX *= 1.5;
+            this.healthSprite.scaleY *= 0.7;
+            startVal += this.healthSprite.width + 50;
+        }
         
         // Create the 3 enemies at fixed positions
         let enemyA = new Enemy(this, 1100, 240, 'circle', 0, "EnemyA", null, [basicAttack], 10);
