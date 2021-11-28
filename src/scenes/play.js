@@ -31,6 +31,10 @@ class Play extends Phaser.Scene {
         // If we are in targeting mode.
         this.targeting = false;
 
+        // this is the text that shows in the textbox when the player isn't hovering over anything
+        this.defaultText = "";
+        this.hoverText = "";
+
         // makes a grey background
         this.bgImage = this.add.rectangle(0, 0, game.config.width, game.config.height, 0xaaaaaa, 1).setOrigin(0,0);
 
@@ -84,6 +88,10 @@ class Play extends Phaser.Scene {
         let enemyB = new Enemy(this, 1100, 480, 'circle', 0, "EnemyB", null, [basicAttack], 10);
         let enemyC = new Enemy(this, 1100, 360, 'circle', 0, "EnemyC", null, [basicAttack], 10);
 
+        enemyA.hoverText = "this is the first enemy";
+
+        this.addHoverText(enemyA);
+
         // Give each enemy an onclick behavior that returns them as a target
         this.enemyUnits = [enemyA, enemyB, enemyC];
         this.enemyUnits.forEach((enemy) => {
@@ -135,7 +143,7 @@ class Play extends Phaser.Scene {
         this.textBoxText = this.add.text(
             this.textBoxSprite.x,
             this.textBoxSprite.y,
-            "",
+            this.defaultText,
             textConfig
         );
 
@@ -180,6 +188,12 @@ class Play extends Phaser.Scene {
                 this.execute();
             }
         }
+
+        if (this.hoverText == "") {
+            this.textBoxText.text = this.defaultText;
+        } else {
+            this.textBoxText.text = this.hoverText;
+        }
     }
 
     // Execute all queued actions, & empty the actionQ
@@ -199,9 +213,9 @@ class Play extends Phaser.Scene {
         this.rotateUIArray = [];
 
         // instructions displayed in the text box
-        this.textBoxText.text = "Rotate your party?";  
-        this.textBoxText.text += "\nClick up or down to rotate, check to confirm.";
-        this.textBoxText.text += "\nOnly party members in the front three slots are active.";
+        this.defaultText = "Rotate your party?";  
+        this.defaultText += "\nClick up or down to rotate, check to confirm.";
+        this.defaultText += "\nOnly party members in the front three slots are active.";
 
         // this is the arrow pointing upwards. i love using magic numbers ;-)
         this.rotateButtonUp = this.add.sprite(
@@ -530,5 +544,15 @@ class Play extends Phaser.Scene {
             console.log(this.enemyUnits[i].name + ": " + this.enemyUnits[i].hp);
             i++;
         }
+    }
+
+    addHoverText(sprite) {
+        sprite.setInteractive();
+        sprite.on("pointerover", () => {
+            this.hoverText = sprite.hoverText;
+        });
+        sprite.on("pointerout", () => {
+            this.hoverText = "";
+        });
     }
 }
