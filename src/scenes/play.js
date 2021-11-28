@@ -43,7 +43,7 @@ class Play extends Phaser.Scene {
         this.playerUnitsBench = [];
         this.enemyUnits = [];
 
-        // Create all the playr game objects.
+        // Create all the player game objects.
         let playerA = new Friendly(this, 800, 120, 'circle', 0, "Medic", null, [basicAttack, basicHeal], 11);
         let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Bounty Hunter", null, [basicAttack, selfHeal], 16);
         let playerC = new Friendly(this, 800, 360, 'square', 0, "Juggernaut", null, [swipe, heavyAttack], 20);
@@ -182,6 +182,56 @@ class Play extends Phaser.Scene {
         );
         this.pentagonContainer.add(this.pentagon);
 
+        this.starHoverText = "";
+        this.starSprite = this.add.sprite(
+            90,
+            0,
+            "star"
+        ).setScale(1.5, 1.5).setInteractive();
+        this.pentagonContainer.add(this.starSprite);
+        this.starSprite.hoverText = "Star";
+        this.addHoverText(this.starSprite);
+
+        this.circleHoverText = "";
+        this.circleSprite = this.add.sprite(
+            32,
+            -93,
+            "circle"
+        ).setScale(1.5, 1.5).setInteractive();
+        this.pentagonContainer.add(this.circleSprite);
+        this.circleSprite.hoverText = "Circle";
+        this.addHoverText(this.circleSprite);
+
+        this.squareHoverText = "";
+        this.squareSprite = this.add.sprite(
+            -80, 
+            -47,
+            "square"
+        ).setScale(1.5, 1.5).setInteractive();
+        this.pentagonContainer.add(this.squareSprite);
+        this.squareSprite.hoverText = "Square";
+        this.addHoverText(this.squareSprite);
+
+        this.triangleHoverText = "";
+        this.triangleSprite = this.add.sprite(
+            -69,
+            62,
+            "triangle"
+        ).setScale(1.5, 1.5).setInteractive();
+        this.pentagonContainer.add(this.triangleSprite);
+        this.triangleSprite.hoverText = "Triangle";
+        this.addHoverText(this.triangleSprite);
+
+        this.hexagonHoverText = "";
+        this.hexagonSprite = this.add.sprite(
+            24,
+            94,
+            "hexagon"
+        ).setScale(1.5, 1.5).setInteractive();
+        this.pentagonContainer.add(this.hexagonSprite);
+        this.hexagonSprite.hoverText = "Hexagon";
+        this.addHoverText(this.hexagonSprite);
+
         // this is the bit on top of the back half of the pentagon that makes it look greyed out
         this.pentagonCover = this.add.sprite(
             this.pentagonCenterX,
@@ -216,11 +266,14 @@ class Play extends Phaser.Scene {
             }
         }
 
+        this.updateHoverText();
+
         if (this.hoverText == "") {
             this.textBoxText.text = this.defaultText;
         } else {
             this.textBoxText.text = this.hoverText;
         }
+        
     }
 
     // Execute all queued actions, & empty the actionQ
@@ -581,5 +634,22 @@ class Play extends Phaser.Scene {
         sprite.on("pointerout", () => {
             this.hoverText = "";
         });
+    }
+
+    updateHoverText() {
+        this.circleHoverText = "Medic\nHP:" + this.totalUnits[0].hp + "/" + this.totalUnits[0].maxHP;
+        this.circleSprite.hoverText = this.circleHoverText;
+
+        this.triangleHoverText = "Bounty Hunter\nHP:" + this.totalUnits[1].hp + "/" + this.totalUnits[1].maxHP;
+        this.triangleSprite.hoverText = this.triangleHoverText;
+
+        this.squareHoverText = "Juggernaut\nHP:" + this.totalUnits[2].hp + "/" + this.totalUnits[2].maxHP;
+        this.squareSprite.hoverText = this.squareHoverText;
+
+        this.hexagonHoverText = "Telepath\nHP:" + this.totalUnits[3].hp + "/" + this.totalUnits[3].maxHP;
+        this.hexagonSprite.hoverText = this.hexagonHoverText;
+
+        this.starHoverText = "Sniper\nHP:" + this.totalUnits[4].hp + "/" + this.totalUnits[4].maxHP;
+        this.starSprite.hoverText = this.starHoverText;
     }
 }
