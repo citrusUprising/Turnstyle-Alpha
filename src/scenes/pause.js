@@ -187,7 +187,7 @@ class Pause extends Phaser.Scene {
         // add the name of ability 3
         this.add.text(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
-            this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing*3 + this.moveHeight, 
+            this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing*3 + this.moveHeight*2, 
             this.currentCharacter.abilities[2].name,
             textConfig
         );
