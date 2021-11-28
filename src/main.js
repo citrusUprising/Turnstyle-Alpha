@@ -61,7 +61,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
   basicHeal.text = "Heal 3 damage";
   basicHeal.requirement = function(){return true};
   basicHeal.effect = function(target){
-    target.hp = Math.max(target.hp + 3, target.maxHP)
+    target.hp = Math.min(target.hp + 3, target.maxHP)
   };
   basicHeal.multitarget = false;
   basicHeal.allies = true;
@@ -89,7 +89,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
   groupHeal.text = "Heal 1 Damage to all allies";
   groupHeal.requirement = function(){return true};
   groupHeal.effect = function(target){
-    target.hp = Math.max(target.hp + 1, target.maxHP)
+    target.hp = Math.min(target.hp + 1, target.maxHP)
   };
   groupHeal.multitarget = true;
   groupHeal.allies = true;
@@ -117,7 +117,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
   selfHeal.text = "Heal 5 damage";
   selfHeal.requirement = function(){return true};
   selfHeal.effect = function(target){
-    target.hp = Math.max(target.hp + 5, target.maxHP)
+    target.hp = Math.min(target.hp + 5, target.maxHP)
   };
   selfHeal.multitarget = false;
   selfHeal.allies = false;
@@ -248,7 +248,7 @@ bullrush.text = "Deal 8 damage to a target and 4 damage to self";
 bullrush.requiremnet = function(){return true};
 bullrush.effect = function(target, self){
   target.takeDamage(self, 8)
-  self.hp = Math.max(self.hp-4., self.maxHP)
+  self.hp = Math.min(self.hp-4., self.maxHP)
 };
 bullrush.multitarget = false;
 bullrush.allies = false;

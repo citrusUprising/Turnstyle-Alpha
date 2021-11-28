@@ -184,8 +184,7 @@ class Pause extends Phaser.Scene {
             this.moveHeight
         ).setScrollFactor(0);
 
-        // TODO: We would add the name of ability 3 here (but for purposes of testing, I only gave characters 2 abilities)
-        // add the name of ability 33
+        // add the name of ability 3
         this.add.text(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
             this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing*2 + this.moveHeight, 
@@ -231,16 +230,7 @@ class Pause extends Phaser.Scene {
         this.moveOneFill.fillColor = 0xFFFFFF;
         this.moveTwoFill.fillColor = 0xFFFFFF;
         this.moveThreeFill.fillColor = 0xFFFFFF;
-        if (i == 1){
-            this.moveOneFill.fillColor = 0xFF00FF;
-        } else if (i == 2){
-            this.moveTwoFill.fillColor = 0xFF00FF;
-        } else if (i == 3){
-            this.moveThreeFill.fillColor = 0xFF00FF;
-        }
-        this.selection = i - 1;
-
-        // TEMPORARY: for purposes of testing, I only gave characters 2 abilities, and thus even though a 3rd ability can be highlighted, we shouldn't perform logic on it.
+        
         if (this.selection >= 0 && this.selection < 3 && !ignoreTar){
             let multi = this.currentCharacter.abilities[this.selection].multitarget;
             let self = this.currentCharacter.abilities[this.selection].selftarget;
@@ -257,7 +247,15 @@ class Pause extends Phaser.Scene {
                 scene.target(!ally);
             }
         }
-        
+
+        if (i == 1){
+            this.moveOneFill.fillColor = 0xFF00FF;
+        } else if (i == 2){
+            this.moveTwoFill.fillColor = 0xFF00FF;
+        } else if (i == 3){
+            this.moveThreeFill.fillColor = 0xFF00FF;
+        }
+        this.selection = i - 1;
     }
 
     // Update the text showing speed value
