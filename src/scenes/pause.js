@@ -6,6 +6,7 @@ class Pause extends Phaser.Scene {
     init(data){
         // Process necessary data to render menu
         this.pausedScene = data.srcScene;
+        this.pausedSceneObject = data.pausedScene;
         this.pentagonCenterX = data.pentagonCenterX;
         this.pentagonCenterY = data.pentagonCenterY;
         this.currentCharacter = data.currentCharacter;
@@ -62,7 +63,9 @@ class Pause extends Phaser.Scene {
             "small arrow"
         ).setOrigin(0, 0);
         // Make left arrow modify a speed value
-        this.leftArrowSprite.setInteractive();
+        this.leftArrowSprite.setInteractive({           
+            useHandCursor: true
+        });
         this.leftArrowSprite.on("pointerup", () => {
             if (this.currentSpeed > 0){
                 this.currentSpeed -= 1;
@@ -78,7 +81,9 @@ class Pause extends Phaser.Scene {
         ).setOrigin(1, 0);
         this.rightArrowSprite.flipX = true;
         // Make right arrow modify a speed value
-        this.rightArrowSprite.setInteractive();
+        this.rightArrowSprite.setInteractive({           
+            useHandCursor: true
+        });
         this.rightArrowSprite.on("pointerup", () => {
             if (this.currentSpeed < this.maxSpeed){
                 this.currentSpeed += 1;
@@ -88,13 +93,20 @@ class Pause extends Phaser.Scene {
 
         // Add text that shows the speed value
         this.speedText = this.add.text(
-            this.moveSelectFrameX + this.moveSelectFrameWidth/2, 
+            this.moveSelectFrameX + this.moveSelectFrameWidth/2 -30, 
             this.moveSelectFrameY, 
             this.currentSpeed,
             textConfig
         );
         this.speedText.setOrigin(0,0)
 
+        textConfig.fontSize = "16px";
+        this.speedLabelText = this.add.text(
+            this.speedText.x - 20,
+            this.speedText.y + 30,
+            "Speed",
+            textConfig
+        ).setOrigin(0, 0);
         
         // Draw ability 1's box
         this.moveOneFill = this.add.rectangle(
@@ -186,10 +198,16 @@ class Pause extends Phaser.Scene {
             this.submitAction()}, this);
 
         // Highlight a selected move if there already was one
-        this.selectMove(this.originalSelection);
+        this.selectMove(this.originalSelection, true);
+
+        // create the text box and the speed tracker
+        // this is nessicary because they need to exist in this scene so that we can edit them here
+        this.createTextBoxAndSpeedTracker();
     }
 
     update() {
+        this.speedTrackerText.text = this.maxSpeed - this.currentSpeed;
+        this.pausedSceneObject.speedTrackerText.text = this.maxSpeed - this.currentSpeed;
     }
 
     // Submits a queued action back to playScene, shutting this down
@@ -204,7 +222,7 @@ class Pause extends Phaser.Scene {
     }
 
     // Visually highlights a selected move, and swaps into tareting mode if a target is needed
-    selectMove(i){
+    selectMove(i, ignoreTar = false){
         this.moveOneFill.fillColor = 0xFFFFFF;
         this.moveTwoFill.fillColor = 0xFFFFFF;
         this.moveThreeFill.fillColor = 0xFFFFFF;
@@ -218,7 +236,7 @@ class Pause extends Phaser.Scene {
         this.selection = i - 1;
 
         // TEMPORARY: for purposes of testing, I only gave characters 2 abilities, and thus even though a 3rd ability can be highlighted, we shouldn't perform logic on it.
-        if (this.selection >= 0 && this.selection < 2){
+        if (this.selection >= 0 && this.selection < 2 && !ignoreTar){
             let multi = this.currentCharacter.abilities[this.selection].multitarget;
             let self = this.currentCharacter.abilities[this.selection].selftarget;
             let ally = this.currentCharacter.abilities[this.selection].allies;
@@ -226,7 +244,7 @@ class Pause extends Phaser.Scene {
             // If a target is necessary
             if (!multi && !self){
                 // Put this to sleep
-                this.scene.sleep();
+                this.scene.pause();
                 // Resume play
                 this.scene.resume(this.pausedScene);
                 // Tell play to go to target mode
@@ -245,5 +263,53 @@ class Pause extends Phaser.Scene {
     // Receive targt data from playscene
     receiveTarget(tar){
         this.currentTar = tar;
+    }
+    
+    createTextBoxAndSpeedTracker() {
+        // this is the sprite in the top that holds the text that the game uses to describe game mechanics and such
+        this.textBoxSprite = this.add.sprite(
+            25, // love to use magic numbers
+            25,
+            "text box"
+        ).setOrigin(0, 0);
+        
+        // this is a pretty standard text config. i was thinking about using a more interesting font but i don't think it's worth
+        // the energy to get one from google fonts. if u wanna change it be my guest 
+        textConfig = {
+            fontFamily: "arial",
+            fontSize: "24px",
+            color: "#000000",
+            align: "left",
+            padding: 20,
+            wordWrap: {width: this.textBoxSprite.width - 40},
+            lineHeight: "normal"
+        };
+
+        // this is the text that goes in the text box. i edit this in the other parts of the game.
+        // there is a lot of room for text in the text box. in theory i would like to animate the text so that 
+        // the older text gets pushed to the top by the new text coming in
+        // ANYWAY from experience this kind of thing is really hard so i won't do it lol
+        // just rewrite this.textBoxText.text to change what text it is. ezpz
+        this.textBoxText = this.add.text(
+            this.textBoxSprite.x,
+            this.textBoxSprite.y,
+            "",
+            textConfig
+        );
+
+        this.speedTracker = this.add.sprite(
+            this.textBoxSprite.x,
+            this.textBoxSprite.y + this.textBoxSprite.height + 20,
+            "total speed"
+        ).setOrigin(0, 0);
+
+        textConfig.fontSize = "32px";
+
+        this.speedTrackerText = this.add.text(
+            this.speedTracker.x + 10,
+            this.speedTracker.y,
+            this.maxSpeed - this.currentSpeed,
+            textConfig
+        );
     }
 }

@@ -308,6 +308,7 @@ invigorate.selftarget = false;
     if(self.fatigue <= 1 || Math.random() <= 0.3){
       target.takeDamage(self, 10)
     //else{Print "Missed"}  
+    }
   };
   shoot.multitarget = false;
   shoot.allies = false;

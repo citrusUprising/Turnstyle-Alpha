@@ -143,36 +143,7 @@ class Play extends Phaser.Scene {
         // this is a place holder for a state machine for each part of the game.
         this.uiState = "rotate";
 
-        // this is the sprite in the top that holds the text that the game uses to describe game mechanics and such
-        this.textBoxSprite = this.add.sprite(
-            25, // love to use magic numbers
-            25,
-            "text box"
-        ).setOrigin(0, 0);
-        
-        // this is a pretty standard text config. i was thinking about using a more interesting font but i don't think it's worth
-        // the energy to get one from google fonts. if u wanna change it be my guest 
-        textConfig = {
-            fontFamily: "arial",
-            fontSize: "24px",
-            color: "#000000",
-            align: "left",
-            padding: 20,
-            wordWrap: {width: this.textBoxSprite.width - 40},
-            lineHeight: "normal"
-        };
-
-        // this is the text that goes in the text box. i edit this in the other parts of the game.
-        // there is a lot of room for text in the text box. in theory i would like to animate the text so that 
-        // the older text gets pushed to the top by the new text coming in
-        // ANYWAY from experience this kind of thing is really hard so i won't do it lol
-        // just rewrite this.textBoxText.text to change what text it is. ezpz
-        this.textBoxText = this.add.text(
-            this.textBoxSprite.x,
-            this.textBoxSprite.y,
-            this.defaultText,
-            textConfig
-        );
+        this.createTextBoxAndSpeedTracker();
 
         // this is the sprite for the pentagon. i will probably split this up into smaller sprites so we can do more with them.
         this.pentagon = this.add.sprite(
@@ -400,6 +371,54 @@ class Play extends Phaser.Scene {
         this.rotationPhase = false;
     }
 
+    createTextBoxAndSpeedTracker() {
+        // this is the sprite in the top that holds the text that the game uses to describe game mechanics and such
+        this.textBoxSprite = this.add.sprite(
+            25, // love to use magic numbers
+            25,
+            "text box"
+        ).setOrigin(0, 0);
+        
+        // this is a pretty standard text config. i was thinking about using a more interesting font but i don't think it's worth
+        // the energy to get one from google fonts. if u wanna change it be my guest 
+        textConfig = {
+            fontFamily: "arial",
+            fontSize: "24px",
+            color: "#000000",
+            align: "left",
+            padding: 20,
+            wordWrap: {width: this.textBoxSprite.width - 40},
+            lineHeight: "normal"
+        };
+
+        // this is the text that goes in the text box. i edit this in the other parts of the game.
+        // there is a lot of room for text in the text box. in theory i would like to animate the text so that 
+        // the older text gets pushed to the top by the new text coming in
+        // ANYWAY from experience this kind of thing is really hard so i won't do it lol
+        // just rewrite this.textBoxText.text to change what text it is. ezpz
+        this.textBoxText = this.add.text(
+            this.textBoxSprite.x,
+            this.textBoxSprite.y,
+            "",
+            textConfig
+        );
+
+        this.speedTracker = this.add.sprite(
+            this.textBoxSprite.x,
+            this.textBoxSprite.y + this.textBoxSprite.height + 20,
+            "total speed"
+        ).setOrigin(0, 0);
+
+        textConfig.fontSize = "32px";
+
+        this.speedTrackerText = this.add.text(
+            this.speedTracker.x + 10,
+            this.speedTracker.y,
+            this.speedBudget,
+            textConfig
+        );
+    }
+
     // this rotates all of the pentagram UI counter clockwise
     rotatePentagonUp(){
         // Tell the game we are already spinning, and do not want to do more spins
@@ -494,6 +513,7 @@ class Play extends Phaser.Scene {
         // Construct the data to form the ability select menu
         let selectData = { 
             srcScene: "playScene",
+            pausedScene: this,
             pentagonCenterX: this.pentagonCenterX,
             pentagonCenterY: this.pentagonCenterY,
             currentCharacter: char,
@@ -506,6 +526,7 @@ class Play extends Phaser.Scene {
         if (char.queuedAction.ability != null){
             selectData.currSelect = char.queuedAction.ability;
             selectData.currSpeed = char.queuedAction.speed;
+            selectData.maxSpeed = this.speedBudget + char.queuedAction.speed;
         }
         // Launch the ability select menu.
         this.scene.launch('pauseScene', selectData);
@@ -542,7 +563,7 @@ class Play extends Phaser.Scene {
         //tar.setTint(0x000000);
         //tar.setScale(2);
 
-        this.scene.wake("pauseScene");
+        this.scene.resume("pauseScene");
         let scene = this.scene.get("pauseScene")
         scene.receiveTarget(tar);
         this.scene.pause();
