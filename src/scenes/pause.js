@@ -184,8 +184,7 @@ class Pause extends Phaser.Scene {
             this.moveHeight
         ).setScrollFactor(0);
 
-        // TODO: We would add the name of ability 3 here (but for purposes of testing, I only gave characters 2 abilities)
-        // add the name of ability 33
+        // add the name of ability 3
         this.add.text(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
             this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing*2 + this.moveHeight, 
@@ -232,7 +231,6 @@ class Pause extends Phaser.Scene {
         this.moveTwoFill.fillColor = 0xFFFFFF;
         this.moveThreeFill.fillColor = 0xFFFFFF;
         
-        // TEMPORARY: for purposes of testing, I only gave characters 2 abilities, and thus even though a 3rd ability can be highlighted, we shouldn't perform logic on it.
         if (this.selection >= 0 && this.selection < 3 && !ignoreTar){
             let multi = this.currentCharacter.abilities[this.selection].multitarget;
             let self = this.currentCharacter.abilities[this.selection].selftarget;
