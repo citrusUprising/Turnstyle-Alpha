@@ -343,4 +343,141 @@ invigorate.selftarget = false;
       target.allies = false;
       target.selftarget = false;
 
+       /**
+ * @type {Ability}
+ */
+        let rally = {};
+        rally.name = "Rally";
+        rally.text = "Grants Random effect (Enrage 1, Aegis 1, Haste 2,2)to all allies including self";
+        rally.requiremnet = function(){return true};
+        rally.effect = function(rally){
+          let rng = Math.random();
+          if(rng <= 0.33){rally.applyStatus("Aegis", 1)}
+          else if(rng <= 0.66){rally.applyStatus("Enrage", 1)}
+          else {rally.applyStatus("Haste",2,2)}
+        };
+        rally.multitarget = true;
+        rally.allies = true;
+        rally.selftarget = false;
+
+        /**
+ * @type {Ability}
+ */
+      let devastation = {};
+      devastation.name = "Devastation";
+      devastation.text = "Deal 5 damage to all active enemies";
+      devastation.requiremnet = function(){return true};//flag
+      devastation.effect = function(devastation){
+        devastation.takeDamage(self, 5);
+      };
+      devastation.multitarget = true;
+      devastation.allies = false;
+      devastation.selftarget = false;
+
+                /**
+ * @type {Ability}
+ */
+      let ruin = {};
+      ruin.name = "Ruin";
+      ruin.text = "Deal 10 damage to targeted enemy";
+      ruin.requiremnet = function(){return true};//flag
+      ruin.effect = function(ruin){
+        ruin.takeDamage(self, 10);
+      };
+      ruin.multitarget = false;
+      ruin.allies = false;
+      ruin.selftarget = false;
+
+      /**
+ * @type {Ability}
+ */
+       let wince = {};
+       wince.name = "Wince";
+       wince.text = "Hit Targeted enemy for 2 damage, inflict Flinch";
+       wince.requiremnet = function(){return true};
+       wince.effect = function(wince){
+         wince.takeDamage(self, 2);
+         wince.applyStatus("Flinch", 1);
+       };
+       wince.multitarget = false;
+       wince.allies = false;
+       wince.selftarget = false;
+
+            /**
+ * @type {Ability}
+ */
+             let lash = {};
+             lash.name = "Lash";
+             lash.text = "Hit targeted enemy for 8 damage, if enemy has Aegis Active, deal 16 damage instead.";
+             lash.requiremnet = function(){return true};
+             lash.effect = function(lash){  
+               if(target.status.buff("Aegis")){lash.takeDamage(self, 16);}//Flag, not sure if functioning
+               else {lash.takeDamage(self, 8);}
+             };
+             lash.multitarget = false;
+             lash.allies = false;
+             lash.selftarget = false;
+
+                 /**
+ * @type {Ability}
+ */
+       let flurry = {};
+       flurry.name = "Flurry";
+       flurry.text = "50% chance to hit all enemies for 6 damage";
+       flurry.requiremnet = function(){return true};
+       flurry.effect = function(flurry){
+         if(Math.random()>0.5){flurry.takeDamage(self, 6);}
+         //else {Print missed}
+       };
+       flurry.multitarget = true;
+       flurry.allies = false;
+       flurry.selftarget = false;
+      
+           /**
+ * @type {Ability}
+ */
+            let fortify = {};
+            fortify.name = "Fortify";
+            fortify.text = "deal 10 damage to self and heal ally for 10 damage";
+            fortify.requiremnet = function(){return true}; //flag
+            fortify.effect = function(fortify){
+              self.hp = Math.max(self.hp-10., self.maxHP)
+              //fortify.heal(self, 10);//flag
+            };
+            fortify.multitarget = false;
+            fortify.allies = true;
+            fortify.selftarget = false;
+
+             /**
+ * @type {Ability}
+ */
+       let exhaust = {};
+       exhaust.name = "Exhaust";
+       exhaust.text = "Hit targeted enemy for 2 damage and inflict Encumbered";
+       exhaust.requiremnet = function(){return true};
+       exhaust.effect = function(exhaust){
+         exhaust.takeDamage(self, 2);
+         exhaust.applyStatus("Encumbered",999)
+       };
+       exhaust.multitarget = false;
+       exhaust.allies = false;
+       exhaust.selftarget = false;
+
+         /**
+ * @type {Ability}
+ */
+          let raze = {};
+          raze.name = "Raze";
+          raze.text = "Hit all enemies for 1 damage and 50% chance to inflict Burn 5";
+          raze.requiremnet = function(){return true};
+          raze.effect = function(raze){
+            raze.takeDamage(self, 1);
+            if(Math.random()>0.5){raze.applyStatus("Burn", 5);}
+          };
+          raze.multitarget = true;
+          raze.allies = false;
+          raze.selftarget = false;
+
+    
+
   
