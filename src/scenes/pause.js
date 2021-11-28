@@ -184,7 +184,13 @@ class Pause extends Phaser.Scene {
             this.moveHeight
         ).setScrollFactor(0);
 
-        // TODO: We would add the name of ability 3 here (but for purposes of testing, I only gave characters 2 abilities)
+        // add the name of ability 3
+        this.add.text(
+            this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
+            this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing*2 + this.moveHeight, 
+            this.currentCharacter.abilities[2].name,
+            textConfig
+        );
 
         // Add a sprite at the bottom of menu showing the character we are selecting action for
         this.characterSprite = this.add.sprite(
@@ -206,8 +212,6 @@ class Pause extends Phaser.Scene {
     }
 
     update() {
-        this.speedTrackerText.text = this.maxSpeed - this.currentSpeed;
-        this.pausedSceneObject.speedTrackerText.text = this.maxSpeed - this.currentSpeed;
     }
 
     // Submits a queued action back to playScene, shutting this down
@@ -226,17 +230,8 @@ class Pause extends Phaser.Scene {
         this.moveOneFill.fillColor = 0xFFFFFF;
         this.moveTwoFill.fillColor = 0xFFFFFF;
         this.moveThreeFill.fillColor = 0xFFFFFF;
-        if (i == 1){
-            this.moveOneFill.fillColor = 0xFF00FF;
-        } else if (i == 2){
-            this.moveTwoFill.fillColor = 0xFF00FF;
-        } else if (i == 3){
-            this.moveThreeFill.fillColor = 0xFF00FF;
-        }
-        this.selection = i - 1;
-
-        // TEMPORARY: for purposes of testing, I only gave characters 2 abilities, and thus even though a 3rd ability can be highlighted, we shouldn't perform logic on it.
-        if (this.selection >= 0 && this.selection < 2 && !ignoreTar){
+        
+        if (this.selection >= 0 && this.selection < 3 && !ignoreTar){
             let multi = this.currentCharacter.abilities[this.selection].multitarget;
             let self = this.currentCharacter.abilities[this.selection].selftarget;
             let ally = this.currentCharacter.abilities[this.selection].allies;
@@ -252,12 +247,23 @@ class Pause extends Phaser.Scene {
                 scene.target(!ally);
             }
         }
-        
+
+        if (i == 1){
+            this.moveOneFill.fillColor = 0xFF00FF;
+        } else if (i == 2){
+            this.moveTwoFill.fillColor = 0xFF00FF;
+        } else if (i == 3){
+            this.moveThreeFill.fillColor = 0xFF00FF;
+        }
+        this.selection = i - 1;
     }
 
     // Update the text showing speed value
     updateText(){
         this.speedText.text = this.currentSpeed;
+
+        this.speedTrackerText.text = this.maxSpeed - this.currentSpeed;
+        this.pausedSceneObject.speedTrackerText.text = this.maxSpeed - this.currentSpeed;
     }
 
     // Receive targt data from playscene
