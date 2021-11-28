@@ -85,9 +85,10 @@ class Play extends Phaser.Scene {
         this.arrangePlayers();
 
         // creating the health bars for each of the players
-        var startVal = 25 // distance from left of game boundary/objects
+        var startVal = 25; // distance from left of game boundary/objects
         var spriteY = 660; // distance from top of game boundary
-        
+        let healthText = {}; // dictionary of {player: hp}
+
         for (var i = 0; i< this.playerUnits.length + this.playerUnitsBench.length; i++){
             // creating icon of the shapes
             this.healthSprite = this.add.sprite(
@@ -108,6 +109,27 @@ class Play extends Phaser.Scene {
             this.healthSprite.scaleX *= 1.5;
             this.healthSprite.scaleY *= 0.7;
             startVal += this.healthSprite.width + 50;
+
+            //console.log(this.totalUnits[i].name, this.totalUnits[i].hp);
+            healthText[this.totalUnits[i].name] = this.totalUnits[i].hp;
+            //console.log(healthText); 
+            
+            textConfig = {
+                fontFamily: "arial",
+                fontSize: "26px",
+                color: "#000000",
+                padding: 20,
+                align: "center",
+                lineHeight: "normal"
+            };
+
+            // displays health based on value in healthText dictionary
+            this.healthText = this.add.text(
+                startVal - 130,
+                spriteY - 5,
+                healthText[this.totalUnits[i].name],
+                textConfig
+            );
         }
         
         // Create the 3 enemies at fixed positions
