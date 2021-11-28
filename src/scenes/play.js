@@ -44,11 +44,11 @@ class Play extends Phaser.Scene {
         this.enemyUnits = [];
 
         // Create all the player game objects.
-        let playerA = new Friendly(this, 800, 120, 'circle', 0, "Medic", null, [basicAttack, basicHeal], 11);
-        let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Bounty Hunter", null, [basicAttack, selfHeal], 16);
-        let playerC = new Friendly(this, 800, 360, 'square', 0, "Juggernaut", null, [swipe, heavyAttack], 20);
-        let playerD = new Friendly(this, 800, 480, 'hexagon', 0, "Telepath", null, [groupHeal, soothe, selfHeal], 14);
-        let playerE = new Friendly(this, 800, 600, 'star', 0, "Sniper", null, [basicAttack, basicHeal], 10);
+        let playerA = new Friendly(this, 800, 120, 'circle', 0, "Medic", null, [drone, flareGun, cure], 11);
+        let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Bounty Hunter", null, [assault, feint, enhance], 16);
+        let playerC = new Friendly(this, 800, 360, 'square', 0, "Juggernaut", null, [swipe, bulwark, bullrush], 20);
+        let playerD = new Friendly(this, 800, 480, 'hexagon', 0, "Telepath", null, [soothe, invigorate, panicAttack], 14);
+        let playerE = new Friendly(this, 800, 600, 'star', 0, "Sniper", null, [shoot, flashBang, pinpoint], 10);
 
         // PlayerUnits -> playerUnitsBench store all the player team in clockwise order.
         this.totalUnits = [playerA, playerB, playerC, playerD, playerE];
@@ -133,9 +133,9 @@ class Play extends Phaser.Scene {
         }
         
         // Create the 3 enemies at fixed positions
-        let enemyA = new Enemy(this, 1100, 240, 'circle', 0, "EnemyA", null, [basicAttack], 10);
-        let enemyB = new Enemy(this, 1100, 480, 'circle', 0, "EnemyB", null, [basicAttack], 10);
-        let enemyC = new Enemy(this, 1100, 360, 'circle', 0, "EnemyC", null, [basicAttack], 10);
+        let enemyA = new Enemy(this, 1100, 240, 'circle', 0, "Phobos", "Strung Out", [wince, lash, flurry], 40);
+        let enemyB = new Enemy(this, 1100, 480, 'circle', 0, "Mars", "Flinch", [rally, devastation, ruin], 80);
+        let enemyC = new Enemy(this, 1100, 360, 'circle', 0, "Deimos", "Distracted", [fortify, exhaust, raze], 40);
 
         enemyA.hoverText = "this is the first enemy";
 
