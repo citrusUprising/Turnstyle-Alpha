@@ -46,21 +46,21 @@ class Unit extends Phaser.GameObjects.Sprite{
                 console.log(this.alliedArray);
                 this.alliedArray.forEach((ally) => {
                     console.log(ally);
-                    this.abilities[this.queuedAction.ability].effect(ally);
+                    this.abilities[this.queuedAction.ability].effect(ally, this);
                 });
             }
             else {
                 this.enemyArray.forEach((enemy) => {
-                    this.abilities[this.queuedAction.ability].effect(enemy);
+                    this.abilities[this.queuedAction.ability].effect(enemy, this);
                 });
             }
                 
         }
         else if (this.abilities[this.queuedAction.ability].selfTarget){
-            this.abilities[this.queuedAction.ability].effect(this)
+            this.abilities[this.queuedAction.ability].effect(this, this)
         }
         else {
-            this.abilities[this.queuedAction.ability].effect(this.queuedAction.target);
+            this.abilities[this.queuedAction.ability].effect(this.queuedAction.target, this);
         }
     }
 
@@ -105,7 +105,7 @@ class Unit extends Phaser.GameObjects.Sprite{
     applyStatus(newStatus, duration, magnitude = 0){
         
         //This dictionariy ensures that you don't have to know the category of a status to call this function
-        let statusCategoriser = {Regen : "Health", Burn: "health", Flinch: "debuff", Haste: "buff", Aegis: "buff",
+        let statusCategoriser = {Regen : "health", Burn: "health", Flinch: "debuff", Haste: "buff", Aegis: "buff",
             Enrage: "buff", Distracted: "debuff", StrungOut : "debuff", Encumbered: "debuff"}
         let statusCategory = statusCategoriser[newStatus]
         //If we already have a status of that kind, we don't care
