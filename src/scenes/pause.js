@@ -185,6 +185,13 @@ class Pause extends Phaser.Scene {
         ).setScrollFactor(0);
 
         // TODO: We would add the name of ability 3 here (but for purposes of testing, I only gave characters 2 abilities)
+        // add the name of ability 33
+        this.add.text(
+            this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
+            this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing*2 + this.moveHeight, 
+            this.currentCharacter.abilities[2].name,
+            textConfig
+        );
 
         // Add a sprite at the bottom of menu showing the character we are selecting action for
         this.characterSprite = this.add.sprite(
