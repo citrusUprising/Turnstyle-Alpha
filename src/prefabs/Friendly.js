@@ -18,7 +18,8 @@ class Friendly extends Unit{
             this.hp = Math.min(this.hp + 3, this.maxHP)
         if(this.statuses.health.status == "Burn")
             this.hp = Math.max(0, this.hp- 3)
-        this.fatigue += (this.statuses.debuff.status == "Encumbered")? 2: 1
+        if(this.isActive)
+            this.fatigue += (this.statuses.debuff.status == "Encumbered")? 2: 1
         for(let indvStatus in this.statuses){
             if(this.statuses[indvStatus].duration > 0){
                 this.statuses[indvStatus].duration -= 1;

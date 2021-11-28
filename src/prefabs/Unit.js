@@ -96,6 +96,7 @@ class Unit extends Phaser.GameObjects.Sprite{
                 this.statuses.health.status = "Regen"
                 this.statuses.health.duration = 0
             }
+            this.isActive = true
         }
     }
 
@@ -107,6 +108,7 @@ class Unit extends Phaser.GameObjects.Sprite{
             }
             if(this.name == "Juggernaut")
                 this.statuses.health.status = "Regen"
+            this.isActive = false
         }
     }
 
