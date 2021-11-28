@@ -369,7 +369,11 @@ rally.selftarget = false;
 let devastation = {};
 devastation.name = "Devastation";
 devastation.text = "Deal 5 damage to all active enemies";
-devastation.requiremnet = function(){return true};//flag
+devastation.requiremnet = function(){
+  //if(ally1.hp <= 0 && ally2.hp <=0){
+    return true
+  //}else{return false}
+};//flag
 devastation.effect = function(devastation){
   target.takeDamage(self, 5);
 };
@@ -383,7 +387,11 @@ devastation.selftarget = false;
 let ruin = {};
 ruin.name = "Ruin";
 ruin.text = "Deal 10 damage to targeted enemy";
-ruin.requiremnet = function(){return true};//flag
+ruin.requiremnet = function(){
+  //if(ally1.hp <= 0 && ally2.hp <=0){
+    return true
+  //}else{return false}
+};//flag
 ruin.effect = function(ruin){
   target.takeDamage(self, 10);
 };
@@ -442,7 +450,12 @@ flurry.selftarget = false;
 let fortify = {};
 fortify.name = "Fortify";
 fortify.text = "deal 10 damage to self and heal ally for 10 damage";
-fortify.requiremnet = function(){return true}; //flag
+fortify.requiremnet = function(){
+  if(target.hp <= target.maxHP - 10 && target.hp > 0){
+  return true
+  }
+  else {return false}
+};
 fortify.effect = function(fortify){
   self.hp = Math.max(self.hp-10., self.maxHP)
   target.healSelf(10);
