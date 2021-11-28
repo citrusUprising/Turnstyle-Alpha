@@ -38,7 +38,7 @@ class Unit extends Phaser.GameObjects.Sprite{
     // Perform the players queued action
     act(){
         //No action if flinched
-        if(this.statuses.Debuff.status == "Flinch")
+        if(this.statuses.debuff.status == "Flinch")
             return
         this.getTeams();
         if(this.abilities[this.queuedAction.ability].multitarget){
