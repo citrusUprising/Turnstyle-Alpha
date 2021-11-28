@@ -396,7 +396,7 @@ class Play extends Phaser.Scene {
             this.rotateUIArray[i].destroy();
         }
         // clears the text box
-        this.textBoxText.text = "";
+        this.defaultText = "Press 1, 2, and 3 to select moves and targets for each of your active party.";
         this.rotationPhase = false;
     }
 
@@ -637,19 +637,68 @@ class Play extends Phaser.Scene {
     }
 
     updateHoverText() {
+        
         this.circleHoverText = "Medic\nHP:" + this.totalUnits[0].hp + "/" + this.totalUnits[0].maxHP;
+
+        this.circleHoverText += "\nFatigue: " + this.totalUnits[0].fatigue;
+        
+        this.circleHoverText += "\nStatuses: " + this.generateStatusHoverText(0);
+
         this.circleSprite.hoverText = this.circleHoverText;
 
+
         this.triangleHoverText = "Bounty Hunter\nHP:" + this.totalUnits[1].hp + "/" + this.totalUnits[1].maxHP;
+
+        this.triangleHoverText += "\nFatigue: " + this.totalUnits[1].fatigue;
+        
+        this.triangleHoverText += "\nStatuses: " + this.generateStatusHoverText(1);
+
         this.triangleSprite.hoverText = this.triangleHoverText;
 
+
         this.squareHoverText = "Juggernaut\nHP:" + this.totalUnits[2].hp + "/" + this.totalUnits[2].maxHP;
+
+        this.squareHoverText += "\nFatigue: " + this.totalUnits[0].fatigue;
+        
+        this.squareHoverText += "\nStatuses: " + this.generateStatusHoverText(2);
+
         this.squareSprite.hoverText = this.squareHoverText;
 
+
         this.hexagonHoverText = "Telepath\nHP:" + this.totalUnits[3].hp + "/" + this.totalUnits[3].maxHP;
+
+        this.hexagonHoverText += "\nFatigue: " + this.totalUnits[3].fatigue;
+        
+        this.hexagonHoverText += "\nStatuses: " + this.generateStatusHoverText(3);
+
         this.hexagonSprite.hoverText = this.hexagonHoverText;
 
+
         this.starHoverText = "Sniper\nHP:" + this.totalUnits[4].hp + "/" + this.totalUnits[4].maxHP;
+
+        this.starHoverText += "\nFatigue: " + this.totalUnits[4].fatigue;
+        
+        this.starHoverText += "\nStatuses: " + this.generateStatusHoverText(4);
+
         this.starSprite.hoverText = this.starHoverText;
+    }
+
+    generateStatusHoverText(n) {
+        // this is kind of dense but that is just how strings are honestly
+        this.statusLabel = "";
+        if (this.totalUnits[n].statuses.health.status != "None") {
+            this.statusLabel += this.totalUnits[n].statuses.health.status;
+        }
+        if (this.totalUnits[n].statuses.buff.status != "None") {
+            if (this.statusLabel != "") this.statusLabel += ",";
+            this.statusLabel += " " + this.totalUnits[n].statuses.buff.status;
+        }
+        if (this.totalUnits[n].statuses.debuff.status != "None") {
+            if (this.statusLabel != "") this.statusLabel += ",";
+            this.statusLabel += " " + this.totalUnits[n].statuses.debuff.status;
+        }
+        if (this.statusLabel == "") this.statusLabel = "None";
+
+        return this.statusLabel;
     }
 }
