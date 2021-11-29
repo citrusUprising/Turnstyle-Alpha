@@ -370,10 +370,10 @@ let devastation = {};
 devastation.name = "Devastation";
 devastation.text = "Deal 5 damage to all active enemies";
 devastation.requiremnet = function(){
-  //if(ally1.hp <= 0 && ally2.hp <=0){
+  if(self.enemyArray[0].hp <=0 && self.enemyArray[2].hp <=0){
     return true
-  //}else{return false}
-};//flag
+  }else{return false}
+};
 devastation.effect = function(devastation){
   target.takeDamage(self, 5);
 };
@@ -388,10 +388,10 @@ let ruin = {};
 ruin.name = "Ruin";
 ruin.text = "Deal 10 damage to targeted enemy";
 ruin.requiremnet = function(){
-  //if(ally1.hp <= 0 && ally2.hp <=0){
+  if(self.enemyArray[0].hp <=0 && self.enemyArray[2].hp <=0){
     return true
-  //}else{return false}
-};//flag
+  }else{return false}
+};
 ruin.effect = function(ruin){
   target.takeDamage(self, 10);
 };
