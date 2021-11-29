@@ -44,7 +44,7 @@ class Play extends Phaser.Scene {
         this.enemyUnits = [];
 
         // Create all the player game objects.
-        let playerA = new Friendly(this, 800, 120, 'circle', 0, "Medic", null, [drone, flareGun, cure], 11);
+        let playerA = new Friendly(this, 800, 120, 'circle', 0, "Medic", null, [swipe, flareGun, cure], 11);
         let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Bounty Hunter", null, [assault, feint, enhance], 16);
         let playerC = new Friendly(this, 800, 360, 'square', 0, "Juggernaut", null, [swipe, bulwark, bullrush], 20);
         let playerD = new Friendly(this, 800, 480, 'hexagon', 0, "Telepath", null, [soothe, invigorate, panicAttack], 14);
@@ -276,6 +276,21 @@ class Play extends Phaser.Scene {
             this.actionQ[i].act();
             this.actionQ.shift();
         }
+
+        for(i=0 ; i <3 ; i++){
+            console.log(this.playerUnits[i].name+": "+this.playerUnits[i].hp);
+        }
+        for(i=0 ; i <3 ; i++){
+            console.log(this.enemyUnits[i].name+": "+this.enemyUnits[i].hp)
+            
+            if(this.enemyUnits[i].statuses.health.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.health.status);}
+            if(this.enemyUnits[i].statuses.buff.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.buff.status);}
+            if(this.enemyUnits[i].statuses.debuff.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.debuff.status);}
+        }
+
     }
 
     // Creates the UI that rotates & sets this.RotationPhase = true
