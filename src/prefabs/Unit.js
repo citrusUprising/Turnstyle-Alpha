@@ -136,7 +136,7 @@ class Unit extends Phaser.GameObjects.Sprite{
     //Function to be called by any ability that inflicts a status
     applyStatus(newStatus, duration, magnitude = 0){
         //Check for boss immunities
-        if(newStatus = this.immunity)
+        if(newStatus == this.immunity)
             return
         //This dictionariy ensures that you don't have to know the category of a status to call this function
         let statusCategoriser = {Regen : "health", Burn: "health", Flinch: "debuff", Haste: "buff", Aegis: "buff",
