@@ -353,6 +353,7 @@ class Play extends Phaser.Scene {
 
         // add it to the array of sprites
         this.rotateUIArray.push(this.checkButton);
+        console.log("Finished creating rotate UI")
     }
 
     // Deletes the rotation UI & sets this.RotationPhase = false
@@ -400,6 +401,7 @@ class Play extends Phaser.Scene {
             player.stopActive();
         }) 
         this.speedBudget = this.speedPerTurn;
+        console.log("Finished starting turn");
     }
 
     queueEnemyActs(){
@@ -421,7 +423,7 @@ class Play extends Phaser.Scene {
                     correctPos = j;
                     j = this.actionQ.length;
                 }
-                i++;
+                j++;
             }
             if (correctPos == -1){
                 correctPos = this.actionQ.length;
@@ -430,7 +432,6 @@ class Play extends Phaser.Scene {
             enemy.queuedAction = action;
 
             i++;
-
         }
     }
 
