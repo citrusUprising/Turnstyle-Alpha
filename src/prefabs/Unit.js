@@ -43,6 +43,8 @@ class Unit extends Phaser.GameObjects.Sprite{
         //No action if flinched
         if(this.statuses.debuff.status == "Flinch"){
             console.log(this.name+" flinched");
+            this.statuses.debuff.status = "None"
+            this.statuses.debuff.duration = 0
             return
         }
         this.getTeams();
