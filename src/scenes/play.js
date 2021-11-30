@@ -117,20 +117,22 @@ class Play extends Phaser.Scene {
             let player = this.totalUnits[j];
             let z = j;
             player.on('pointerup', () => {
-                if (this.targeting){
-                    this.receiveTarget(player);
-                } else {
-                    if (!this.rotationPhase){
-                        let index = (z + (this.pentagonRotationState - 1)) % 5;
-                        // Currently! This never happens becaus the player is never set interactive outside of the targeting phase.
-                        // To make that work, we'd need carefully set/remove interactive so players are
-                            // Interactive during: Targeting Allies & Ability picking
-                            // Non-interactive during: rotation & targeting enemies
-                        if (index < 3){
-                            this.pause(index);
+                if (!player.dead){
+                    if (this.targeting){
+                        this.receiveTarget(player);
+                    } else {
+                        if (!this.rotationPhase){
+                            let index = (z + (this.pentagonRotationState - 1)) % 5;
+                            // Currently! This never happens becaus the player is never set interactive outside of the targeting phase.
+                            // To make that work, we'd need carefully set/remove interactive so players are
+                                // Interactive during: Targeting Allies & Ability picking
+                                // Non-interactive during: rotation & targeting enemies
+                            if (index < 3){
+                                this.pause(index);
+                            }
                         }
                     }
-                }
+                }   
             })
             j++;
         }
@@ -202,7 +204,7 @@ class Play extends Phaser.Scene {
             let enemy = this.enemyUnits[j];
             enemy.setInteractive();
             enemy.on('pointerup', () => {
-                if (this.targeting){
+                if (this.targeting && !enemy.dead){
                     this.receiveTarget(enemy);
                 }
             }, this)

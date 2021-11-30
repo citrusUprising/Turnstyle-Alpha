@@ -34,6 +34,7 @@ class Unit extends Phaser.GameObjects.Sprite{
         this.fatigue = 0
         this.isActive = true;
         this.priorTarget = null;
+        this.dead = false;
     }
 
 
@@ -111,6 +112,7 @@ class Unit extends Phaser.GameObjects.Sprite{
                 this.statuses.health.status = "Regen"
             this.isActive = false
         }
+        this.fatigue = 0;
     }
 
     healSelf(amount){
@@ -132,6 +134,11 @@ class Unit extends Phaser.GameObjects.Sprite{
         if(source.name == "Bounty Hunter" && source.queuedAction.target == source.priorTarget)
             this.amount = Math.ceil(amount * 1.5)
         this.hp = Math.max(this.hp - amount, 0)
+
+        if (this.hp == 0){
+            this.dead = true;
+            this.setTint(0x000000);
+        }
     }
 
     //Function to be called by any ability that inflicts a status
