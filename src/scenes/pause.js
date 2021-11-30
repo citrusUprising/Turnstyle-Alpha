@@ -201,7 +201,8 @@ class Pause extends Phaser.Scene {
 
         // On pressing escape, submit the queued action back to playScene
         this.input.keyboard.on("keydown-ESC", function() {
-            this.submitAction()}, this);
+            this.submitAction()
+        }, this);
 
         // Highlight a selected move if there already was one
         this.selectMove(this.originalSelection, true);
@@ -227,11 +228,14 @@ class Pause extends Phaser.Scene {
 
     // Visually highlights a selected move, and swaps into tareting mode if a target is needed
     selectMove(i, ignoreTar = false){
+        //console.log("In SelectMove");
         this.moveOneFill.fillColor = 0xFFFFFF;
         this.moveTwoFill.fillColor = 0xFFFFFF;
         this.moveThreeFill.fillColor = 0xFFFFFF;
         
+        this.selection = i - 1;
         if (this.selection >= 0 && this.selection < 3 && !ignoreTar){
+            //console.log("Should be targeting");
             let multi = this.currentCharacter.abilities[this.selection].multitarget;
             let self = this.currentCharacter.abilities[this.selection].selftarget;
             let ally = this.currentCharacter.abilities[this.selection].allies;
@@ -246,16 +250,15 @@ class Pause extends Phaser.Scene {
                 let scene = this.scene.get("playScene")
                 scene.target(!ally);
             }
+        } else {
+            if (i == 1){
+                this.moveOneFill.fillColor = 0xFF00FF;
+            } else if (i == 2){
+                this.moveTwoFill.fillColor = 0xFF00FF;
+            } else if (i == 3){
+                this.moveThreeFill.fillColor = 0xFF00FF;
+            }
         }
-
-        if (i == 1){
-            this.moveOneFill.fillColor = 0xFF00FF;
-        } else if (i == 2){
-            this.moveTwoFill.fillColor = 0xFF00FF;
-        } else if (i == 3){
-            this.moveThreeFill.fillColor = 0xFF00FF;
-        }
-        this.selection = i - 1;
     }
 
     // Update the text showing speed value
@@ -268,6 +271,13 @@ class Pause extends Phaser.Scene {
 
     // Receive targt data from playscene
     receiveTarget(tar){
+        if (this.selection == 0){
+            this.moveOneFill.fillColor = 0xFF00FF;
+        } else if (this.selection == 1){
+            this.moveTwoFill.fillColor = 0xFF00FF;
+        } else if (this.selection == 2){
+            this.moveThreeFill.fillColor = 0xFF00FF;
+        }
         this.currentTar = tar;
     }
     
