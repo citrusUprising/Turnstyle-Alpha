@@ -46,9 +46,9 @@ class Unit extends Phaser.GameObjects.Sprite{
         this.getTeams();
         if(this.abilities[this.queuedAction.ability].multitarget){
             if(this.abilities[this.queuedAction.ability].allies){
-                console.log(this.alliedArray);
+                //console.log(this.alliedArray);
                 this.alliedArray.forEach((ally) => {
-                    console.log(ally);
+                    //console.log(ally);
                     this.abilities[this.queuedAction.ability].effect(ally, this);
                 });
             }

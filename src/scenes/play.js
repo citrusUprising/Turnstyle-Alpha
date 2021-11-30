@@ -390,6 +390,7 @@ class Play extends Phaser.Scene {
     }
     
     startTurn(){
+        this.queueEnemyActs();
         this.playerUnits.forEach((player) => {
             player.turnStart();
             player.makeActive();
@@ -399,6 +400,38 @@ class Play extends Phaser.Scene {
             player.stopActive();
         }) 
         this.speedBudget = this.speedPerTurn;
+    }
+
+    queueEnemyActs(){
+        let i = 0;
+        while (i < this.enemyUnits.length){
+            let enemy = this.enemyUnits[i];
+            let ability = Math.floor(Math.random() * 3);
+            let targetNum = Math.floor(Math.random() * 3);
+            let target = this.playerUnits[targetNum];
+            let speed = Math.floor(Math.random() * 9);
+            let action = {target: target, ability: ability, speed: speed};
+
+            let j = 0;
+            let correctPos = -1;
+    
+            while (j < this.actionQ.length){
+                let compareTo = this.actionQ[j];
+                if (compareTo.queuedAction.speed + compareTo.fatigue < action.speed){
+                    correctPos = j;
+                    j = this.actionQ.length;
+                }
+                i++;
+            }
+            if (correctPos == -1){
+                correctPos = this.actionQ.length;
+            }
+            this.actionQ.splice(correctPos, 0, enemy);
+            enemy.queuedAction = action;
+
+            i++;
+
+        }
     }
 
     createTextBoxAndSpeedTracker() {

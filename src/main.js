@@ -60,7 +60,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
   basicHeal.name = "BasicHeal";
   basicHeal.text = "Heal 3 damage.";
   basicHeal.requirement = function(){return true};
-  basicHeal.effect = function(target){
+  basicHeal.effect = function(target,self){
     target.hp = Math.min(target.hp + 3, target.maxHP)
   };
   basicHeal.multitarget = false;
@@ -88,7 +88,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
   groupHeal.name = "Group Heal";
   groupHeal.text = "Heal 1 Damage to all allies.";
   groupHeal.requirement = function(){return true};
-  groupHeal.effect = function(target){
+  groupHeal.effect = function(target,self){
     target.hp = Math.min(target.hp + 1, target.maxHP)
   };
   groupHeal.multitarget = true;
@@ -116,7 +116,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
   selfHeal.name = "selfHeal";
   selfHeal.text = "Heal 5 damage.";
   selfHeal.requirement = function(){return true};
-  selfHeal.effect = function(target){
+  selfHeal.effect = function(target,self){
     target.hp = Math.min(target.hp + 5, target.maxHP)
   };
   selfHeal.multitarget = false;
@@ -132,7 +132,7 @@ let drone = {};
 drone.name = "Drone";
 drone.text = "Give ally Regeneration 3.";
 drone.requirement = function(){return true};
-drone.effect = function(target){
+drone.effect = function(target,self){
   target.applyStatus("Regen", 3)
 };
 drone.multitarget = false;
@@ -161,7 +161,7 @@ let cure = {};
 cure.name = "Cure";
 cure.text = "Remove Ally Debuffs.";
 cure.requirement = function(){return true};
-cure.effect = function(target){
+cure.effect = function(target,self){
   if(target.statuses.debuff.status != "None"){
     target.statuses.debuff.status = "None";
   }
@@ -194,7 +194,7 @@ let feint = {};
 feint.name = "Feint";
 feint.text = "Flinch an enemy.";
 feint.requirement = function(){return true};
-feint.effect = function(target){
+feint.effect = function(target,self){
   target.applyStatus("Flinch", 1)
 };
 feint.multitarget = false;
@@ -208,7 +208,7 @@ let enhance = {};
 enhance.name = "Enhance";
 enhance.text = "Give self Haste 3 for 3 turns.";
 enhance.requirement = function(){return true};
-enhance.effect = function(target){
+enhance.effect = function(target,self){
   target.applyStatus("Haste", 3, 3)
 };
 enhance.multitarget = false;
@@ -236,7 +236,7 @@ let bulwark = {};
 bulwark.name = "Bulwark";
 bulwark.text = "Give all allies Aegis 1.";
 bulwark.requirement = function(){return true};
-bulwark.effect = function(target){
+bulwark.effect = function(target,self){
   target.applyStatus("Aegis", 1)
 };
 bulwark.multitarget = true;
@@ -265,7 +265,7 @@ let soothe = {};
 soothe.name = "Soothe";
 soothe.text = "Heal ally for 6 damage.";
 soothe.requirement = function(){return true};
-soothe.effect = function(target){
+soothe.effect = function(target,self){
   target.healSelf(6);
 };
 soothe.multitarget = false;
@@ -279,7 +279,7 @@ let invigorate = {};
 invigorate.name = "Invigorate";
 invigorate.text = "Give ally Enrage 1.";
 invigorate.requirement = function(){return true};
-invigorate.effect = function(target){
+invigorate.effect = function(target,self){
   target.applyStatus("Enrage", 1)
 };
 invigorate.multitarget = false;
@@ -324,7 +324,7 @@ let flashBang = {};
 flashBang.name = "Flash Bang";
 flashBang.text = "Targets all enemies, 50% chance to Flinch.";
 flashBang.requirement = function(){return true};
-flashBang.effect = function(target){
+flashBang.effect = function(target,self){
   if(Math.random() <= 0.5)
     target.applyStatus("Flinch", 1)
 };
@@ -339,7 +339,7 @@ let pinpoint = {};
 pinpoint.name = "Pinpoint";
 pinpoint.text = "Afflicts one targeted enemy with Distracted 2.";
 pinpoint.requirement = function(){return true};
-pinpoint.effect = function(pinpoint){
+pinpoint.effect = function(target,self){
   target.applyStatus("Distracted", 2)
 };
 pinpoint.multitarget = false;
@@ -353,7 +353,7 @@ let rally = {};
 rally.name = "Rally";
 rally.text = "Grants Random effect (Enrage 1, Aegis 1, Haste 2,2)to all allies including self.";
 rally.requirement = function(){return true};
-rally.effect = function(rally){
+rally.effect = function(target,self){
   let rng = Math.random();
   if(rng <= 0.33){target.applyStatus("Aegis", 1)}
   else if(rng <= 0.66){target.applyStatus("Enrage", 1)}
@@ -374,7 +374,7 @@ devastation.requirement = function(){
     return true
   }else{return false}
 };
-devastation.effect = function(devastation){
+devastation.effect = function(target,self){
   target.takeDamage(self, 5);
 };
 devastation.multitarget = true;
@@ -392,7 +392,7 @@ ruin.requirement = function(){
     return true
   }else{return false}
 };
-ruin.effect = function(ruin){
+ruin.effect = function(target,self){
   target.takeDamage(self, 10);
 };
 ruin.multitarget = false;
@@ -406,7 +406,7 @@ let wince = {};
 wince.name = "Wince";
 wince.text = "Hit Targeted enemy for 2 damage, inflict Flinch.";
 wince.requirement = function(){return true};
-wince.effect = function(wince){
+wince.effect = function(target,self){
   target.takeDamage(self, 2);
   target.applyStatus("Flinch", 1);
 };
@@ -421,7 +421,7 @@ let lash = {};
 lash.name = "Lash";
 lash.text = "Hit targeted enemy for 8 damage, if enemy has Aegis Active, deal 16 damage instead.";
 lash.requirement = function(){return true};
-lash.effect = function(lash){  
+lash.effect = function(target,self){  
   if(target.statuses.buff.status == "Aegis"){target.takeDamage(self, 16);}
   else {target.takeDamage(self, 8);}
 };
@@ -436,7 +436,7 @@ let flurry = {};
 flurry.name = "Flurry";
 flurry.text = "50% chance to hit all enemies for 6 damage.";
 flurry.requirement = function(){return true};
-flurry.effect = function(flurry){
+flurry.effect = function(target,self){
   if(Math.random()>0.5){target.takeDamage(self, 6);}
   //else {Print missed}
 };
@@ -450,14 +450,14 @@ flurry.selftarget = false;
 let fortify = {};
 fortify.name = "Fortify";
 fortify.text = "deal 10 damage to self and heal ally for 10 damage.";
-fortify.requirement = function(){
+fortify.requirement = function(target, self){
   if(target.hp <= target.maxHP - 10 && target.hp > 0){
   return true
   }
   else {return false}
 };
-fortify.effect = function(fortify){
-  self.hp = Math.max(self.hp-10., self.maxHP)
+fortify.effect = function(target, self){
+  self.hp = Math.max(self.hp-10, 0)
   target.healSelf(10);
 };
 fortify.multitarget = false;
@@ -471,7 +471,7 @@ let exhaust = {};
 exhaust.name = "Exhaust";
 exhaust.text = "Hit targeted enemy for 2 damage and inflict Encumbered.";
 exhaust.requirement = function(){return true};
-exhaust.effect = function(exhaust){
+exhaust.effect = function(target,self){
   target.takeDamage(self, 2);
   target.applyStatus("Encumbered",999)
 };
@@ -486,7 +486,7 @@ let raze = {};
 raze.name = "Raze";
 raze.text = "Hit all enemies for 1 damage and 50% chance to inflict Burn 5.";
 raze.requirement = function(){return true};
-raze.effect = function(raze){
+raze.effect = function(target,self){
   target.takeDamage(self, 1);
   if(Math.random()>0.5){target.applyStatus("Burn", 5);}
 };
