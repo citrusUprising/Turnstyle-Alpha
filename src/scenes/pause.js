@@ -234,10 +234,10 @@ class Pause extends Phaser.Scene {
     // Submits a queued action back to playScene, shutting this down
     submitAction(){
         this.scene.resume(this.pausedScene);
-        let scene = this.scene.get("playScene")
+        let myScene = this.scene.get("playScene")
         if (this.selection != -1){
             let action = {target: this.currentTar, ability: this.selection, speed: this.currentSpeed}
-            scene.receiveAction(action, this.charNum);
+            myScene.receiveAction(action, this.charNum);
         }
         this.scene.stop();
     }
@@ -262,8 +262,18 @@ class Pause extends Phaser.Scene {
                 // Resume play
                 this.scene.resume(this.pausedScene);
                 // Tell play to go to target mode
-                let scene = this.scene.get("playScene")
-                scene.target(!ally);
+                let myScene = this.scene.get("playScene")
+                myScene.target(!ally);
+
+                
+            } else {
+                if (i == 1){
+                    this.moveOneFill.fillColor = 0xFF00FF;
+                } else if (i == 2){
+                    this.moveTwoFill.fillColor = 0xFF00FF;
+                } else if (i == 3){
+                    this.moveThreeFill.fillColor = 0xFF00FF;
+                }
             }
         } else {
             if (i == 1){

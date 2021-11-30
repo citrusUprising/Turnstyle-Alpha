@@ -131,7 +131,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
 let drone = {};
 drone.name = "Drone";
 drone.text = "Give ally Regeneration 3.";
-drone.requiremnet = function(){return true};
+drone.requirement = function(){return true};
 drone.effect = function(target){
   target.applyStatus("Regen", 3)
 };
@@ -145,7 +145,7 @@ drone.selftarget = false;
  let flareGun = {};
  flareGun.name = "Flare Gun";
  flareGun.text = "Hit enemy for 1 damage and 50% chance to inflict Burn.";
- flareGun.requiremnet = function(){return true};
+ flareGun.requirement = function(){return true};
  flareGun.effect = function(target, self){
    target.takeDamage(self, 1);
    if(Math.random() >= 0.5) target.applyStatus("Burn", 3)
@@ -160,7 +160,7 @@ drone.selftarget = false;
 let cure = {};
 cure.name = "Cure";
 cure.text = "Remove Ally Debuffs.";
-cure.requiremnet = function(){return true};
+cure.requirement = function(){return true};
 cure.effect = function(target){
   if(target.statuses.debuff.status != "None"){
     target.statuses.debuff.status = "None";
@@ -179,7 +179,7 @@ cure.selftarget = false;
 let assault = {};
 assault.name = "Assault";
 assault.text = "Hit enemy for damage based off your speed.";
-assault.requiremnet = function(){return true};
+assault.requirement = function(){return true};
 assault.effect = function(target, self){
   target.takeDamage(self, 3 + Math.ceil(self.queuedAction.speed/2))
 };
@@ -193,7 +193,7 @@ assault.selftarget = false;
 let feint = {};
 feint.name = "Feint";
 feint.text = "Flinch an enemy.";
-feint.requiremnet = function(){return true};
+feint.requirement = function(){return true};
 feint.effect = function(target){
   target.applyStatus("Flinch", 1)
 };
@@ -207,7 +207,7 @@ feint.selftarget = false;
 let enhance = {};
 enhance.name = "Enhance";
 enhance.text = "Give self Haste 3 for 3 turns.";
-enhance.requiremnet = function(){return true};
+enhance.requirement = function(){return true};
 enhance.effect = function(target){
   target.applyStatus("Haste", 3, 3)
 };
@@ -221,7 +221,7 @@ enhance.selftarget = true;
 let swipe = {};
 swipe.name = "Swipe ";
 swipe.text = "Hit all enemies for 2 damage.";
-swipe.requiremnet = function(){return true};
+swipe.requirement = function(){return true};
 swipe.effect = function(target, self){
   target.takeDamage(self, 2);
 };
@@ -235,7 +235,7 @@ swipe.selftarget = false;
 let bulwark = {};
 bulwark.name = "Bulwark";
 bulwark.text = "Give all allies Aegis 1.";
-bulwark.requiremnet = function(){return true};
+bulwark.requirement = function(){return true};
 bulwark.effect = function(target){
   target.applyStatus("Aegis", 1)
 };
@@ -249,7 +249,7 @@ bulwark.selftarget = false;
 let bullrush = {};
 bullrush.name = "Bullrush";
 bullrush.text = "Deal 8 damage to a target and 4 damage to self.";
-bullrush.requiremnet = function(){return true};
+bullrush.requirement = function(){return true};
 bullrush.effect = function(target, self){
   target.takeDamage(self, 8)
   self.hp = Math.min(self.hp-4., self.maxHP)
@@ -264,7 +264,7 @@ bullrush.selftarget = false;
 let soothe = {};
 soothe.name = "Soothe";
 soothe.text = "Heal ally for 6 damage.";
-soothe.requiremnet = function(){return true};
+soothe.requirement = function(){return true};
 soothe.effect = function(target){
   target.healSelf(6);
 };
@@ -278,7 +278,7 @@ soothe.selftarget = false;
 let invigorate = {};
 invigorate.name = "Invigorate";
 invigorate.text = "Give ally Enrage 1.";
-invigorate.requiremnet = function(){return true};
+invigorate.requirement = function(){return true};
 invigorate.effect = function(target){
   target.applyStatus("Enrage", 1)
 };
@@ -292,7 +292,7 @@ invigorate.selftarget = false;
 let panicAttack = {};
 panicAttack.name = "Panic Attack";
 panicAttack.text = "Deal 2 damage to targeted enemy and inflict Strung Out 1.";
-panicAttack.requiremnet = function(){return true};
+panicAttack.requirement = function(){return true};
 panicAttack.effect = function(target, self){
   target.takeDamage(self, 2)
   target.applyStatus("StrungOut", 1)
@@ -307,7 +307,7 @@ panicAttack.selftarget = false;
 let shoot = {};
 shoot.name = "Shoot";
 shoot.text = "Deal 10 damage. If you have more than 1 fatigue, 30% accuracy.";
-shoot.requiremnet = function(){return true};
+shoot.requirement = function(){return true};
 shoot.effect = function(target, self){
   if(self.fatigue <= 1 || Math.random() <= 0.3){
     target.takeDamage(self, 10)}
@@ -323,7 +323,7 @@ shoot.selftarget = false;
 let flashBang = {};
 flashBang.name = "Flash Bang";
 flashBang.text = "Targets all enemies, 50% chance to Flinch.";
-flashBang.requiremnet = function(){return true};
+flashBang.requirement = function(){return true};
 flashBang.effect = function(target){
   if(Math.random() <= 0.5)
     target.applyStatus("Flinch", 1)
@@ -338,7 +338,7 @@ flashBang.selftarget = false;
 let pinpoint = {};
 pinpoint.name = "Pinpoint";
 pinpoint.text = "Afflicts one targeted enemy with Distracted 2.";
-pinpoint.requiremnet = function(){return true};
+pinpoint.requirement = function(){return true};
 pinpoint.effect = function(pinpoint){
   target.applyStatus("Distracted", 2)
 };
@@ -352,7 +352,7 @@ pinpoint.selftarget = false;
 let rally = {};
 rally.name = "Rally";
 rally.text = "Grants Random effect (Enrage 1, Aegis 1, Haste 2,2)to all allies including self.";
-rally.requiremnet = function(){return true};
+rally.requirement = function(){return true};
 rally.effect = function(rally){
   let rng = Math.random();
   if(rng <= 0.33){target.applyStatus("Aegis", 1)}
@@ -369,7 +369,7 @@ rally.selftarget = false;
 let devastation = {};
 devastation.name = "Devastation";
 devastation.text = "Deal 5 damage to all active enemies.";
-devastation.requiremnet = function(){
+devastation.requirement = function(){
   if(self.enemyArray[0].hp <=0 && self.enemyArray[2].hp <=0){
     return true
   }else{return false}
@@ -387,7 +387,7 @@ devastation.selftarget = false;
 let ruin = {};
 ruin.name = "Ruin";
 ruin.text = "Deal 10 damage to targeted enemy.";
-ruin.requiremnet = function(){
+ruin.requirement = function(){
   if(self.enemyArray[0].hp <=0 && self.enemyArray[2].hp <=0){
     return true
   }else{return false}
@@ -405,7 +405,7 @@ ruin.selftarget = false;
 let wince = {};
 wince.name = "Wince";
 wince.text = "Hit Targeted enemy for 2 damage, inflict Flinch.";
-wince.requiremnet = function(){return true};
+wince.requirement = function(){return true};
 wince.effect = function(wince){
   target.takeDamage(self, 2);
   target.applyStatus("Flinch", 1);
@@ -420,7 +420,7 @@ wince.selftarget = false;
 let lash = {};
 lash.name = "Lash";
 lash.text = "Hit targeted enemy for 8 damage, if enemy has Aegis Active, deal 16 damage instead.";
-lash.requiremnet = function(){return true};
+lash.requirement = function(){return true};
 lash.effect = function(lash){  
   if(target.statuses.buff.status == "Aegis"){target.takeDamage(self, 16);}
   else {target.takeDamage(self, 8);}
@@ -435,7 +435,7 @@ lash.selftarget = false;
 let flurry = {};
 flurry.name = "Flurry";
 flurry.text = "50% chance to hit all enemies for 6 damage.";
-flurry.requiremnet = function(){return true};
+flurry.requirement = function(){return true};
 flurry.effect = function(flurry){
   if(Math.random()>0.5){target.takeDamage(self, 6);}
   //else {Print missed}
@@ -450,7 +450,7 @@ flurry.selftarget = false;
 let fortify = {};
 fortify.name = "Fortify";
 fortify.text = "deal 10 damage to self and heal ally for 10 damage.";
-fortify.requiremnet = function(){
+fortify.requirement = function(){
   if(target.hp <= target.maxHP - 10 && target.hp > 0){
   return true
   }
@@ -470,7 +470,7 @@ fortify.selftarget = false;
 let exhaust = {};
 exhaust.name = "Exhaust";
 exhaust.text = "Hit targeted enemy for 2 damage and inflict Encumbered.";
-exhaust.requiremnet = function(){return true};
+exhaust.requirement = function(){return true};
 exhaust.effect = function(exhaust){
   target.takeDamage(self, 2);
   target.applyStatus("Encumbered",999)
@@ -485,7 +485,7 @@ exhaust.selftarget = false;
 let raze = {};
 raze.name = "Raze";
 raze.text = "Hit all enemies for 1 damage and 50% chance to inflict Burn 5.";
-raze.requiremnet = function(){return true};
+raze.requirement = function(){return true};
 raze.effect = function(raze){
   target.takeDamage(self, 1);
   if(Math.random()>0.5){target.applyStatus("Burn", 5);}

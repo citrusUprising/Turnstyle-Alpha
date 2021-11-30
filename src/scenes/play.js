@@ -196,12 +196,20 @@ class Play extends Phaser.Scene {
         this.addHoverText(enemyA);
 
         // Give each enemy an onclick behavior that returns them as a target
+        j = 0;
         this.enemyUnits = [enemyA, enemyB, enemyC];
-        this.enemyUnits.forEach((enemy) => {
+        while (j < this.enemyUnits.length){
+            let enemy = this.enemyUnits[j];
+            enemy.setInteractive();
             enemy.on('pointerup', () => {
-                this.receiveTarget(enemy);
-            }, this);
-        });
+                if (this.targeting){
+                    this.receiveTarget(enemy);
+                }
+            }, this)
+            j++;
+        }
+        
+        
       
 
         // this is a place holder for a state machine for each part of the game.
@@ -212,9 +220,9 @@ class Play extends Phaser.Scene {
         this.createRotateUI();
 
         // When you press Escape, this prints the state (health) of all active characters
-        this.input.keyboard.on("keydown-ESC", () => {
-            this.printState();
-        }, this);
+        /* this.input.keyboard.on("keydown-SPACE", () => {
+            console.log(this.targeting);
+        }, this); */
     }
 
     update(){
@@ -236,21 +244,6 @@ class Play extends Phaser.Scene {
             this.actionQ[i].act();
             this.actionQ.shift();
         }
-
-        for(i=0 ; i <3 ; i++){
-            console.log(this.playerUnits[i].name+": "+this.playerUnits[i].hp);
-        }
-        for(i=0 ; i <3 ; i++){
-            console.log(this.enemyUnits[i].name+": "+this.enemyUnits[i].hp)
-            
-            if(this.enemyUnits[i].statuses.health.status != "None")
-            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.health.status);}
-            if(this.enemyUnits[i].statuses.buff.status != "None")
-            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.buff.status);}
-            if(this.enemyUnits[i].statuses.debuff.status != "None")
-            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.debuff.status);}
-        }
-
     }
 
     // Creates the UI that rotates & sets this.RotationPhase = true
@@ -575,14 +568,13 @@ class Play extends Phaser.Scene {
     target(tarEnemy = true) {
         this.targeting = true;
         if (tarEnemy){
-            this.enemyUnits.forEach((enemy) => {
-                enemy.setInteractive();
-            });
+            //console.log("Players aren't interactive");
             this.playerUnits.forEach((player) => {
                 player.removeInteractive();
             });
         }
         else {
+            //console.log("Players are interactive");
             this.playerUnits.forEach((player) => {
                 player.setInteractive();
             });
@@ -594,9 +586,7 @@ class Play extends Phaser.Scene {
     // Freezes this scene again
     receiveTarget(tar) {
         this.targeting = false;
-        this.enemyUnits.forEach((enemy) => {
-            enemy.removeInteractive();
-        })
+        //console.log("Players are interactive");
         this.playerUnits.forEach((player) => {
             player.setInteractive();
         });
@@ -604,8 +594,8 @@ class Play extends Phaser.Scene {
         //tar.setScale(2);
 
         this.scene.resume("pauseScene");
-        let scene = this.scene.get("pauseScene")
-        scene.receiveTarget(tar);
+        let myScene = this.scene.get("pauseScene")
+        myScene.receiveTarget(tar);
         this.scene.pause();
     }
 
@@ -639,7 +629,7 @@ class Play extends Phaser.Scene {
         // Boolean representing if this action is a revision of a previously queued action
         let revisedAct = (char.queuedAction.ability != null);
 
-        // If it is a reevision
+        // If it is a revision
         if (revisedAct){
             //console.log("Revising an action");
             // Remove the original from the actionQ
@@ -684,6 +674,12 @@ class Play extends Phaser.Scene {
         i = 0;
         while (i < this.enemyUnits.length){
             console.log(this.enemyUnits[i].name + ": " + this.enemyUnits[i].hp);
+            if(this.enemyUnits[i].statuses.health.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.health.status);}
+            if(this.enemyUnits[i].statuses.buff.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.buff.status);}
+            if(this.enemyUnits[i].statuses.debuff.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.debuff.status);}
             i++;
         }
     }
