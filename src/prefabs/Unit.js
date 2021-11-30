@@ -64,7 +64,6 @@ class Unit extends Phaser.GameObjects.Sprite{
         else {
             this.abilities[this.queuedAction.ability].effect(this.queuedAction.target, this);
         }
-        this.queuedAction = {target: null, ability: null, speed: 0};
     }
 
     // Get the up to date lists of active characters.

@@ -43,81 +43,20 @@ class Play extends Phaser.Scene {
         this.playerUnitsBench = [];
         this.enemyUnits = [];
 
-        // this is the center of the pentagon UI which contains information about the party members
-        this.pentagonCenterX = game.config.width * .2;
-        this.pentagonCenterY = game.config.height * .6;
-
-        // the pentagon has five states, 1-5, each of which represents a different possible rotation.
-        // the states are changed in the functions rotatePentagonUp() and rotatePentagonDown() at the beginning of the turn
-        this.pentagonRotationState = 1;
-        
-        // this is a container that holds all the parts of the pentagon UI
-        // a container lets us rotate all of them at once by rotating the container
-        // right now, the container just has one sprite in it, but i will add more later
-        this.pentagonContainer = this.add.container(this.pentagonCenterX, this.pentagonCenterY);
-
-        // this is the sprite for the pentagon. i will probably split this up into smaller sprites so we can do more with them.
-        this.pentagon = this.add.sprite(
-            0,
-            0,
-            "pentagon",
-        );
-        this.pentagonContainer.add(this.pentagon);
-
-        this.starHoverText = "";
-        this.starSprite = new Friendly(this, 90, 0, 'star', 0, "Sniper", null, [shoot, flashBang, pinpoint], 10);
-        this.starSprite.setScale(1.5, 1.5).setInteractive();
-        this.pentagonContainer.add(this.starSprite);
-        this.starSprite.hoverText = "Star";
-        this.addHoverText(this.starSprite);
-
-        this.circleHoverText = "";
-        this.circleSprite = new Friendly(this, 32, -93, 'circle', 0, "Medic", null, [drone, flareGun, cure], 11);
-        this.circleSprite.setScale(1.5, 1.5).setInteractive();
-        this.pentagonContainer.add(this.circleSprite);
-        this.circleSprite.hoverText = "Circle";
-        this.addHoverText(this.circleSprite);
-
-        this.squareHoverText = "";
-        this.squareSprite = new Friendly(this, -80, -47, 'square', 0, "Juggernaut", null, [swipe, bulwark, bullrush], 20);
-        this.squareSprite.setScale(1.5, 1.5).setInteractive();
-        this.pentagonContainer.add(this.squareSprite);
-        this.squareSprite.hoverText = "Square";
-        this.addHoverText(this.squareSprite);
-
-        this.triangleHoverText = "";
-        this.triangleSprite = new Friendly(this, -69, 62, 'triangle', 0, "Bounty Hunter", null, [assault, feint, enhance], 16);
-        this.triangleSprite.setScale(1.5, 1.5).setInteractive();
-        this.pentagonContainer.add(this.triangleSprite);
-        this.triangleSprite.hoverText = "Triangle";
-        this.addHoverText(this.triangleSprite);
-
-        this.hexagonHoverText = "";
-        this.hexagonSprite = new Friendly(this, 24, 94, 'hexagon', 0, "Telepath", null, [soothe, invigorate, panicAttack], 14);
-        this.hexagonSprite.setScale(1.5, 1.5).setInteractive();
-        this.pentagonContainer.add(this.hexagonSprite);
-        this.hexagonSprite.hoverText = "Hexagon";
-        this.addHoverText(this.hexagonSprite);
-
-        // this is the bit on top of the back half of the pentagon that makes it look greyed out
-        this.pentagonCover = this.add.sprite(
-            this.pentagonCenterX,
-            this.pentagonCenterY,
-            "pentagon cover",
-        ).setAlpha(.8);
-
         // Create all the player game objects.
+        let playerA = new Friendly(this, 800, 120, 'circle', 0, "Medic", null, [swipe, flareGun, cure], 11);
+        let playerB = new Friendly(this, 800, 240, 'triangle', 0, "Bounty Hunter", null, [assault, feint, enhance], 16);
+        let playerC = new Friendly(this, 800, 360, 'square', 0, "Juggernaut", null, [swipe, bulwark, bullrush], 20);
+        let playerD = new Friendly(this, 800, 480, 'hexagon', 0, "Telepath", null, [soothe, invigorate, panicAttack], 14);
+        let playerE = new Friendly(this, 800, 600, 'star', 0, "Sniper", null, [shoot, flashBang, pinpoint], 10);
 
         // PlayerUnits -> playerUnitsBench store all the player team in clockwise order.
-        this.totalUnits = [this.circleSprite, this.starSprite, this.hexagonSprite, this.triangleSprite, this.squareSprite];
-        this.playerUnits = [this.circleSprite, this.starSprite, this.hexagonSprite];
-        this.playerUnitsBench = [this.triangleSprite, this.squareSprite];
+        this.totalUnits = [playerA, playerB, playerC, playerD, playerE];
+        this.playerUnits = [playerA, playerE, playerD];
+        this.playerUnitsBench = [playerB, playerC];
 
         // This gives all the players an onclick function that either targets them, or goes to their ability select screen.
-        let j = 0;
-        while (j < this.totalUnits.length){
-            let player = this.totalUnits[j];
-            let z = j;
+        this.playerUnits.forEach((player) => {
             player.on('pointerup', () => {
                 if (this.targeting){
                     this.receiveTarget(player);
@@ -133,12 +72,22 @@ class Play extends Phaser.Scene {
                         }
                     }
                 }
-            })
-            j++;
-        }
+            }, this);
+        });
+
+        // Same as above for bench characters.
+        this.playerUnitsBench.forEach((player) => {
+            player.on('pointerup', () => {
+                if (this.targeting){
+                    this.receiveTarget(player);
+                } else {
+                    console.log("Go to ability select screen");
+                }
+            }, this);
+        });
 
         // This positions the player sprites in a vertical line, top->bottom matching clockwise order
-        // this.arrangePlayers();
+        this.arrangePlayers();
 
         // creating the health bars for each of the players
         var startVal = 25; // distance from left of game boundary/objects
@@ -205,14 +154,88 @@ class Play extends Phaser.Scene {
             }, this);
         });
       
+        // this is the center of the pentagon UI which contains information about the party members
+        this.pentagonCenterX = game.config.width * .2;
+        this.pentagonCenterY = game.config.height * .6;
+
+        // the pentagon has five states, 1-5, each of which represents a different possible rotation.
+        // the states are changed in the functions rotatePentagonUp() and rotatePentagonDown() at the beginning of the turn
+        this.pentagonRotationState = 1;
         
+        // this is a container that holds all the parts of the pentagon UI
+        // a container lets us rotate all of them at once by rotating the container
+        // right now, the container just has one sprite in it, but i will add more later
+        this.pentagonContainer = this.add.container(this.pentagonCenterX, this.pentagonCenterY);
 
         // this is a place holder for a state machine for each part of the game.
         this.uiState = "rotate";
 
         this.createTextBoxAndSpeedTracker();
 
-        
+        // this is the sprite for the pentagon. i will probably split this up into smaller sprites so we can do more with them.
+        this.pentagon = this.add.sprite(
+            0,
+            0,
+            "pentagon",
+        );
+        this.pentagonContainer.add(this.pentagon);
+
+        this.starHoverText = "";
+        this.starSprite = this.add.sprite(
+            90,
+            0,
+            "star"
+        ).setScale(1.5, 1.5).setInteractive();
+        this.pentagonContainer.add(this.starSprite);
+        this.starSprite.hoverText = "Star";
+        this.addHoverText(this.starSprite);
+
+        this.circleHoverText = "";
+        this.circleSprite = this.add.sprite(
+            32,
+            -93,
+            "circle"
+        ).setScale(1.5, 1.5).setInteractive();
+        this.pentagonContainer.add(this.circleSprite);
+        this.circleSprite.hoverText = "Circle";
+        this.addHoverText(this.circleSprite);
+
+        this.squareHoverText = "";
+        this.squareSprite = this.add.sprite(
+            -80, 
+            -47,
+            "square"
+        ).setScale(1.5, 1.5).setInteractive();
+        this.pentagonContainer.add(this.squareSprite);
+        this.squareSprite.hoverText = "Square";
+        this.addHoverText(this.squareSprite);
+
+        this.triangleHoverText = "";
+        this.triangleSprite = this.add.sprite(
+            -69,
+            62,
+            "triangle"
+        ).setScale(1.5, 1.5).setInteractive();
+        this.pentagonContainer.add(this.triangleSprite);
+        this.triangleSprite.hoverText = "Triangle";
+        this.addHoverText(this.triangleSprite);
+
+        this.hexagonHoverText = "";
+        this.hexagonSprite = this.add.sprite(
+            24,
+            94,
+            "hexagon"
+        ).setScale(1.5, 1.5).setInteractive();
+        this.pentagonContainer.add(this.hexagonSprite);
+        this.hexagonSprite.hoverText = "Hexagon";
+        this.addHoverText(this.hexagonSprite);
+
+        // this is the bit on top of the back half of the pentagon that makes it look greyed out
+        this.pentagonCover = this.add.sprite(
+            this.pentagonCenterX,
+            this.pentagonCenterY,
+            "pentagon cover",
+        ).setAlpha(.8);
         // this creates the UI that the player uses to rotate the pentagon
         // we should probably put an intro or something to space out the game at the start but idk it works like this
         this.createRotateUI();
@@ -239,10 +262,24 @@ class Play extends Phaser.Scene {
     execute(){
         let i = 0;
         while (i < this.actionQ.length){
-            console.log(this.actionQ[i].queuedAction);
             this.actionQ[i].act();
             this.actionQ.shift();
         }
+
+        for(i=0 ; i <3 ; i++){
+            console.log(this.playerUnits[i].name+": "+this.playerUnits[i].hp);
+        }
+        for(i=0 ; i <3 ; i++){
+            console.log(this.enemyUnits[i].name+": "+this.enemyUnits[i].hp)
+            
+            if(this.enemyUnits[i].statuses.health.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.health.status);}
+            if(this.enemyUnits[i].statuses.buff.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.buff.status);}
+            if(this.enemyUnits[i].statuses.debuff.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.debuff.status);}
+        }
+
     }
 
     // Creates the UI that rotates & sets this.RotationPhase = true
@@ -481,7 +518,7 @@ class Play extends Phaser.Scene {
                 this.playerUnits.push(B);
                 this.playerUnitsBench.push(A);
                 // Redraw with new order
-                // this.arrangePlayers();
+                this.arrangePlayers();
                 //console.log("Should be able to rotate again");
             },
             onCompleteScope: this
@@ -521,7 +558,7 @@ class Play extends Phaser.Scene {
                 this.playerUnits.unshift(B);
                 this.playerUnitsBench.unshift(A);
                 // Redraw with new order
-                // this.arrangePlayers();
+                this.arrangePlayers();
                 //console.log("Should be able to rotate again");
             },
             onCompleteScope: this
@@ -561,7 +598,6 @@ class Play extends Phaser.Scene {
     // Sets either all players or all enemies to interactive, & this.targeting to true
     // So that clicking on one will return it as a target to this.receiveTarget
     target(tarEnemy = true) {
-        //console.log("In Scene Target");
         this.targeting = true;
         if (tarEnemy){
             this.enemyUnits.forEach((enemy) => {
@@ -582,7 +618,6 @@ class Play extends Phaser.Scene {
     // Wakes Pause Scene back up, passes pause scene the chosen target
     // Freezes this scene again
     receiveTarget(tar) {
-        //console.log("In scene receive target");
         this.targeting = false;
         this.enemyUnits.forEach((enemy) => {
             enemy.removeInteractive();
