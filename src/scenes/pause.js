@@ -91,6 +91,7 @@ class Pause extends Phaser.Scene {
             }
         }, this)
 
+        textConfig.padding = 20;
         // Add text that shows the speed value
         this.speedText = this.add.text(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 -30, 
