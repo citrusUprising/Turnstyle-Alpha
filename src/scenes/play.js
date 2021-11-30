@@ -718,12 +718,12 @@ class Play extends Phaser.Scene {
         i = 0;
         while (i < this.enemyUnits.length){
             console.log(this.enemyUnits[i].name + ": " + this.enemyUnits[i].hp);
-            if(this.enemyUnits[i].statuses.health.status != "None")
+            /*if(this.enemyUnits[i].statuses.health.status != "None")
             {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.health.status);}
             if(this.enemyUnits[i].statuses.buff.status != "None")
             {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.buff.status);}
             if(this.enemyUnits[i].statuses.debuff.status != "None")
-            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.debuff.status);}
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.debuff.status);}*/
             i++;
         }
     }

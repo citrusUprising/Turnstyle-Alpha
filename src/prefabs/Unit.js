@@ -129,8 +129,9 @@ class Unit extends Phaser.GameObjects.Sprite{
             amount = amount * 2
         if(source.statuses.debuff.status == "StrungOut")
             amount = Math.ceil(amount/2)
-        if(this.name == "Medic" && this.queuedAction.speed >= 5 && Math.random() > 0.5)
-            return
+        if(this.name == "Medic" && this.queuedAction.speed >= 5 && Math.random() > 0.5){
+            console.log(this.name+" dodged the attack")
+            return}
         if(source.name == "Bounty Hunter" && source.queuedAction.target == source.priorTarget)
             this.amount = Math.ceil(amount * 1.5)
         this.hp = Math.max(this.hp - amount, 0)
@@ -158,6 +159,7 @@ class Unit extends Phaser.GameObjects.Sprite{
             this.statuses[statusCategory].status = newStatus
             this.statuses[statusCategory].duration = duration
             this.statuses[statusCategory].magnitude = magnitude
+            console.log (this.name+" has "+newStatus)
         }
     }
 
