@@ -22,6 +22,10 @@ class Preload extends Phaser.Scene
         this.load.image("hexagon", "./assets/ui/hexagon_character.png");
         this.load.image("star", "./assets/ui/star_character.png");
 
+        this.load.audio("select", "./assets/audio/menu_select.wav");
+        this.load.audio("back", "./assets/audio/menu_back.wav");
+        this.load.audio("forward", "./assets/audio/menu_forward.wav");
+        this.load.audio("scroll", "./assets/audio/menu_scroll.wav");
 
         this.createProgressbar(game.config.width / 2, game.config.height / 2);
     }
