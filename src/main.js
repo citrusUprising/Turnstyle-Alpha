@@ -217,11 +217,11 @@ enhance.text = "Give self Haste 3 for 3 turns.";
 enhance.requirement = function(caster, castee){return true};
 enhance.effect = function(target,self){
   console.log(self.name+" used "+enhance.name+" on themself");
-  target.applyStatus("Haste", 3, 3)
+  self.applyStatus("Haste", 3, 3)
 };
-enhance.multitarget = false;
+enhance.multitarget = true;
 enhance.allies = false;
-enhance.selftarget = true;
+enhance.selftarget = false;
 
 /**
  * @type {Ability}
