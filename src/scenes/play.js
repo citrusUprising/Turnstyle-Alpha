@@ -122,13 +122,15 @@ class Play extends Phaser.Scene {
                 if (this.targeting){
                     this.receiveTarget(player);
                 } else {
-                    let index = (z + (this.pentagonRotationState - 1)) % 5;
-                    // Currently! This never happens becaus the player is never set interactive outside of the targeting phase.
-                    // To make that work, we'd need carefully set/remove interactive so players are
-                        // Interactive during: Targeting Allies & Ability picking
-                        // Non-interactive during: rotation & targeting enemies
-                    if (index < 3){
-                        this.pause(index);
+                    if (!this.rotationPhase){
+                        let index = (z + (this.pentagonRotationState - 1)) % 5;
+                        // Currently! This never happens becaus the player is never set interactive outside of the targeting phase.
+                        // To make that work, we'd need carefully set/remove interactive so players are
+                            // Interactive during: Targeting Allies & Ability picking
+                            // Non-interactive during: rotation & targeting enemies
+                        if (index < 3){
+                            this.pause(index);
+                        }
                     }
                 }
             })
@@ -222,13 +224,6 @@ class Play extends Phaser.Scene {
     }
 
     update(){
-        // If we are not in the targeting phase & we are not in the rotation phase
-        if (!this.targeting && !this.rotationPhase){
-            // Or execute all queued actions
-            if (Phaser.Input.Keyboard.JustDown(keySPACE)){
-                this.execute();
-            }
-        }
 
         this.updateHoverText();
 
@@ -253,6 +248,10 @@ class Play extends Phaser.Scene {
     // Creates the UI that rotates & sets this.RotationPhase = true
     createRotateUI(){
         this.rotationPhase = true;
+
+        if (this.endTurnButton != null){
+            this.endTurnButton.destroy();
+        }
 
         // this is used in deleteRotateUI(). it contains every sprite created in this function
         this.rotateUIArray = [];
@@ -356,6 +355,7 @@ class Play extends Phaser.Scene {
     // Deletes the rotation UI & sets this.RotationPhase = false
     // this will need to have createUseMoveUI() or w/e added at the end of it
     deleteRotateUI(){
+        this.startTurn();
         // destroy all the sprites created by createRotateUI()
         for(let i = 0; i < this.rotateUIArray.length; i++) {
             this.rotateUIArray[i].destroy();
@@ -363,6 +363,35 @@ class Play extends Phaser.Scene {
         // clears the text box
         this.defaultText = "Press 1, 2, and 3 to select moves and targets for each of your active party.";
         this.rotationPhase = false;
+
+        this.endTurnButton = this.add.rectangle(640, 360, 60, 20, 0x69385C);
+        this.endTurnButton.setInteractive({
+            useHandCursor: true     // makes it appear clickable
+        });
+        this.endTurnButton.on("pointerup", this.endTurn, this)
+    }
+
+    endTurn(){
+        if (!this.targeting){
+            this.execute();
+            this.printState();
+            this.createRotateUI();
+            this.playerUnits.forEach((player) => {
+                player.turnEnd();
+            });
+        }
+    }
+    
+    startTurn(){
+        this.playerUnits.forEach((player) => {
+            player.turnStart();
+            player.makeActive();
+            player.setInteractive();
+        });
+        this.playerUnitsBench.forEach((player) => {
+            player.stopActive();
+        }) 
+        this.speedBudget = this.speedPerTurn;
     }
 
     createTextBoxAndSpeedTracker() {
@@ -514,13 +543,15 @@ class Play extends Phaser.Scene {
             charNum: num,
             maxSpeed: this.speedBudget,
             currSpeed: 0,
-            currSelect: -1
+            currSelect: -1,
+            currTar: null
         }
         // Modify the data to form the ability select menu if the character already has an ability queued
         if (char.queuedAction.ability != null){
             selectData.currSelect = char.queuedAction.ability;
             selectData.currSpeed = char.queuedAction.speed;
             selectData.maxSpeed = this.speedBudget + char.queuedAction.speed;
+            selectData.currTar = char.queuedAction.target;
         }
         // Launch the ability select menu.
         this.scene.launch('pauseScene', selectData);
@@ -535,6 +566,9 @@ class Play extends Phaser.Scene {
         if (tarEnemy){
             this.enemyUnits.forEach((enemy) => {
                 enemy.setInteractive();
+            });
+            this.playerUnits.forEach((player) => {
+                player.removeInteractive();
             });
         }
         else {
@@ -554,8 +588,8 @@ class Play extends Phaser.Scene {
             enemy.removeInteractive();
         })
         this.playerUnits.forEach((player) => {
-            player.removeInteractive();
-        })
+            player.setInteractive();
+        });
         //tar.setTint(0x000000);
         //tar.setScale(2);
 
@@ -606,9 +640,10 @@ class Play extends Phaser.Scene {
         // Iterate over all queued actions to find the correct place to put this new action to maintain speed order.
         let i = 0;
         let correctPos = -1;
+
         while (i < this.actionQ.length){
             let compareTo = this.actionQ[i];
-            if (compareTo.queuedAction.speed < action.speed){
+            if (compareTo.queuedAction.speed + compareTo.fatigue < action.speed + char.fatigue){
                 correctPos = i;
                 i = this.actionQ.length;
             }
@@ -654,6 +689,8 @@ class Play extends Phaser.Scene {
     }
 
     updateHoverText() {
+
+        this.speedTrackerText.text = this.speedBudget;
         
         this.circleHoverText = "Medic\nHP:" + this.totalUnits[0].hp + "/" + this.totalUnits[0].maxHP;
 

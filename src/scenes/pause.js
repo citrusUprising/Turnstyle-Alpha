@@ -15,10 +15,10 @@ class Pause extends Phaser.Scene {
         this.maxSpeed = data.maxSpeed;
         this.originalSelection = data.currSelect + 1;
         this.selection = data.currSelect;
+        this.currentTar = data.currTar;
     }
 
     create(){
-        this.currentTar = null;
         let graphics = this.add.graphics();
         
         // CENTER WINDOW START //
