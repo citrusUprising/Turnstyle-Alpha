@@ -251,6 +251,17 @@ class Play extends Phaser.Scene {
             this.actionQ[i].act();
             this.actionQ.shift();
         }
+        
+        if (this.enemyUnits[0].dead == true && this.enemyUnits[1].dead == true && this.enemyUnits[2].dead == true) {
+            this.textBoxText.text = "YOU WIN";
+            this.scene.pause();
+        }
+        if (this.playerUnits[0].dead == true && this.playerUnits[1].dead == true && this.playerUnits[2].dead == true
+                && this.playerUnits[3].dead == true && this.playerUnits[4].dead == true) {
+            
+            this.textBoxText.text = "YOU LOSE";
+            this.scene.pause();
+        }
     }
 
     // Creates the UI that rotates & sets this.RotationPhase = true
