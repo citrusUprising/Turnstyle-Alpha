@@ -20,6 +20,8 @@ class Pause extends Phaser.Scene {
 
     create(){
         let graphics = this.add.graphics();
+
+        this.initializeAudio();
         
         // CENTER WINDOW START //
         // Add Background
@@ -69,6 +71,7 @@ class Pause extends Phaser.Scene {
         this.leftArrowSprite.on("pointerup", () => {
             if (this.currentSpeed > 0){
                 this.currentSpeed -= 1;
+                this.scrollSound.play();
                 this.updateText();
             }
         }, this)
@@ -87,6 +90,7 @@ class Pause extends Phaser.Scene {
         this.rightArrowSprite.on("pointerup", () => {
             if (this.currentSpeed < this.maxSpeed){
                 this.currentSpeed += 1;
+                this.scrollSound.play();
                 this.updateText();
             }
         }, this)
@@ -239,6 +243,7 @@ class Pause extends Phaser.Scene {
             let action = {target: this.currentTar, ability: this.selection, speed: this.currentSpeed}
             scene.receiveAction(action, this.charNum);
         }
+        this.backSound.play();
         this.scene.stop();
     }
 
@@ -273,8 +278,8 @@ class Pause extends Phaser.Scene {
             } else if (i == 3){
                 this.moveThreeFill.fillColor = 0xFF00FF;
             }
-            
         }
+        this.scrollSound.play();
     }
 
     // Update the text showing speed value
@@ -295,6 +300,7 @@ class Pause extends Phaser.Scene {
         } else if (this.selection == 2){
             this.moveThreeFill.fillColor = 0xFF00FF;
         }
+        this.selectSound.play();
     }
     
     createTextBoxAndSpeedTracker() {
@@ -353,5 +359,12 @@ class Pause extends Phaser.Scene {
         sprite.on("pointerout", () => {
             this.hoverText = "";
         });
+    }
+
+    initializeAudio(){
+        this.selectSound = this.sound.add("select");
+        this.backSound = this.sound.add("back");
+        this.forwardSound = this.sound.add("forward");
+        this.scrollSound = this.sound.add("scroll");
     }
 }

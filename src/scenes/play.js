@@ -215,6 +215,8 @@ class Play extends Phaser.Scene {
         this.input.keyboard.on("keydown-ESC", () => {
             this.printState();
         }, this);
+
+        this.initializeAudio();
     }
 
     update(){
@@ -259,6 +261,7 @@ class Play extends Phaser.Scene {
 
         if (this.endTurnButton != null){
             this.endTurnButton.destroy();
+            this.endTurnText.destroy();
         }
 
         // this is used in deleteRotateUI(). it contains every sprite created in this function
@@ -369,8 +372,8 @@ class Play extends Phaser.Scene {
             this.rotateUIArray[i].destroy();
         }
         // clears the text box
-        this.defaultText = "Click on your active party members in the pentagon to select moves and targets for them.";
-        this.defaultText += "Click \"DONE\" when you are done";
+        this.defaultText = "Click on your active party members in the pentagon to select moves and targets for them. ";
+        this.defaultText += "Click \"DONE\" when you are done selecting moves for each party member.";
         this.rotationPhase = false;
 
         this.endTurnButton = this.add.rectangle(700 + 75, 375, 74, 30, 0xcd42ed).setOrigin(0,0);
@@ -381,6 +384,7 @@ class Play extends Phaser.Scene {
         textConfig.padding = 0;
         textConfig.fontSize = "24px";
         this.endTurnText = this.add.text(702 + 75, 377, "DONE", textConfig);
+        this.selectSound.play();
     }
 
     endTurn(){
@@ -498,7 +502,7 @@ class Play extends Phaser.Scene {
             },
             onCompleteScope: this
         });
-        //this.pentagonContainer.angle = 72*(this.pentagonRotationState - 1);
+        this.scrollSound.play();
     }
 
     // it's late and i don't want to comment this. it's the same as the last function except with inversed numbers
@@ -538,6 +542,7 @@ class Play extends Phaser.Scene {
             },
             onCompleteScope: this
         });
+        this.scrollSound.play();
     }
 
     // This goes to the ability select screen. It needs the index of the acting character from PlayerUnits
@@ -764,5 +769,12 @@ class Play extends Phaser.Scene {
         if (this.statusLabel == "") this.statusLabel = "None";
 
         return this.statusLabel;
+    }
+
+    initializeAudio(){
+        this.selectSound = this.sound.add("select");
+        this.backSound = this.sound.add("back");
+        this.forwardSound = this.sound.add("forward");
+        this.scrollSound = this.sound.add("scroll");
     }
 }
