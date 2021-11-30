@@ -191,7 +191,7 @@ class Play extends Phaser.Scene {
         // Create the 3 enemies at fixed positions
         let enemyA = new Enemy(this, 1100, 240, 'circle', 0, "Phobos", "Strung Out", [wince, lash, flurry], 40);
         let enemyB = new Enemy(this, 1100, 480, 'circle', 0, "Mars", "Flinch", [rally, devastation, ruin], 80);
-        let enemyC = new Enemy(this, 1100, 360, 'circle', 0, "Deimos", "Distracted", [fortify, exhaust, raze], 40);
+        let enemyC = new Enemy(this, 1100, 360, 'circle', 0, "Deimos", "Distracted", [exhaust, raze, fortify], 40);
 
         enemyA.hoverText = "this is the first enemy";
 
@@ -415,9 +415,17 @@ class Play extends Phaser.Scene {
         let i = 0;
         while (i < this.enemyUnits.length){
             let enemy = this.enemyUnits[i];
-            let ability = Math.floor(Math.random() * 3);
+            let posAbil = 0;
+            for(let k=0;k<3;k++){
+                if(enemy.abilities[k].requirement(enemy, this.enemyUnits[1])){posAbil++;}
+                console.log(enemy.abilities[k].name+" is "+enemy.abilities[k].requirement(enemy, this.enemyUnits[1]));
+            }
+            let ability = Math.floor(Math.random() * posAbil);
             let targetNum = Math.floor(Math.random() * 3);
-            let target = this.playerUnits[targetNum];
+            let target;
+            if(!enemy.abilities[ability].allies){
+            target = this.playerUnits[targetNum];}
+            else{target = this.enemyUnits[targetNum];}
             let speed = Math.floor(Math.random() * 9);
             let action = {target: target, ability: ability, speed: speed};
 
