@@ -373,14 +373,14 @@ class Play extends Phaser.Scene {
         this.defaultText += "Click \"DONE\" when you are done";
         this.rotationPhase = false;
 
-        this.endTurnButton = this.add.rectangle(700, 375, 74, 30, 0xcd42ed).setOrigin(0,0);
+        this.endTurnButton = this.add.rectangle(700 + 75, 375, 74, 30, 0xcd42ed).setOrigin(0,0);
         this.endTurnButton.setInteractive({
             useHandCursor: true     // makes it appear clickable
         });
         this.endTurnButton.on("pointerup", this.endTurn, this);
-        textConfig.padding = 0,
+        textConfig.padding = 0;
         textConfig.fontSize = "24px";
-        this.endTurnText = this.add.text(702, 377, "DONE", textConfig);
+        this.endTurnText = this.add.text(702 + 75, 377, "DONE", textConfig);
     }
 
     endTurn(){
