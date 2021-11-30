@@ -419,7 +419,7 @@ class Play extends Phaser.Scene {
             for(let k=0;k<3;k++){
                 if(enemy.abilities[k].requirement(enemy, this.enemyUnits[1])){posAbil.push(k);}
             }
-            let ability = posAbility[Math.floor(Math.random() * posAbil.length)];
+            let ability = posAbil[Math.floor(Math.random() * posAbil.length)];
             let targetNum = Math.floor(Math.random() * 3);
             let target;
             if(ability.name == "Fortify")
