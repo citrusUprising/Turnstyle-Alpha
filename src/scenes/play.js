@@ -369,14 +369,18 @@ class Play extends Phaser.Scene {
             this.rotateUIArray[i].destroy();
         }
         // clears the text box
-        this.defaultText = "Press 1, 2, and 3 to select moves and targets for each of your active party.";
+        this.defaultText = "Click on your active party members in the pentagon to select moves and targets for them.";
+        this.defaultText += "Click \"DONE\" when you are done";
         this.rotationPhase = false;
 
-        this.endTurnButton = this.add.rectangle(640, 360, 60, 20, 0x69385C);
+        this.endTurnButton = this.add.rectangle(700, 375, 74, 30, 0xcd42ed).setOrigin(0,0);
         this.endTurnButton.setInteractive({
             useHandCursor: true     // makes it appear clickable
         });
-        this.endTurnButton.on("pointerup", this.endTurn, this)
+        this.endTurnButton.on("pointerup", this.endTurn, this);
+        textConfig.padding = 0,
+        textConfig.fontSize = "24px";
+        this.endTurnText = this.add.text(702, 377, "DONE", textConfig);
     }
 
     endTurn(){

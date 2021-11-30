@@ -120,6 +120,8 @@ class Pause extends Phaser.Scene {
         }).setOrigin(0, 0).on("pointerup", () => {
             this.selectMove(1);
         });
+        this.moveOneFill.hoverText = this.currentCharacter.abilities[0].text;
+        this.addHoverText(this.moveOneFill);
 
         this.moveOneStroke = graphics.lineStyle(6, 0x000000, 5).strokeRect(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
@@ -149,6 +151,10 @@ class Pause extends Phaser.Scene {
         }).setOrigin(0, 0).on("pointerup", () => {
             this.selectMove(2);
         });
+
+        this.moveTwoFill.hoverText = this.currentCharacter.abilities[1].text;
+        this.addHoverText(this.moveTwoFill);
+
         this.moveTwoStroke = graphics.lineStyle(6, 0x000000, 5).strokeRect(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
             this.leftArrowSprite.y + this.leftArrowSprite.height + this.spacing*2 + this.moveHeight, 
@@ -176,6 +182,9 @@ class Pause extends Phaser.Scene {
         }).setOrigin(0, 0).on("pointerup", () => {
             this.selectMove(3);
         });
+
+        this.moveThreeFill.hoverText = this.currentCharacter.abilities[2].text;
+        this.addHoverText(this.moveThreeFill);
 
         this.moveThreeStroke = graphics.lineStyle(6, 0x000000, 5).strokeRect(
             this.moveSelectFrameX + this.moveSelectFrameWidth/2 - this.moveWidth/2, 
@@ -209,9 +218,16 @@ class Pause extends Phaser.Scene {
         // create the text box and the speed tracker
         // this is nessicary because they need to exist in this scene so that we can edit them here
         this.createTextBoxAndSpeedTracker();
+
+        this.defaultText = "Click on a move and then click on a target. Press esc after selecting a move."
     }
 
     update() {
+        if (this.hoverText == "") {
+            this.textBoxText.text = this.defaultText;
+        } else {
+            this.textBoxText.text = this.hoverText;
+        }
     }
 
     // Submits a queued action back to playScene, shutting this down
@@ -326,5 +342,15 @@ class Pause extends Phaser.Scene {
             this.maxSpeed - this.currentSpeed,
             textConfig
         );
+    }
+
+    addHoverText(sprite) {
+        sprite.setInteractive();
+        sprite.on("pointerover", () => {
+            this.hoverText = sprite.hoverText;
+        });
+        sprite.on("pointerout", () => {
+            this.hoverText = "";
+        });
     }
 }

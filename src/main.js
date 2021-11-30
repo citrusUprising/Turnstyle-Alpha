@@ -44,7 +44,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  */
  let basicAttack = {};
  basicAttack.name = "BasicAttack";
- basicAttack.text = "Deal 3 damage";
+ basicAttack.text = "Deal 3 damage.";
  basicAttack.requirement = function(){return true};
  basicAttack.effect = function(target,self){
    target.takeDamage(self, 3)
@@ -58,7 +58,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  */
   let basicHeal = {};
   basicHeal.name = "BasicHeal";
-  basicHeal.text = "Heal 3 damage";
+  basicHeal.text = "Heal 3 damage.";
   basicHeal.requirement = function(){return true};
   basicHeal.effect = function(target){
     target.hp = Math.min(target.hp + 3, target.maxHP)
@@ -72,7 +72,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  */
    let groupAttack = {};
    groupAttack.name = "GroupAttack";
-   groupAttack.text = "Deal 1 damage to all enemies";
+   groupAttack.text = "Deal 1 damage to all enemies.";
    groupAttack.requirement = function(){return true};
    groupAttack.effect = function(target, self){
      target.takeDamage(self, 1)
@@ -86,7 +86,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  */
   let groupHeal = {};
   groupHeal.name = "Group Heal";
-  groupHeal.text = "Heal 1 Damage to all allies";
+  groupHeal.text = "Heal 1 Damage to all allies.";
   groupHeal.requirement = function(){return true};
   groupHeal.effect = function(target){
     target.hp = Math.min(target.hp + 1, target.maxHP)
@@ -100,7 +100,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  */
  let heavyAttack = {};
  heavyAttack.name = "heavyAttack";
- heavyAttack.text = "Deal 8 damage";
+ heavyAttack.text = "Deal 8 damage.";
  heavyAttack.requirement = function(){return true};
  heavyAttack.effect = function(target, self){
    target.takeDamage(self, 8)
@@ -114,7 +114,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  */
   let selfHeal = {};
   selfHeal.name = "selfHeal";
-  selfHeal.text = "Heal 5 damage";
+  selfHeal.text = "Heal 5 damage.";
   selfHeal.requirement = function(){return true};
   selfHeal.effect = function(target){
     target.hp = Math.min(target.hp + 5, target.maxHP)
@@ -130,7 +130,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  */
 let drone = {};
 drone.name = "Drone";
-drone.text = "Give ally Regeneration 3";
+drone.text = "Give ally Regeneration 3.";
 drone.requiremnet = function(){return true};
 drone.effect = function(target){
   target.applyStatus("Regen", 3)
@@ -144,7 +144,7 @@ drone.selftarget = false;
  */
  let flareGun = {};
  flareGun.name = "Flare Gun";
- flareGun.text = "Hit enemy for 1 damage and 50% chance to inflict Burn";
+ flareGun.text = "Hit enemy for 1 damage and 50% chance to inflict Burn.";
  flareGun.requiremnet = function(){return true};
  flareGun.effect = function(target, self){
    target.takeDamage(self, 1);
@@ -159,7 +159,7 @@ drone.selftarget = false;
  */
 let cure = {};
 cure.name = "Cure";
-cure.text = "Remove Ally Debuffs";
+cure.text = "Remove Ally Debuffs.";
 cure.requiremnet = function(){return true};
 cure.effect = function(target){
   if(target.statuses.debuff.status != "None"){
@@ -178,7 +178,7 @@ cure.selftarget = false;
  */
 let assault = {};
 assault.name = "Assault";
-assault.text = "Hit enemy for damage based off your speed";
+assault.text = "Hit enemy for damage based off your speed.";
 assault.requiremnet = function(){return true};
 assault.effect = function(target, self){
   target.takeDamage(self, 3 + Math.ceil(self.queuedAction.speed/2))
@@ -192,7 +192,7 @@ assault.selftarget = false;
  */
 let feint = {};
 feint.name = "Feint";
-feint.text = "Flinch an enemy";
+feint.text = "Flinch an enemy.";
 feint.requiremnet = function(){return true};
 feint.effect = function(target){
   target.applyStatus("Flinch", 1)
@@ -206,7 +206,7 @@ feint.selftarget = false;
  */
 let enhance = {};
 enhance.name = "Enhance";
-enhance.text = "Give self Haste 3 for 3 turns";
+enhance.text = "Give self Haste 3 for 3 turns.";
 enhance.requiremnet = function(){return true};
 enhance.effect = function(target){
   target.applyStatus("Haste", 3, 3)
@@ -220,7 +220,7 @@ enhance.selftarget = true;
  */
 let swipe = {};
 swipe.name = "Swipe ";
-swipe.text = "Hit all enemies for 2 damage";
+swipe.text = "Hit all enemies for 2 damage.";
 swipe.requiremnet = function(){return true};
 swipe.effect = function(target, self){
   target.takeDamage(self, 2);
@@ -234,7 +234,7 @@ swipe.selftarget = false;
  */
 let bulwark = {};
 bulwark.name = "Bulwark";
-bulwark.text = "Give all allies Aegis 1";
+bulwark.text = "Give all allies Aegis 1.";
 bulwark.requiremnet = function(){return true};
 bulwark.effect = function(target){
   target.applyStatus("Aegis", 1)
@@ -248,7 +248,7 @@ bulwark.selftarget = false;
  */
 let bullrush = {};
 bullrush.name = "Bullrush";
-bullrush.text = "Deal 8 damage to a target and 4 damage to self";
+bullrush.text = "Deal 8 damage to a target and 4 damage to self.";
 bullrush.requiremnet = function(){return true};
 bullrush.effect = function(target, self){
   target.takeDamage(self, 8)
@@ -263,7 +263,7 @@ bullrush.selftarget = false;
  */
 let soothe = {};
 soothe.name = "Soothe";
-soothe.text = "Heal ally for 6 damage";
+soothe.text = "Heal ally for 6 damage.";
 soothe.requiremnet = function(){return true};
 soothe.effect = function(target){
   target.healSelf(6);
@@ -277,7 +277,7 @@ soothe.selftarget = false;
  */
 let invigorate = {};
 invigorate.name = "Invigorate";
-invigorate.text = "Give ally Enrage 1";
+invigorate.text = "Give ally Enrage 1.";
 invigorate.requiremnet = function(){return true};
 invigorate.effect = function(target){
   target.applyStatus("Enrage", 1)
@@ -291,7 +291,7 @@ invigorate.selftarget = false;
  */
 let panicAttack = {};
 panicAttack.name = "Panic Attack";
-panicAttack.text = "Deal 2 damage to targeted enemy and inflict Strung Out 1";
+panicAttack.text = "Deal 2 damage to targeted enemy and inflict Strung Out 1.";
 panicAttack.requiremnet = function(){return true};
 panicAttack.effect = function(target, self){
   target.takeDamage(self, 2)
@@ -306,7 +306,7 @@ panicAttack.selftarget = false;
  */
 let shoot = {};
 shoot.name = "Shoot";
-shoot.text = "Deal 10 damage. If you have more than 1 fatigue, 30% accuracy";
+shoot.text = "Deal 10 damage. If you have more than 1 fatigue, 30% accuracy.";
 shoot.requiremnet = function(){return true};
 shoot.effect = function(target, self){
   if(self.fatigue <= 1 || Math.random() <= 0.3){
@@ -322,7 +322,7 @@ shoot.selftarget = false;
  */
 let flashBang = {};
 flashBang.name = "Flash Bang";
-flashBang.text = "Targets all enemies, 50% chance to Flinch";
+flashBang.text = "Targets all enemies, 50% chance to Flinch.";
 flashBang.requiremnet = function(){return true};
 flashBang.effect = function(target){
   if(Math.random() <= 0.5)
@@ -337,7 +337,7 @@ flashBang.selftarget = false;
  */
 let pinpoint = {};
 pinpoint.name = "Pinpoint";
-pinpoint.text = "Afflicts one targeted enemy with Distracted 2";
+pinpoint.text = "Afflicts one targeted enemy with Distracted 2.";
 pinpoint.requiremnet = function(){return true};
 pinpoint.effect = function(pinpoint){
   target.applyStatus("Distracted", 2)
@@ -351,7 +351,7 @@ pinpoint.selftarget = false;
  */
 let rally = {};
 rally.name = "Rally";
-rally.text = "Grants Random effect (Enrage 1, Aegis 1, Haste 2,2)to all allies including self";
+rally.text = "Grants Random effect (Enrage 1, Aegis 1, Haste 2,2)to all allies including self.";
 rally.requiremnet = function(){return true};
 rally.effect = function(rally){
   let rng = Math.random();
@@ -368,7 +368,7 @@ rally.selftarget = false;
  */
 let devastation = {};
 devastation.name = "Devastation";
-devastation.text = "Deal 5 damage to all active enemies";
+devastation.text = "Deal 5 damage to all active enemies.";
 devastation.requiremnet = function(){
   if(self.enemyArray[0].hp <=0 && self.enemyArray[2].hp <=0){
     return true
@@ -386,7 +386,7 @@ devastation.selftarget = false;
  */
 let ruin = {};
 ruin.name = "Ruin";
-ruin.text = "Deal 10 damage to targeted enemy";
+ruin.text = "Deal 10 damage to targeted enemy.";
 ruin.requiremnet = function(){
   if(self.enemyArray[0].hp <=0 && self.enemyArray[2].hp <=0){
     return true
@@ -404,7 +404,7 @@ ruin.selftarget = false;
  */
 let wince = {};
 wince.name = "Wince";
-wince.text = "Hit Targeted enemy for 2 damage, inflict Flinch";
+wince.text = "Hit Targeted enemy for 2 damage, inflict Flinch.";
 wince.requiremnet = function(){return true};
 wince.effect = function(wince){
   target.takeDamage(self, 2);
@@ -434,7 +434,7 @@ lash.selftarget = false;
  */
 let flurry = {};
 flurry.name = "Flurry";
-flurry.text = "50% chance to hit all enemies for 6 damage";
+flurry.text = "50% chance to hit all enemies for 6 damage.";
 flurry.requiremnet = function(){return true};
 flurry.effect = function(flurry){
   if(Math.random()>0.5){target.takeDamage(self, 6);}
@@ -449,7 +449,7 @@ flurry.selftarget = false;
  */
 let fortify = {};
 fortify.name = "Fortify";
-fortify.text = "deal 10 damage to self and heal ally for 10 damage";
+fortify.text = "deal 10 damage to self and heal ally for 10 damage.";
 fortify.requiremnet = function(){
   if(target.hp <= target.maxHP - 10 && target.hp > 0){
   return true
@@ -469,7 +469,7 @@ fortify.selftarget = false;
  */
 let exhaust = {};
 exhaust.name = "Exhaust";
-exhaust.text = "Hit targeted enemy for 2 damage and inflict Encumbered";
+exhaust.text = "Hit targeted enemy for 2 damage and inflict Encumbered.";
 exhaust.requiremnet = function(){return true};
 exhaust.effect = function(exhaust){
   target.takeDamage(self, 2);
@@ -484,7 +484,7 @@ exhaust.selftarget = false;
  */
 let raze = {};
 raze.name = "Raze";
-raze.text = "Hit all enemies for 1 damage and 50% chance to inflict Burn 5";
+raze.text = "Hit all enemies for 1 damage and 50% chance to inflict Burn 5.";
 raze.requiremnet = function(){return true};
 raze.effect = function(raze){
   target.takeDamage(self, 1);
