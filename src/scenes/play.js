@@ -418,7 +418,6 @@ class Play extends Phaser.Scene {
             let posAbil = 0;
             for(let k=0;k<3;k++){
                 if(enemy.abilities[k].requirement(enemy, this.enemyUnits[1])){posAbil++;}
-                console.log(enemy.abilities[k].name+" is "+enemy.abilities[k].requirement(enemy, this.enemyUnits[1]));
             }
             let ability = Math.floor(Math.random() * posAbil);
             let targetNum = Math.floor(Math.random() * 3);
