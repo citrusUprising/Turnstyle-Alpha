@@ -709,38 +709,38 @@ class Play extends Phaser.Scene {
         this.circleSprite.hoverText = this.circleHoverText;
 
 
-        this.triangleHoverText = "Bounty Hunter\nHP:" + this.totalUnits[1].hp + "/" + this.totalUnits[1].maxHP;
+        this.triangleHoverText = "Bounty Hunter\nHP:" + this.totalUnits[3].hp + "/" + this.totalUnits[3].maxHP;
 
-        this.triangleHoverText += "\nFatigue: " + this.totalUnits[1].fatigue;
+        this.triangleHoverText += "\nFatigue: " + this.totalUnits[3].fatigue;
         
-        this.triangleHoverText += "\nStatuses: " + this.generateStatusHoverText(1);
+        this.triangleHoverText += "\nStatuses: " + this.generateStatusHoverText(3);
 
         this.triangleSprite.hoverText = this.triangleHoverText;
 
 
-        this.squareHoverText = "Juggernaut\nHP:" + this.totalUnits[2].hp + "/" + this.totalUnits[2].maxHP;
+        this.squareHoverText = "Juggernaut\nHP:" + this.totalUnits[4].hp + "/" + this.totalUnits[4].maxHP;
 
-        this.squareHoverText += "\nFatigue: " + this.totalUnits[0].fatigue;
+        this.squareHoverText += "\nFatigue: " + this.totalUnits[4].fatigue;
         
-        this.squareHoverText += "\nStatuses: " + this.generateStatusHoverText(2);
+        this.squareHoverText += "\nStatuses: " + this.generateStatusHoverText(4);
 
         this.squareSprite.hoverText = this.squareHoverText;
 
 
-        this.hexagonHoverText = "Telepath\nHP:" + this.totalUnits[3].hp + "/" + this.totalUnits[3].maxHP;
+        this.hexagonHoverText = "Telepath\nHP:" + this.totalUnits[2].hp + "/" + this.totalUnits[2].maxHP;
 
-        this.hexagonHoverText += "\nFatigue: " + this.totalUnits[3].fatigue;
+        this.hexagonHoverText += "\nFatigue: " + this.totalUnits[2].fatigue;
         
-        this.hexagonHoverText += "\nStatuses: " + this.generateStatusHoverText(3);
+        this.hexagonHoverText += "\nStatuses: " + this.generateStatusHoverText(2);
 
         this.hexagonSprite.hoverText = this.hexagonHoverText;
 
 
-        this.starHoverText = "Sniper\nHP:" + this.totalUnits[4].hp + "/" + this.totalUnits[4].maxHP;
+        this.starHoverText = "Sniper\nHP:" + this.totalUnits[1].hp + "/" + this.totalUnits[1].maxHP;
 
-        this.starHoverText += "\nFatigue: " + this.totalUnits[4].fatigue;
+        this.starHoverText += "\nFatigue: " + this.totalUnits[1].fatigue;
         
-        this.starHoverText += "\nStatuses: " + this.generateStatusHoverText(4);
+        this.starHoverText += "\nStatuses: " + this.generateStatusHoverText(1);
 
         this.starSprite.hoverText = this.starHoverText;
     }
