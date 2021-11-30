@@ -117,20 +117,22 @@ class Play extends Phaser.Scene {
             let player = this.totalUnits[j];
             let z = j;
             player.on('pointerup', () => {
-                if (this.targeting){
-                    this.receiveTarget(player);
-                } else {
-                    if (!this.rotationPhase){
-                        let index = (z + (this.pentagonRotationState - 1)) % 5;
-                        // Currently! This never happens becaus the player is never set interactive outside of the targeting phase.
-                        // To make that work, we'd need carefully set/remove interactive so players are
-                            // Interactive during: Targeting Allies & Ability picking
-                            // Non-interactive during: rotation & targeting enemies
-                        if (index < 3){
-                            this.pause(index);
+                if (!player.dead){
+                    if (this.targeting){
+                        this.receiveTarget(player);
+                    } else {
+                        if (!this.rotationPhase){
+                            let index = (z + (this.pentagonRotationState - 1)) % 5;
+                            // Currently! This never happens becaus the player is never set interactive outside of the targeting phase.
+                            // To make that work, we'd need carefully set/remove interactive so players are
+                                // Interactive during: Targeting Allies & Ability picking
+                                // Non-interactive during: rotation & targeting enemies
+                            if (index < 3){
+                                this.pause(index);
+                            }
                         }
                     }
-                }
+                }   
             })
             j++;
         }
@@ -196,12 +198,20 @@ class Play extends Phaser.Scene {
         this.addHoverText(enemyA);
 
         // Give each enemy an onclick behavior that returns them as a target
+        j = 0;
         this.enemyUnits = [enemyA, enemyB, enemyC];
-        this.enemyUnits.forEach((enemy) => {
+        while (j < this.enemyUnits.length){
+            let enemy = this.enemyUnits[j];
+            enemy.setInteractive();
             enemy.on('pointerup', () => {
-                this.receiveTarget(enemy);
-            }, this);
-        });
+                if (this.targeting && !enemy.dead){
+                    this.receiveTarget(enemy);
+                }
+            }, this)
+            j++;
+        }
+        
+        
       
 
         // this is a place holder for a state machine for each part of the game.
@@ -217,6 +227,9 @@ class Play extends Phaser.Scene {
         }, this);
 
         this.initializeAudio();
+        /* this.input.keyboard.on("keydown-SPACE", () => {
+            console.log(this.targeting);
+        }, this); */
     }
 
     update(){
@@ -238,21 +251,6 @@ class Play extends Phaser.Scene {
             this.actionQ[i].act();
             this.actionQ.shift();
         }
-
-        for(i=0 ; i <3 ; i++){
-            console.log(this.playerUnits[i].name+": "+this.playerUnits[i].hp);
-        }
-        for(i=0 ; i <3 ; i++){
-            console.log(this.enemyUnits[i].name+": "+this.enemyUnits[i].hp)
-            
-            if(this.enemyUnits[i].statuses.health.status != "None")
-            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.health.status);}
-            if(this.enemyUnits[i].statuses.buff.status != "None")
-            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.buff.status);}
-            if(this.enemyUnits[i].statuses.debuff.status != "None")
-            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.debuff.status);}
-        }
-
     }
 
     // Creates the UI that rotates & sets this.RotationPhase = true
@@ -399,6 +397,7 @@ class Play extends Phaser.Scene {
     }
     
     startTurn(){
+        this.queueEnemyActs();
         this.playerUnits.forEach((player) => {
             player.turnStart();
             player.makeActive();
@@ -408,6 +407,38 @@ class Play extends Phaser.Scene {
             player.stopActive();
         }) 
         this.speedBudget = this.speedPerTurn;
+    }
+
+    queueEnemyActs(){
+        let i = 0;
+        while (i < this.enemyUnits.length){
+            let enemy = this.enemyUnits[i];
+            let ability = Math.floor(Math.random() * 3);
+            let targetNum = Math.floor(Math.random() * 3);
+            let target = this.playerUnits[targetNum];
+            let speed = Math.floor(Math.random() * 9);
+            let action = {target: target, ability: ability, speed: speed};
+
+            let j = 0;
+            let correctPos = -1;
+    
+            while (j < this.actionQ.length){
+                let compareTo = this.actionQ[j];
+                if (compareTo.queuedAction.speed + compareTo.fatigue < action.speed){
+                    correctPos = j;
+                    j = this.actionQ.length;
+                }
+                i++;
+            }
+            if (correctPos == -1){
+                correctPos = this.actionQ.length;
+            }
+            this.actionQ.splice(correctPos, 0, enemy);
+            enemy.queuedAction = action;
+
+            i++;
+
+        }
     }
 
     createTextBoxAndSpeedTracker() {
@@ -580,14 +611,13 @@ class Play extends Phaser.Scene {
     target(tarEnemy = true) {
         this.targeting = true;
         if (tarEnemy){
-            this.enemyUnits.forEach((enemy) => {
-                enemy.setInteractive();
-            });
+            //console.log("Players aren't interactive");
             this.playerUnits.forEach((player) => {
                 player.removeInteractive();
             });
         }
         else {
+            //console.log("Players are interactive");
             this.playerUnits.forEach((player) => {
                 player.setInteractive();
             });
@@ -599,9 +629,7 @@ class Play extends Phaser.Scene {
     // Freezes this scene again
     receiveTarget(tar) {
         this.targeting = false;
-        this.enemyUnits.forEach((enemy) => {
-            enemy.removeInteractive();
-        })
+        //console.log("Players are interactive");
         this.playerUnits.forEach((player) => {
             player.setInteractive();
         });
@@ -609,8 +637,8 @@ class Play extends Phaser.Scene {
         //tar.setScale(2);
 
         this.scene.resume("pauseScene");
-        let scene = this.scene.get("pauseScene")
-        scene.receiveTarget(tar);
+        let myScene = this.scene.get("pauseScene")
+        myScene.receiveTarget(tar);
         this.scene.pause();
     }
 
@@ -644,7 +672,7 @@ class Play extends Phaser.Scene {
         // Boolean representing if this action is a revision of a previously queued action
         let revisedAct = (char.queuedAction.ability != null);
 
-        // If it is a reevision
+        // If it is a revision
         if (revisedAct){
             //console.log("Revising an action");
             // Remove the original from the actionQ
@@ -689,6 +717,12 @@ class Play extends Phaser.Scene {
         i = 0;
         while (i < this.enemyUnits.length){
             console.log(this.enemyUnits[i].name + ": " + this.enemyUnits[i].hp);
+            if(this.enemyUnits[i].statuses.health.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.health.status);}
+            if(this.enemyUnits[i].statuses.buff.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.buff.status);}
+            if(this.enemyUnits[i].statuses.debuff.status != "None")
+            {console.log(this.enemyUnits[i].name+" is "+this.enemyUnits[i].statuses.debuff.status);}
             i++;
         }
     }
@@ -716,38 +750,38 @@ class Play extends Phaser.Scene {
         this.circleSprite.hoverText = this.circleHoverText;
 
 
-        this.triangleHoverText = "Bounty Hunter\nHP:" + this.totalUnits[1].hp + "/" + this.totalUnits[1].maxHP;
+        this.triangleHoverText = "Bounty Hunter\nHP:" + this.totalUnits[3].hp + "/" + this.totalUnits[3].maxHP;
 
-        this.triangleHoverText += "\nFatigue: " + this.totalUnits[1].fatigue;
+        this.triangleHoverText += "\nFatigue: " + this.totalUnits[3].fatigue;
         
-        this.triangleHoverText += "\nStatuses: " + this.generateStatusHoverText(1);
+        this.triangleHoverText += "\nStatuses: " + this.generateStatusHoverText(3);
 
         this.triangleSprite.hoverText = this.triangleHoverText;
 
 
-        this.squareHoverText = "Juggernaut\nHP:" + this.totalUnits[2].hp + "/" + this.totalUnits[2].maxHP;
+        this.squareHoverText = "Juggernaut\nHP:" + this.totalUnits[4].hp + "/" + this.totalUnits[4].maxHP;
 
-        this.squareHoverText += "\nFatigue: " + this.totalUnits[0].fatigue;
+        this.squareHoverText += "\nFatigue: " + this.totalUnits[4].fatigue;
         
-        this.squareHoverText += "\nStatuses: " + this.generateStatusHoverText(2);
+        this.squareHoverText += "\nStatuses: " + this.generateStatusHoverText(4);
 
         this.squareSprite.hoverText = this.squareHoverText;
 
 
-        this.hexagonHoverText = "Telepath\nHP:" + this.totalUnits[3].hp + "/" + this.totalUnits[3].maxHP;
+        this.hexagonHoverText = "Telepath\nHP:" + this.totalUnits[2].hp + "/" + this.totalUnits[2].maxHP;
 
-        this.hexagonHoverText += "\nFatigue: " + this.totalUnits[3].fatigue;
+        this.hexagonHoverText += "\nFatigue: " + this.totalUnits[2].fatigue;
         
-        this.hexagonHoverText += "\nStatuses: " + this.generateStatusHoverText(3);
+        this.hexagonHoverText += "\nStatuses: " + this.generateStatusHoverText(2);
 
         this.hexagonSprite.hoverText = this.hexagonHoverText;
 
 
-        this.starHoverText = "Sniper\nHP:" + this.totalUnits[4].hp + "/" + this.totalUnits[4].maxHP;
+        this.starHoverText = "Sniper\nHP:" + this.totalUnits[1].hp + "/" + this.totalUnits[1].maxHP;
 
-        this.starHoverText += "\nFatigue: " + this.totalUnits[4].fatigue;
+        this.starHoverText += "\nFatigue: " + this.totalUnits[1].fatigue;
         
-        this.starHoverText += "\nStatuses: " + this.generateStatusHoverText(4);
+        this.starHoverText += "\nStatuses: " + this.generateStatusHoverText(1);
 
         this.starSprite.hoverText = this.starHoverText;
     }
