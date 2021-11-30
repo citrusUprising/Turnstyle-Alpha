@@ -529,7 +529,7 @@ class Play extends Phaser.Scene {
                 this.playerUnits.unshift(B);
                 this.playerUnitsBench.unshift(A);
                 // Redraw with new order
-                this.arrangePlayers();
+                // this.arrangePlayers();
                 //console.log("Should be able to rotate again");
             },
             onCompleteScope: this
