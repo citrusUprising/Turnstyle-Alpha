@@ -416,6 +416,7 @@ class Play extends Phaser.Scene {
                     if(i + index < 0)
                         continue
                     potentialOutputText += outputQueue[index + i] + "\n"
+                    console.log(outputQueue[i + index])
                 }
                 this.time.delayedCall({
                     delay: 1000 * index,
