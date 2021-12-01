@@ -419,7 +419,7 @@ class Play extends Phaser.Scene {
                     potentialOutputText += outputQueue[index + i] + "\n"
                 }
                 this.time.delayedCall({
-                    delay: 1000 * index,
+                    delay: 10* index,
                     callback: (outTextLines) => {this.textBoxText.text = outTextLines},
                     args: [potentialOutputText],
                     scope: this
