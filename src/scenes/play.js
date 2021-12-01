@@ -137,6 +137,7 @@ class Play extends Phaser.Scene {
             j++;
         }
 
+
         // This positions the player sprites in a vertical line, top->bottom matching clockwise order
         // this.arrangePlayers();
 
@@ -235,12 +236,14 @@ class Play extends Phaser.Scene {
     update(){
 
         this.updateHoverText();
-
-        if (this.hoverText == "") {
-            this.textBoxText.text = this.defaultText;
-        } else {
-            this.textBoxText.text = this.hoverText;
+        if( outputQueue.length == 0){
+            if (this.hoverText == "") {
+                this.textBoxText.text = this.defaultText;
+            } else {
+                this.textBoxText.text = this.hoverText;
+            }
         }
+        
         
     }
 
@@ -407,26 +410,22 @@ class Play extends Phaser.Scene {
             });
             //Output everything to the text box
             this.textBoxText.text = ""
-            console.log(outputQueue)
             outputQueue.forEach((text, index) => {
                 //Going to make a lot of timed delay events
                 let potentialOutputText = ""
                 //We want to show up to 4 lines at once
                 for(let i = -4; i < 1; i++){
-                    console.log(i + index)
                     if(i + index < 0)
                         continue
                     potentialOutputText += outputQueue[index + i] + "\n"
                 }
-                console.log(potentialOutputText)
                 this.time.delayedCall(
                     1000* index,
-                    (outTextLines) => {this.textBoxText.text = outTextLines},
-                    [potentialOutputText],
-                    this
+                    (outTextLines) => {this.textBoxText.text = outTextLines
+                                        outputQueue.pop()},
+                    [potentialOutputText]
                 )
             })
-            outputQueue = []
         }
     }
     
