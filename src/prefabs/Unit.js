@@ -90,7 +90,7 @@ class Unit extends Phaser.GameObjects.Sprite{
         if (this.hp == 0 && !this.dead){
             this.dead = true;
             this.setTint(0x000000);
-            outputQueue.append(this.name + " died!")
+            outputQueue.push(this.name + " died!")
         }
         for(let indvStatus in this.statuses){
             if(this.statuses[indvStatus].duration > 0){
@@ -140,16 +140,16 @@ class Unit extends Phaser.GameObjects.Sprite{
             amount = Math.ceil(amount/2)
         if(this.name == "Medic" && this.queuedAction.speed >= 5 && Math.random() > 0.5){
             console.log(this.name+" dodged the attack")
-            outputQueue.append(this.name+" dodged the attack")
+            outputQueue.push(this.name+" dodged the attack")
             return}
         if(source.name == "Bounty Hunter" && source.queuedAction.target == source.priorTarget)
             amount = Math.ceil(amount * 1.5)
         this.hp = Math.max(this.hp - amount, 0)
-        outputQueue.append(this.name + " took " + amount + " damage.")
+        outputQueue.push(this.name + " took " + amount + " damage.")
         if (this.hp == 0 && !this.dead){
             this.dead = true;
             this.setTint(0x000000);
-            outputQueue.append(this.name + " died!")
+            outputQueue.push(this.name + " died!")
         }
     }
 
@@ -171,7 +171,7 @@ class Unit extends Phaser.GameObjects.Sprite{
             this.statuses[statusCategory].duration = duration
             this.statuses[statusCategory].magnitude = magnitude
             console.log (this.name+" has "+newStatus)
-            outputQueue.append(this.name+" has "+newStatus)
+            outputQueue.push(this.name+" has "+newStatus)
         }
     }
 
