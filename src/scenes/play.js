@@ -408,6 +408,7 @@ class Play extends Phaser.Scene {
             //Output everything to the text box
             this.textBoxText.text = ""
             outputQueue.forEach((text, index) => {
+                console.log("looping")
                 //Going to make a lot of timed delay events
                 let potentialOutputText = ""
                 //We want to show up to 4 lines at once
@@ -423,6 +424,7 @@ class Play extends Phaser.Scene {
                     scope: this
                 })
             })
+            outputQueue = []
         }
     }
     
