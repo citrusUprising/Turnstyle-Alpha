@@ -33,6 +33,9 @@ let keyUP, keyDOWN, keyLEFT, keyRIGHT, keySPACE, keyESC;
 let key0, key1, key2, key3, key4, key5, key6, key7, key8, key9;
 let textConfig;
 
+//All between-turns feedback here
+let outputQueue = []
+
 /*
 
 BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
@@ -134,6 +137,7 @@ drone.text = "Give ally Regeneration 3.";
 drone.requirement = function(caster, castee){return true};
 drone.effect = function(target,self){
   console.log(self.name+" used "+drone.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+drone.name+" on "+target.name)
   target.applyStatus("Regen", 3)
 };
 drone.multitarget = false;
@@ -149,6 +153,7 @@ drone.selftarget = false;
  flareGun.requirement = function(caster, castee){return true};
  flareGun.effect = function(target, self){
   console.log(self.name+" used "+flareGun.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+flareGun.name+" on "+target.name);
   target.takeDamage(self, 1);
   if(Math.random() >= 0.5) target.applyStatus("Burn", 3)
  };
@@ -165,12 +170,15 @@ cure.text = "Remove Ally Debuffs.";
 cure.requirement = function(caster, castee){return true};
 cure.effect = function(target,self){
   console.log(self.name+" used "+cure.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+cure.name+" on "+target.name);
   if(target.statuses.debuff.status != "None"){
     console.log(target.name+" was cured of "+target.statuses.debuff.status);
+    outputQueue.append(target.name+" was cured of "+target.statuses.debuff.status);
     target.statuses.debuff.status = "None";
   }
   if(target.statuses.health.status == "Burn"){
     console.log(target.name+" was cured of "+target.statuses.health.status);
+    outputQueue.append(target.name+" was cured of "+target.statuses.health.status);
     target.statuses.health.status = "None";
   }
 };
@@ -187,6 +195,7 @@ assault.text = "Hit enemy for damage based off your speed.";
 assault.requirement = function(caster, castee){return true};
 assault.effect = function(target, self){
   console.log(self.name+" used "+assault.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+assault.name+" on "+target.name);
   target.takeDamage(self, 3 + Math.ceil(self.queuedAction.speed/2))
 };
 assault.multitarget = false;
@@ -202,6 +211,7 @@ feint.text = "Flinch an enemy.";
 feint.requirement = function(caster, castee){return true};
 feint.effect = function(target,self){
   console.log(self.name+" used "+feint.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+feint.name+" on "+target.name);
   target.applyStatus("Flinch", 1)
 };
 feint.multitarget = false;
@@ -217,6 +227,7 @@ enhance.text = "Give self Haste 3 for 3 turns.";
 enhance.requirement = function(caster, castee){return true};
 enhance.effect = function(target,self){
   console.log(self.name+" used "+enhance.name+" on themself");
+  outputQueue.append(self.name+" used "+enhance.name+" on themself");
   self.applyStatus("Haste", 3, 3)
 };
 enhance.multitarget = true;
@@ -233,6 +244,7 @@ swipe.requirement = function(caster, castee){return true};
 swipe.effect = function(target, self){
   target.takeDamage(self, 2);
   console.log(self.name+" used "+swipe.name+" on enemy team");
+  outputQueue.append(self.name+" used "+swipe.name+" on enemy team");
 };
 swipe.multitarget = true;
 swipe.allies = false;
@@ -247,6 +259,7 @@ bulwark.text = "Give all allies Aegis 1.";
 bulwark.requirement = function(caster, castee){return true};
 bulwark.effect = function(target,self){
   console.log(self.name+" used "+bulwark.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+bulwark.name+" on "+target.name);
   target.applyStatus("Aegis", 1)
 };
 bulwark.multitarget = true;
@@ -262,6 +275,7 @@ bullrush.text = "Deal 8 damage to a target and 4 damage to self.";
 bullrush.requirement = function(caster, castee){return true};
 bullrush.effect = function(target, self){
   console.log(self.name+" used "+bullrush.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+bullrush.name+" on "+target.name);
   target.takeDamage(self, 8)
   self.hp = Math.min(self.hp-4., self.maxHP)
 };
@@ -278,6 +292,7 @@ soothe.text = "Heal ally for 6 damage.";
 soothe.requirement = function(caster, castee){return true};
 soothe.effect = function(target,self){
   console.log(self.name+" used "+soothe.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+soothe.name+" on "+target.name);
   target.healSelf(6);
 };
 soothe.multitarget = false;
@@ -293,6 +308,7 @@ invigorate.text = "Give ally Enrage 1.";
 invigorate.requirement = function(caster, castee){return true};
 invigorate.effect = function(target,self){
   console.log(self.name+" used "+invigorate.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+invigorate.name+" on "+target.name);
   target.applyStatus("Enrage", 1)
 };
 invigorate.multitarget = false;
@@ -308,6 +324,7 @@ panicAttack.text = "Deal 2 damage to targeted enemy and inflict Strung Out 1.";
 panicAttack.requirement = function(caster, castee){return true};
 panicAttack.effect = function(target, self){
   console.log(self.name+" used "+panicAttack.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+panicAttack.name+" on "+target.name);
   target.takeDamage(self, 2)
   target.applyStatus("StrungOut", 1)
 };
@@ -324,10 +341,13 @@ shoot.text = "Deal 10 damage. If you have more than 1 fatigue, 30% accuracy.";
 shoot.requirement = function(caster, castee){return true};
 shoot.effect = function(target, self){
   console.log(self.name+" shot at "+target.name);
+  outputQueue.append(self.name+" shot at "+target.name);
   if(self.fatigue <= 1 || Math.random() <= 0.3){
     console.log(target.name+" was hit")
+    outputQueue.append(target.name+" was hit")
     target.takeDamage(self, 10);}
-  else{console.log(self.name+" missed");}  
+  else{console.log(self.name+" missed");
+    outputQueue.append(self.name+" missed")}  
 };
 shoot.multitarget = false;
 shoot.allies = false;
@@ -343,8 +363,10 @@ flashBang.requirement = function(caster, castee){return true};
 flashBang.effect = function(target,self){
   if(Math.random() <= 0.5){
     console.log(self.name+" hit "+target.name+" with "+flashBang.name);
+    outputQueue.append(self.name+" hit "+target.name+" with "+flashBang.name);
     target.applyStatus("Flinch", 1)
-  }else{console.log(target.name+" avoided the "+flashBang.name);}
+  }else{console.log(target.name+" avoided the "+flashBang.name)
+    outputQueue.append(target.name+" avoided the "+flashBang.name);}
 };
 flashBang.multitarget = true;
 flashBang.allies = false;
@@ -359,6 +381,7 @@ pinpoint.text = "Afflicts one targeted enemy with Distracted 2.";
 pinpoint.requirement = function(caster, castee){return true};
 pinpoint.effect = function(target,self){
   console.log(self.name+" used "+pinpoint.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+pinpoint.name+" on "+target.name);
   target.applyStatus("Distracted", 2)
 };
 pinpoint.multitarget = false;
@@ -376,14 +399,17 @@ rally.effect = function(target,self){
   let rng = Math.random();
   if(rng <= 0.33){
     console.log(self.name+"'s "+rally.name+" gave "+target.name+" Aegis 1");
+    outputQueue.append(self.name+"'s "+rally.name+" gave "+target.name+" Aegis 1");
     target.applyStatus("Aegis", 1);
   }
   else if(rng <= 0.66){
     console.log(self.name+"'s "+rally.name+" gave "+target.name+" Enrage 1");
+    outputQueue.append(self.name+"'s "+rally.name+" gave "+target.name+" Enrage 1");
     target.applyStatus("Enrage", 1);
   }
   else {
     console.log(self.name+"'s "+rally.name+" gave "+target.name+" Haste 2,2");
+    outputQueue.append(self.name+"'s "+rally.name+" gave "+target.name+" Haste 2,2");
     target.applyStatus("Haste",2,2);
   }
 };
@@ -404,6 +430,7 @@ devastation.requirement = function(caster, castee){
 };
 devastation.effect = function(target,self){
   console.log(self.name+"'s "+devastation.name+" hit "+target.name);
+  outputQueue.append(self.name+"'s "+devastation.name+" hit "+target.name);
   target.takeDamage(self, 5);
 };
 devastation.multitarget = true;
@@ -424,6 +451,7 @@ ruin.requirement = function(caster, castee){
 ruin.effect = function(target,self){
   target.takeDamage(self, 10);
   console.log(self.name+" used "+ruin.name+" on "+target.name);
+  outputQueue.append.log(self.name+" used "+ruin.name+" on "+target.name);
 };
 ruin.multitarget = false;
 ruin.allies = false;
@@ -438,6 +466,7 @@ wince.text = "Hit Targeted enemy for 2 damage, inflict Flinch.";
 wince.requirement = function(caster, castee){return true};
 wince.effect = function(target,self){
   console.log(self.name+" used "+wince.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+wince.name+" on "+target.name);
   target.takeDamage(self, 2);
   target.applyStatus("Flinch", 1);
 };
@@ -454,6 +483,7 @@ lash.text = "Hit targeted enemy for 8 damage, if enemy has Aegis Active, deal 16
 lash.requirement = function(caster, castee){return true};
 lash.effect = function(target,self){  
   console.log(self.name+" used "+lash.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+lash.name+" on "+target.name);
   if(target.statuses.buff.status == "Aegis"){target.takeDamage(self, 16);}
   else {target.takeDamage(self, 8);}
 };
@@ -471,9 +501,11 @@ flurry.requirement = function(caster, castee){return true};
 flurry.effect = function(target,self){
   if(Math.random()>0.5){
     console.log(self.name+" hit "+target.name+" in a "+flurry.name);
+    outputQueue.append(self.name+" hit "+target.name+" in a "+flurry.name);
     target.takeDamage(self, 6);
   }
-  else {console.log(self.name+"'s "+flurry.name+" missed "+target.name);}
+  else {console.log(self.name+"'s "+flurry.name+" missed "+target.name);
+  outputQueue.append(self.name+"'s "+flurry.name+" missed "+target.name);}
 };
 flurry.multitarget = true;
 flurry.allies = false;
@@ -491,6 +523,7 @@ fortify.requirement = function(caster, castee){
 };
 fortify.effect = function(target, self){
   console.log(self.name+" used "+fortify.name+" on "+target.name+" and took 10 damage");
+  outputQueue.append(self.name+" used "+fortify.name+" on "+target.name+" and took 10 damage");
   self.hp = Math.max(self.hp-10, 0)
   target.healSelf(10);
 };
@@ -507,6 +540,7 @@ exhaust.text = "Hit targeted enemy for 2 damage and inflict Encumbered.";
 exhaust.requirement = function(caster, castee){return true};
 exhaust.effect = function(target,self){
   console.log(self.name+" used "+exhaust.name+" on "+target.name);
+  outputQueue.append(self.name+" used "+exhaust.name+" on "+target.name);
   target.takeDamage(self, 2);
   target.applyStatus("Encumbered",999);
 };
@@ -523,6 +557,7 @@ raze.text = "Hit all enemies for 1 damage and 50% chance to inflict Burn 5.";
 raze.requirement = function(caster, castee){return true};
 raze.effect = function(target,self){
   console.log(self.name+"'s "+raze.name+" hit "+target.name);
+  outputQueue.append(self.name+"'s "+raze.name+" hit "+target.name)
   target.takeDamage(self, 1);
   if(Math.random()>0.5){target.applyStatus("Burn", 5);}
 };

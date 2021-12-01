@@ -405,6 +405,23 @@ class Play extends Phaser.Scene {
             this.playerUnits.forEach((player) => {
                 player.turnEnd();
             });
+            //Output everything to the text box
+            this.textBoxText.text = ""
+            outputQueue.forEach((text, index) => {
+                //Going to make a lot of timed delay events
+                let potentialOutputText = ""
+                //We want to show up to 4 lines at once
+                for(let i = -4; i < 1; i++){
+                    if(i + index < 0)
+                        continue
+                    potentialOutputText += outputQueue[index + i] + "\n"
+                }
+                this.time.delayedCall({
+                    delay: 1000 * index,
+                    callback: (outTextLines) => {this.textBoxText = outTextLines},
+                    args: [potentialOutputText]
+                })
+            })
         }
     }
     
