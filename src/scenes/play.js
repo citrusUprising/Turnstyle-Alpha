@@ -413,10 +413,10 @@ class Play extends Phaser.Scene {
                 let potentialOutputText = ""
                 //We want to show up to 4 lines at once
                 for(let i = -4; i < 1; i++){
+                    console.log(i + index)
                     if(i + index < 0)
                         continue
                     potentialOutputText += outputQueue[index + i] + "\n"
-                    console.log(outputQueue[i + index])
                 }
                 this.time.delayedCall({
                     delay: 1000 * index,
