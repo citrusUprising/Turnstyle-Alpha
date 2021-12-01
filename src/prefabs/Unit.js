@@ -81,6 +81,7 @@ class Unit extends Phaser.GameObjects.Sprite{
 
     turnEnd(){
         // For resolving anything that happens once per turn at turn end
+        console.log(this.name+" has ended their turn");
         this.priorTarget = this.queuedAction.target
         this.queuedAction = {target: null, ability: null, speed: 0}
         if(this.statuses.health.status == "Regen")
@@ -95,8 +96,11 @@ class Unit extends Phaser.GameObjects.Sprite{
         for(let indvStatus in this.statuses){
             if(this.statuses[indvStatus].duration > 0){
                 this.statuses[indvStatus].duration -= 1;
-                if(this.statuses[indvStatus].duration == 0)
+                if(this.statuses[indvStatus].duration == 0){
+                    outputQueue.push(this.name+"'s "+this.statuses[indvStatus].status+" wore off");
+                    console.log(this.name+"'s "+this.statuses[indvStatus].status+" wore off");
                     this.statuses[indvStatus].status = "None"
+                }
             }
         }
     }
@@ -107,6 +111,8 @@ class Unit extends Phaser.GameObjects.Sprite{
                 this.statuses.health.status = "Regen"
                 this.statuses.health.duration = 0
             }
+            if(this.name == "Juggernaut")
+                this.statuses.health.status = "None"
             this.isActive = true
         }
     }

@@ -242,9 +242,9 @@ swipe.name = "Swipe";
 swipe.text = "Hit all enemies for 2 damage.";
 swipe.requirement = function(caster, castee){return true};
 swipe.effect = function(target, self){
-  target.takeDamage(self, 2);
   console.log(self.name+" used "+swipe.name+" on enemy team");
   outputQueue.push(self.name+" used "+swipe.name+" on enemy team");
+  target.takeDamage(self, 2);
 };
 swipe.multitarget = true;
 swipe.allies = false;

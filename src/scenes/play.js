@@ -406,8 +406,15 @@ class Play extends Phaser.Scene {
             this.printState();
             this.createRotateUI();
             this.playerUnits.forEach((player) => {
+                if(player.isActive){
+                    player.fatigue += (player.statuses.debuff.status == "Encumbered")? 2: 1;
+                }
                 player.turnEnd();
             });
+            this.enemyUnits.forEach((enemy) => {
+                enemy.turnEnd();
+            });
+            console.log("the turn has ended");
             //Output everything to the text box
             this.textBoxText.text = ""
             outputQueue.forEach((text, index) => {
