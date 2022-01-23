@@ -131,18 +131,18 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
 /**
  * @type {Ability}
  */
-let drone = {};
-drone.name = "Drone";
-drone.text = "Give ally Regeneration 3.";
-drone.requirement = function(caster, castee){return true};
-drone.effect = function(target,self){
-  console.log(self.name+" used "+drone.name+" on "+target.name);
-  outputQueue.push(self.name+" used "+drone.name+" on "+target.name)
-  target.applyStatus("Regen", 3)
+let mitigate = {};
+mitigate.name = "Mitigate";
+mitigate.text = "Give ally Regeneration (3,4).";
+mitigate.requirement = function(caster, castee){return true};
+mitigate.effect = function(target,self){
+  console.log(self.name+" used "+mitigate.name+" on "+target.name);
+  outputQueue.push(self.name+" used "+mitigate.name+" on "+target.name)
+  target.applyStatus("Regen", 3, 4)
 };
-drone.multitarget = false;
-drone.allies = true;
-drone.selftarget = false;
+mitigate.multitarget = false;
+mitigate.allies = true;
+mitigate.selftarget = false;
 
 /**
  * @type {Ability}
@@ -164,43 +164,42 @@ drone.selftarget = false;
 /**
  * @type {Ability}
  */
-let cure = {};
-cure.name = "Cure";
-cure.text = "Remove Ally Debuffs.";
-cure.requirement = function(caster, castee){return true};
-cure.effect = function(target,self){
-  console.log(self.name+" used "+cure.name+" on "+target.name);
-  outputQueue.push(self.name+" used "+cure.name+" on "+target.name);
+let scrum = {};
+scrum.name = "Scrum";
+scrum.text = "Cure an ally of debuffs, then inflict them with Null(3)";
+scrum.requirement = function(caster, castee){return true};
+scrum.effect = function(target,self){
+  console.log(self.name+" used "+scrum.name+" on "+target.name);
+  outputQueue.push(self.name+" used "+scrum.name+" on "+target.name);
   if(target.statuses.debuff.status != "None"){
-    console.log(target.name+" was cured of "+target.statuses.debuff.status);
-    outputQueue.push(target.name+" was cured of "+target.statuses.debuff.status);
-    target.statuses.debuff.status = "None";
+    console.log(target.name+" was cured of "+target.statuses.debuff.status+" and given Null");
+    outputQueue.push(target.name+" was cured of "+target.statuses.debuff.status+" and given Null");
+  }else{
+    console.log(target.name+" was given Null");
+    outputQueue.push(target.name+" was given Null");
   }
-  if(target.statuses.health.status == "Burn"){
-    console.log(target.name+" was cured of "+target.statuses.health.status);
-    outputQueue.push(target.name+" was cured of "+target.statuses.health.status);
-    target.statuses.health.status = "None";
-  }
+  target.statuses.debuff.status = "None";
+  target.applyStatus("Null", 3);
 };
-cure.multitarget = false;
-cure.allies = true;
-cure.selftarget = false;
+scrum.multitarget = false;
+scrum.allies = true;
+scrum.selftarget = false;
 
 /**
  * @type {Ability}
  */
-let assault = {};
-assault.name = "Assault";
-assault.text = "Hit enemy for damage based off your speed.";
-assault.requirement = function(caster, castee){return true};
-assault.effect = function(target, self){
-  console.log(self.name+" used "+assault.name+" on "+target.name);
-  outputQueue.push(self.name+" used "+assault.name+" on "+target.name);
+let smolder = {};
+smolder.name = "Smolder";
+smolder.text = "Hit enemy with fire, damaging them based on your speed";
+smolder.requirement = function(caster, castee){return true};
+smolder.effect = function(target, self){
+  console.log(self.name+" used "+smolder.name+" on "+target.name);
+  outputQueue.push(self.name+" used "+smolder.name+" on "+target.name);
   target.takeDamage(self, 3 + Math.ceil(self.queuedAction.speed/2))
 };
-assault.multitarget = false;
-assault.allies = false;
-assault.selftarget = false;
+smolder.multitarget = false;
+smolder.allies = false;
+smolder.selftarget = false;
 
 /**
  * @type {Ability}
@@ -221,83 +220,89 @@ feint.selftarget = false;
 /**
  * @type {Ability}
  */
-let enhance = {};
-enhance.name = "Enhance";
-enhance.text = "Give self Haste 3 for 3 turns.";
-enhance.requirement = function(caster, castee){return true};
-enhance.effect = function(target,self){
-  console.log(self.name+" used "+enhance.name+" on themself");
-  outputQueue.push(self.name+" used "+enhance.name+" on themself");
-  self.applyStatus("Haste", 3, 3)
+let imbibe = {};
+imbibe.name = "Imbibe";
+imbibe.text = "Give self Haste(2,5) and Strung Out(2)";
+imbibe.requirement = function(caster, castee){return true};
+imbibe.effect = function(target,self){
+  console.log(self.name+" used "+imbibe.name+" on themself");
+  outputQueue.push(self.name+" used "+imbibe.name+" on themself");
+  self.applyStatus("Haste", 2, 5)
+  self.applyStatus("StrungOut", 2)
 };
-enhance.multitarget = true;
-enhance.allies = false;
-enhance.selftarget = false;
+imbibe.multitarget = true;
+imbibe.allies = false;
+imbibe.selftarget = false;
 
 /**
  * @type {Ability}
  */
-let swipe = {};
-swipe.name = "Swipe";
-swipe.text = "Hit all enemies for 2 damage.";
-swipe.requirement = function(caster, castee){return true};
-swipe.effect = function(target, self){
-  console.log(self.name+" used "+swipe.name+" on enemy team");
-  outputQueue.push(self.name+" used "+swipe.name+" on enemy team");
+let repel = {};
+repel.name = "Repel";
+repel.text = "Hit all enemies for 2 damage.";
+repel.requirement = function(caster, castee){return true};
+repel.effect = function(target, self){
+  console.log(self.name+" used "+repel.name+" on enemy team");
+  outputQueue.push(self.name+" used "+repel.name+" on enemy team");
   target.takeDamage(self, 2);
 };
-swipe.multitarget = true;
-swipe.allies = false;
-swipe.selftarget = false;
+repel.multitarget = true;
+repel.allies = false;
+repel.selftarget = false;
 
 /**
  * @type {Ability}
  */
-let bulwark = {};
-bulwark.name = "Bulwark";
-bulwark.text = "Give all allies Aegis 1.";
-bulwark.requirement = function(caster, castee){return true};
-bulwark.effect = function(target,self){
-  console.log(self.name+" used "+bulwark.name+" on "+target.name);
-  outputQueue.push(self.name+" used "+bulwark.name+" on "+target.name);
+let fallGuy = {};
+fallGuy.name = "Fall Guy";
+fallGuy.text = "Give all allies Aegis(1), give self Distracted(1).";
+fallGuy.requirement = function(caster, castee){return true};
+fallGuy.effect = function(target,self){
+  console.log(self.name+" used "+fallGuy.name);
+  outputQueue.push(self.name+" used "+fallGuy.name);
   target.applyStatus("Aegis", 1)
+  if(self.statuses.buff.status = "Aegis"){
+    self.statuses.buff.status = "None";
+    self.applyStatus("Distracted", 1);
+  }
 };
-bulwark.multitarget = true;
-bulwark.allies = true;
-bulwark.selftarget = false;
+fallGuy.multitarget = true;
+fallGuy.allies = true;
+fallGuy.selftarget = false;
 
 /**
  * @type {Ability}
  */
-let bullrush = {};
-bullrush.name = "Bullrush";
-bullrush.text = "Deal 8 damage to a target and 4 damage to self.";
-bullrush.requirement = function(caster, castee){return true};
-bullrush.effect = function(target, self){
-  console.log(self.name+" used "+bullrush.name+" on "+target.name);
-  outputQueue.push(self.name+" used "+bullrush.name+" on "+target.name);
+let crush = {};
+crush.name = "Crush";
+crush.text = "Deal 8 damage to a target and 4 damage to self.";
+crush.requirement = function(caster, castee){return true};
+crush.effect = function(target, self){
+  console.log(self.name+" used "+crush.name+" on "+target.name);
+  outputQueue.push(self.name+" used "+crush.name+" on "+target.name);
   target.takeDamage(self, 8)
   self.hp = Math.min(self.hp-4., self.maxHP)
 };
-bullrush.multitarget = false;
-bullrush.allies = false;
-bullrush.selftarget = false;
+crush.multitarget = false;
+crush.allies = false;
+crush.selftarget = false;
 
 /**
  * @type {Ability}
  */
-let soothe = {};
-soothe.name = "Soothe";
-soothe.text = "Heal ally for 6 damage.";
-soothe.requirement = function(caster, castee){return true};
-soothe.effect = function(target,self){
-  console.log(self.name+" used "+soothe.name+" on "+target.name);
-  outputQueue.push(self.name+" used "+soothe.name+" on "+target.name);
-  target.healSelf(6);
+let rally = {};
+rally.name = "Rally";
+rally.text = "Heal ally for 8 damage, while dealing 2 damage to self";
+rally.requirement = function(caster, castee){return true};
+rally.effect = function(target,self){
+  console.log(self.name+" used "+rally.name+" on "+target.name);
+  outputQueue.push(self.name+" used "+rally.name+" on "+target.name);
+  target.healSelf(8);
+  self.hp = Math.min(self.hp-2., self.maxHP)
 };
-soothe.multitarget = false;
-soothe.allies = true;
-soothe.selftarget = false;
+rally.multitarget = false;
+rally.allies = true;
+rally.selftarget = false;
 
 /**
  * @type {Ability}
@@ -318,104 +323,108 @@ invigorate.selftarget = false;
 /**
  * @type {Ability}
  */
-let panicAttack = {};
-panicAttack.name = "Panic Attack";
-panicAttack.text = "Deal 2 damage to targeted enemy and inflict Strung Out 1.";
-panicAttack.requirement = function(caster, castee){return true};
-panicAttack.effect = function(target, self){
-  console.log(self.name+" used "+panicAttack.name+" on "+target.name);
-  outputQueue.push(self.name+" used "+panicAttack.name+" on "+target.name);
+let stunnerClap = {};
+stunnerClap.name = "Stunner Clap";
+stunnerClap.text = "Deal 2 damage to targeted enemy and inflict Strung Out 1.";
+stunnerClap.requirement = function(caster, castee){return true};
+stunnerClap.effect = function(target, self){
+  console.log(self.name+" used "+stunnerClap.name+" on "+target.name);
+  outputQueue.push(self.name+" used "+stunnerClap.name+" on "+target.name);
   target.takeDamage(self, 2)
   target.applyStatus("StrungOut", 1)
 };
-panicAttack.multitarget = false;
-panicAttack.allies = false;
-panicAttack.selftarget = false;
+stunnerClap.multitarget = false;
+stunnerClap.allies = false;
+stunnerClap.selftarget = false;
 
 /**
  * @type {Ability}
  */
-let shoot = {};
-shoot.name = "Shoot";
-shoot.text = "Deal 10 damage. If you have more than 1 fatigue, 30% accuracy.";
-shoot.requirement = function(caster, castee){return true};
-shoot.effect = function(target, self){
-  console.log(self.name+" shot at "+target.name);
-  outputQueue.push(self.name+" shot at "+target.name);
-  if(self.fatigue <= 1 || Math.random() <= 0.3){
-    console.log(target.name+" was hit")
-    outputQueue.push(target.name+" was hit")
+let soulRip = {};
+soulRip.name = "Soul Rip";
+soulRip.text = "Deal 10 damage. Accuracy -25% for each level of fatigue";
+soulRip.requirement = function(caster, castee){return true};
+soulRip.effect = function(target, self){
+  console.log(self.name+" possessed "+target.name);
+  outputQueue.push(self.name+" possessed "+target.name);
+  if(self.fatigue <= 0 || Math.random() <= (1-.25*self.fatigue)){
+    console.log(target.name+"'s soul was torn")
+    outputQueue.push(target.name+"'s soul was torn")
     target.takeDamage(self, 10);}
-  else{console.log(self.name+" missed");
-    outputQueue.push(self.name+" missed")}  
+  else{console.log(self.name+" couldn't manifest");
+    outputQueue.push(self.name+" couldn't manifest")}  
 };
-shoot.multitarget = false;
-shoot.allies = false;
-shoot.selftarget = false;
+soulRip.multitarget = false;
+soulRip.allies = false;
+soulRip.selftarget = false;
 
 /**
  * @type {Ability}
  */
-let flashBang = {};
-flashBang.name = "Flash Bang";
-flashBang.text = "Targets all enemies, 50% chance to Flinch.";
-flashBang.requirement = function(caster, castee){return true};
-flashBang.effect = function(target,self){
-  if(Math.random() <= 0.5){
-    console.log(self.name+" hit "+target.name+" with "+flashBang.name);
-    outputQueue.push(self.name+" hit "+target.name+" with "+flashBang.name);
+let dazzle = {};
+dazzle.name = "Dazzle";
+dazzle.text = "Targets all enemies, 35% chance to Flinch, 35% chance to Burn";
+dazzle.requirement = function(caster, castee){return true};
+dazzle.effect = function(target,self){
+  if(Math.random() <= 0.35){
+    console.log(self.name+"'s "+dazzle.name+" flinched "+target.name);
+    outputQueue.push(self.name+"'s "+dazzle.name+" flinched "+target.name);
     target.applyStatus("Flinch", 1)
-  }else{console.log(target.name+" avoided the "+flashBang.name)
-    outputQueue.push(target.name+" avoided the "+flashBang.name);}
+  }else if(Math.random() <= 0.35){
+    console.log(self.name+"'s "+dazzle.name+" burned "+target.name);
+    outputQueue.push(self.name+"'s "+dazzle.name+" burned "+target.name);
+    target.applyStatus("Burn", 2, 4)
+  }else{console.log(target.name+" avoided the "+dazzle.name)
+    outputQueue.push(target.name+" avoided the "+dazzle.name);}
 };
-flashBang.multitarget = true;
-flashBang.allies = false;
-flashBang.selftarget = false;
+dazzle.multitarget = true;
+dazzle.allies = false;
+dazzle.selftarget = false;
 
 /**
  * @type {Ability}
  */
-let pinpoint = {};
-pinpoint.name = "Pinpoint";
-pinpoint.text = "Afflicts one targeted enemy with Distracted 2.";
-pinpoint.requirement = function(caster, castee){return true};
-pinpoint.effect = function(target,self){
-  console.log(self.name+" used "+pinpoint.name+" on "+target.name);
-  outputQueue.push(self.name+" used "+pinpoint.name+" on "+target.name);
+let scry = {};
+scry.name = "Scry";
+scry.text = "Afflicts one targeted enemy with Distracted 2.";
+scry.requirement = function(caster, castee){return true};
+scry.effect = function(target,self){
+  console.log(self.name+" used "+scry.name+" on "+target.name);
+  outputQueue.push(self.name+" used "+scry.name+" on "+target.name);
   target.applyStatus("Distracted", 2)
 };
-pinpoint.multitarget = false;
-pinpoint.allies = false;
-pinpoint.selftarget = false;
+scry.multitarget = false;
+scry.allies = false;
+scry.selftarget = false;
 
 /**
  * @type {Ability}
  */
-let rally = {};
-rally.name = "Rally";
-rally.text = "Grants Random effect (Enrage 1, Aegis 1, Haste 2,2)to all allies including self.";
-rally.requirement = function(caster, castee){return true};
-rally.effect = function(target,self){
+let motivate = {};
+motivate.name = "Motivate";
+motivate.text = "Grants Random effect (Enrage 1, Aegis 1, Haste 2,3)to an ally";
+motivate.requirement = function(caster, castee){return true};
+motivate.effect = function(target,self){
   let rng = Math.random();
   if(rng <= 0.33){
-    console.log(self.name+"'s "+rally.name+" gave "+target.name+" Aegis 1");
-    outputQueue.push(self.name+"'s "+rally.name+" gave "+target.name+" Aegis 1");
+    console.log(self.name+"'s "+motivate.name+" gave "+target.name+" Aegis 1");
+    outputQueue.push(self.name+"'s "+motivate.name+" gave "+target.name+" Aegis 1");
     target.applyStatus("Aegis", 1);
   }
   else if(rng <= 0.66){
-    console.log(self.name+"'s "+rally.name+" gave "+target.name+" Enrage 1");
-    outputQueue.push(self.name+"'s "+rally.name+" gave "+target.name+" Enrage 1");
+    console.log(self.name+"'s "+motivate.name+" gave "+target.name+" Enrage 1");
+    outputQueue.push(self.name+"'s "+motivate.name+" gave "+target.name+" Enrage 1");
     target.applyStatus("Enrage", 1);
   }
   else {
-    console.log(self.name+"'s "+rally.name+" gave "+target.name+" Haste 2,2");
-    outputQueue.push(self.name+"'s "+rally.name+" gave "+target.name+" Haste 2,2");
-    target.applyStatus("Haste",2,2);
+    console.log(self.name+"'s "+motivate.name+" gave "+target.name+" Haste 2,3");
+    outputQueue.push(self.name+"'s "+motivate.name+" gave "+target.name+" Haste 2,3");
+    target.applyStatus("Haste", 2,3);
   }
 };
-rally.multitarget = true;
-rally.allies = true;
-rally.selftarget = false;
+motivate.multitarget = false;
+motivate.allies = true;
+motivate.selftarget = false;
 
 /**
  * @type {Ability}
@@ -565,6 +574,37 @@ raze.multitarget = true;
 raze.allies = false;
 raze.selftarget = false;
 
+/**
+ * @type {Ability}
+ */
+ let slump = {};
+ slump.name = "Slump";
+ slump.text = "Grants self Regen (1,6)";
+ slump.requirement = function(caster, castee){return true};
+ slump.effect = function(target, self){
+   console.log(self.name+" "+slump.name+"ed");
+   outputQueue.push(self.name+" "+slump.name+"ed");
+   self.applyStatus("Regen",1,6);
+ };
+ slump.multitarget = true;
+ slump.allies = true;
+ slump.selftarget = false;
+
+ /**
+ * @type {Ability}
+ */
+  let hunker = {};
+  hunker.name = "Hunker";
+  hunker.text = "Grants self Aegis (2))";
+  hunker.requirement = function(caster, castee){return true};
+  hunker.effect = function(target, self){
+    console.log(self.name+" "+hunker.name+"ed");
+    outputQueue.push(self.name+" "+hunker.name+"ed");
+    self.applyStatus("Aegis", 2);
+  };
+  hunker.multitarget = true;
+  hunker.allies = true;
+  hunker.selftarget = false;
     
 
   

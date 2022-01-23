@@ -85,13 +85,47 @@ class Unit extends Phaser.GameObjects.Sprite{
         this.priorTarget = this.queuedAction.target
         this.queuedAction = {target: null, ability: null, speed: 0}
         if(this.statuses.health.status == "Regen")
-            this.hp = Math.min(this.hp + 3, this.maxHP)
+            this.hp = Math.min(this.hp + this.statuses.health.magnitude, this.maxHP)
         if(this.statuses.health.status == "Burn")
-            this.hp = Math.max(0, this.hp- 3)
+            this.hp = Math.max(0, this.hp - this.statuses.health.magnitude)
         if (this.hp == 0 && !this.dead){
             this.dead = true;
             this.setTint(0x000000);
             outputQueue.push(this.name + " died!")
+        }
+        if(this.name == "Yellow"){
+            let fullHealth = true;
+            let highest;
+            let highestHP;
+            let lowest;
+            let lowestHP;
+
+            for(let allies in this.alliedArray){
+                if (this.alliedArray[allies].hp < this.alliedArray[allies].maxHP){
+                    fullHealth = false;
+                    }
+                if(!fullHealth){
+                    if(highest = undefined || this.alliedArray[allies].hp > highestHP){
+                        highest = allies;
+                        highestHP = this.alliedArray[allies].hp;
+                        }
+                    if(lowest = undefined || this.alliedArray[allies].hp < lowestHP){
+                        lowest = allies;
+                        lowestHP = this.alliedArray[allies].hp;
+                        }
+                    }
+                }
+            if (fullHealth){
+                this.alliedArray[lowest].healSelf(4);
+                this.alliedArray[highest].hp = Math.min(this.alliedArray[highest].hp-4., this.alliedArray[highest].maxHP);
+                }
+            }
+
+        }
+        if(this.name == "Green"&&this.fatigue < 2){
+            for(let allies in this.alliedArray){
+                this.alliedArray[allies].statuses.debuff.status = "None"
+            }
         }
         for(let indvStatus in this.statuses){
             if(this.statuses[indvStatus].duration > 0){
@@ -107,11 +141,7 @@ class Unit extends Phaser.GameObjects.Sprite{
     
     makeActive(){
         if(!this.isActive){
-            if(this.name == "Telepath"){
-                this.statuses.health.status = "Regen"
-                this.statuses.health.duration = 0
-            }
-            if(this.name == "Juggernaut")
+            if(this.name == "Pink")
                 this.statuses.health.status = "None"
             this.isActive = true
         }
@@ -123,7 +153,7 @@ class Unit extends Phaser.GameObjects.Sprite{
                 this.statuses[indvStatus].duration = 0;
                 this.statuses[indvStatus].status = "None"
             }
-            if(this.name == "Juggernaut")
+            if(this.name == "Pink")
                 this.statuses.health.status = "Regen"
             this.isActive = false
         }
@@ -144,18 +174,20 @@ class Unit extends Phaser.GameObjects.Sprite{
             amount = amount * 2
         if(source.statuses.debuff.status == "StrungOut")
             amount = Math.ceil(amount/2)
-        if(this.name == "Medic" && this.queuedAction.speed >= 5 && Math.random() > 0.5){
+        if(this.name == "Red" && this.queuedAction.speed >= 5 && Math.random() > 0.5){
             console.log(this.name+" dodged the attack")
             outputQueue.push(this.name+" dodged the attack")
             return}
-        if(source.name == "Bounty Hunter" && source.queuedAction.target == source.priorTarget)
-            amount = Math.ceil(amount * 1.5)
         this.hp = Math.max(this.hp - amount, 0)
         outputQueue.push(this.name + " took " + amount + " damage.")
         if (this.hp == 0 && !this.dead){
             this.dead = true;
             this.setTint(0x000000);
             outputQueue.push(this.name + " died!")
+            if(source.name == "Blue"){
+                source.fatigue = 0;
+                outputQueue.push(source.name + " got a second wind")
+            }
         }
     }
 
@@ -166,7 +198,7 @@ class Unit extends Phaser.GameObjects.Sprite{
             return
         //This dictionariy ensures that you don't have to know the category of a status to call this function
         let statusCategoriser = {Regen : "health", Burn: "health", Flinch: "debuff", Haste: "buff", Aegis: "buff",
-            Enrage: "buff", Distracted: "debuff", StrungOut : "debuff", Encumbered: "debuff"}
+            Enrage: "buff", Distracted: "debuff", StrungOut : "debuff", Encumbered: "debuff", Null: "debuff"}
         let statusCategory = statusCategoriser[newStatus]
         //If we already have a status of that kind, we don't care
         if(this.statuses[statusCategory].status != "None")
@@ -183,9 +215,5 @@ class Unit extends Phaser.GameObjects.Sprite{
 
     turnStart(){
         // For resolving anything that happens once per turn at turn start
-        if(this.name == "Sniper" && this.fatigue == 0){
-            this.statuses.buff.status = "Aegis"
-            this.statuses.buff.duration = 1
-        }
     }
 }

@@ -65,35 +65,35 @@ class Play extends Phaser.Scene {
         this.pentagonContainer.add(this.pentagon);
 
         this.starHoverText = "";
-        this.starSprite = new Friendly(this, 90, 0, 'star', 0, "Sniper", null, [shoot, flashBang, pinpoint], 10);
+        this.starSprite = new Friendly(this, 90, 0, 'star', 0, "Yellow", null, [mitigate,fallGuy,scrum], 12);
         this.starSprite.setScale(1.5, 1.5).setInteractive();
         this.pentagonContainer.add(this.starSprite);
         this.starSprite.hoverText = "Star";
         this.addHoverText(this.starSprite);
 
         this.circleHoverText = "";
-        this.circleSprite = new Friendly(this, 32, -93, 'circle', 0, "Medic", null, [drone, flareGun, cure], 11);
+        this.circleSprite = new Friendly(this, 32, -93, 'circle', 0, "Blue", null, [smolder,dazzle,imbibe], 16);
         this.circleSprite.setScale(1.5, 1.5).setInteractive();
         this.pentagonContainer.add(this.circleSprite);
         this.circleSprite.hoverText = "Circle";
         this.addHoverText(this.circleSprite);
 
         this.squareHoverText = "";
-        this.squareSprite = new Friendly(this, -80, -47, 'square', 0, "Juggernaut", null, [swipe, bulwark, bullrush], 20);
+        this.squareSprite = new Friendly(this, -80, -47, 'square', 0, "Red", null, [soulRip,scry,slump], 10);
         this.squareSprite.setScale(1.5, 1.5).setInteractive();
         this.pentagonContainer.add(this.squareSprite);
         this.squareSprite.hoverText = "Square";
         this.addHoverText(this.squareSprite);
 
         this.triangleHoverText = "";
-        this.triangleSprite = new Friendly(this, -69, 62, 'triangle', 0, "Bounty Hunter", null, [assault, feint, enhance], 16);
+        this.triangleSprite = new Friendly(this, -69, 62, 'triangle', 0, "Pink", null, [repel,hunker,crush], 20);
         this.triangleSprite.setScale(1.5, 1.5).setInteractive();
         this.pentagonContainer.add(this.triangleSprite);
         this.triangleSprite.hoverText = "Triangle";
         this.addHoverText(this.triangleSprite);
 
         this.hexagonHoverText = "";
-        this.hexagonSprite = new Friendly(this, 24, 94, 'hexagon', 0, "Telepath", null, [soothe, invigorate, panicAttack], 14);
+        this.hexagonSprite = new Friendly(this, 24, 94, 'hexagon', 0, "Green", null, [stunnerClap,rally,motivate], 15);
         this.hexagonSprite.setScale(1.5, 1.5).setInteractive();
         this.pentagonContainer.add(this.hexagonSprite);
         this.hexagonSprite.hoverText = "Hexagon";
@@ -107,9 +107,9 @@ class Play extends Phaser.Scene {
         ).setAlpha(.8);
 
         // PlayerUnits -> playerUnitsBench store all the player team in clockwise order.
-        this.totalUnits = [this.circleSprite, this.starSprite, this.hexagonSprite, this.triangleSprite, this.squareSprite];
-        this.playerUnits = [this.circleSprite, this.starSprite, this.hexagonSprite];
-        this.playerUnitsBench = [this.triangleSprite, this.squareSprite];
+        this.totalUnits = [this.circleSprite, this.starSprite, this.triangleSprite,  this.hexagonSprite, this.squareSprite];
+        this.playerUnits = [this.circleSprite, this.starSprite, this.triangleSprite];
+        this.playerUnitsBench = [this.hexagonSprite, this.squareSprite];
 
         // This gives all the players an onclick function that either targets them, or goes to their ability select screen
         let j = 0;
@@ -190,9 +190,9 @@ class Play extends Phaser.Scene {
         }
         
         // Create the 3 enemies at fixed positions
-        let enemyA = new Enemy(this, 1100, 240, 'circle', 0, "Phobos", "Strung Out", [wince, lash, flurry], 40);
-        let enemyB = new Enemy(this, 1100, 480, 'circle', 0, "Mars", "Flinch", [rally, devastation, ruin], 80);
-        let enemyC = new Enemy(this, 1100, 360, 'circle', 0, "Deimos", "Distracted", [exhaust, raze, fortify], 40);
+        let enemyA = new Enemy(this, 1100, 240, 'circle', 0, "Enemy 1", null, [basicAttack,groupAttack,heavyAttack], 25);
+        let enemyB = new Enemy(this, 1100, 480, 'circle', 0, "Enemy 2", null, [basicAttack,groupAttack,heavyAttack], 25);
+        let enemyC = new Enemy(this, 1100, 360, 'circle', 0, "Enemy 3", null, [basicAttack,groupAttack,heavyAttack], 25);
 
         enemyA.hoverText = "this is the first enemy";
 
