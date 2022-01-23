@@ -86,14 +86,14 @@ class Play extends Phaser.Scene {
         this.addHoverText(this.squareSprite);
 
         this.triangleHoverText = "";
-        this.triangleSprite = new Friendly(this, -69, 62, 'triangle', 0, "Pink", null, [repel,hunker,crush], 20);
+        this.triangleSprite = new Friendly(this, 24, 94, 'triangle', 0, "Pink", null, [repel,hunker,crush], 20);
         this.triangleSprite.setScale(1.5, 1.5).setInteractive();
         this.pentagonContainer.add(this.triangleSprite);
         this.triangleSprite.hoverText = "Triangle";
         this.addHoverText(this.triangleSprite);
 
         this.hexagonHoverText = "";
-        this.hexagonSprite = new Friendly(this, 24, 94, 'hexagon', 0, "Green", null, [stunnerClap,rally,motivate], 15);
+        this.hexagonSprite = new Friendly(this, -69, 62, 'hexagon', 0, "Green", null, [stunnerClap,rally,motivate], 15);
         this.hexagonSprite.setScale(1.5, 1.5).setInteractive();
         this.pentagonContainer.add(this.hexagonSprite);
         this.hexagonSprite.hoverText = "Hexagon";
@@ -790,7 +790,7 @@ class Play extends Phaser.Scene {
 
         this.speedTrackerText.text = this.speedBudget;
         
-        this.circleHoverText = "Medic\nHP:" + this.totalUnits[0].hp + "/" + this.totalUnits[0].maxHP;
+        this.circleHoverText = "Blue\nHP:" + this.totalUnits[0].hp + "/" + this.totalUnits[0].maxHP;
 
         this.circleHoverText += "\nFatigue: " + this.totalUnits[0].fatigue;
         
@@ -799,16 +799,16 @@ class Play extends Phaser.Scene {
         this.circleSprite.hoverText = this.circleHoverText;
 
 
-        this.triangleHoverText = "Bounty Hunter\nHP:" + this.totalUnits[3].hp + "/" + this.totalUnits[3].maxHP;
+        this.triangleHoverText = "Pink\nHP:" + this.totalUnits[2].hp + "/" + this.totalUnits[2].maxHP;
 
-        this.triangleHoverText += "\nFatigue: " + this.totalUnits[3].fatigue;
+        this.triangleHoverText += "\nFatigue: " + this.totalUnits[2].fatigue;
         
-        this.triangleHoverText += "\nStatuses: " + this.generateStatusHoverText(3);
+        this.triangleHoverText += "\nStatuses: " + this.generateStatusHoverText(2);
 
         this.triangleSprite.hoverText = this.triangleHoverText;
 
 
-        this.squareHoverText = "Juggernaut\nHP:" + this.totalUnits[4].hp + "/" + this.totalUnits[4].maxHP;
+        this.squareHoverText = "Red\nHP:" + this.totalUnits[4].hp + "/" + this.totalUnits[4].maxHP;
 
         this.squareHoverText += "\nFatigue: " + this.totalUnits[4].fatigue;
         
@@ -817,16 +817,16 @@ class Play extends Phaser.Scene {
         this.squareSprite.hoverText = this.squareHoverText;
 
 
-        this.hexagonHoverText = "Telepath\nHP:" + this.totalUnits[2].hp + "/" + this.totalUnits[2].maxHP;
+        this.hexagonHoverText = "Green\nHP:" + this.totalUnits[3].hp + "/" + this.totalUnits[3].maxHP;
 
-        this.hexagonHoverText += "\nFatigue: " + this.totalUnits[2].fatigue;
+        this.hexagonHoverText += "\nFatigue: " + this.totalUnits[3].fatigue;
         
-        this.hexagonHoverText += "\nStatuses: " + this.generateStatusHoverText(2);
+        this.hexagonHoverText += "\nStatuses: " + this.generateStatusHoverText(3);
 
         this.hexagonSprite.hoverText = this.hexagonHoverText;
 
 
-        this.starHoverText = "Sniper\nHP:" + this.totalUnits[1].hp + "/" + this.totalUnits[1].maxHP;
+        this.starHoverText = "Yellow\nHP:" + this.totalUnits[1].hp + "/" + this.totalUnits[1].maxHP;
 
         this.starHoverText += "\nFatigue: " + this.totalUnits[1].fatigue;
         

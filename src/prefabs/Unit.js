@@ -103,25 +103,24 @@ class Unit extends Phaser.GameObjects.Sprite{
             for(let allies in this.alliedArray){
                 if (this.alliedArray[allies].hp < this.alliedArray[allies].maxHP){
                     fullHealth = false;
+                    break
                     }
-                if(!fullHealth){
-                    if(highest = undefined || this.alliedArray[allies].hp > highestHP){
+                }
+            if (!fullHealth){
+                for(let allies in this.alliedArray){
+                    if(highest == undefined || this.alliedArray[allies].hp > highestHP){
                         highest = allies;
                         highestHP = this.alliedArray[allies].hp;
                         }
-                    if(lowest = undefined || this.alliedArray[allies].hp < lowestHP){
+                    if(lowest == undefined || this.alliedArray[allies].hp < lowestHP){
                         lowest = allies;
                         lowestHP = this.alliedArray[allies].hp;
                         }
                     }
-                }
-            if (fullHealth){
                 this.alliedArray[lowest].healSelf(4);
                 this.alliedArray[highest].hp = Math.min(this.alliedArray[highest].hp-4., this.alliedArray[highest].maxHP);
                 }
             }
-
-        }
         if(this.name == "Green"&&this.fatigue < 2){
             for(let allies in this.alliedArray){
                 this.alliedArray[allies].statuses.debuff.status = "None"
