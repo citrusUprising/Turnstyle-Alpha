@@ -50,6 +50,8 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  basicAttack.text = "Deal 3 damage.";
  basicAttack.requirement = function(){return true};
  basicAttack.effect = function(target,self){
+  console.log(self.name+" attacked "+target.name);
+  outputQueue.push(self.name+" attacked "+target.name)
    target.takeDamage(self, 3)
   };
  basicAttack.multitarget = false;
@@ -78,6 +80,8 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
    groupAttack.text = "Deal 1 damage to all enemies.";
    groupAttack.requirement = function(){return true};
    groupAttack.effect = function(target, self){
+      console.log(self.name+" group attacked");
+      outputQueue.push(self.name+" group attacked")
      target.takeDamage(self, 1)
     };
    groupAttack.multitarget = true;
@@ -106,6 +110,8 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  heavyAttack.text = "Deal 8 damage.";
  heavyAttack.requirement = function(){return true};
  heavyAttack.effect = function(target, self){
+   console.log(self.name+" heavy attacked "+target.name);
+   outputQueue.push(self.name+" heavy attacked "+target.name)
    target.takeDamage(self, 8)
   };
  heavyAttack.multitarget = false;
