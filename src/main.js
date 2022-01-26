@@ -46,7 +46,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  * @type {Ability}
  */
  let basicAttack = {};
- basicAttack.name = "BasicAttack";
+ basicAttack.name = "Basic Attack";
  basicAttack.text = "Deal 3 damage.";
  basicAttack.requirement = function(){return true};
  basicAttack.effect = function(target,self){
@@ -62,7 +62,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  * @type {Ability}
  */
   let basicHeal = {};
-  basicHeal.name = "BasicHeal";
+  basicHeal.name = "Basic Heal";
   basicHeal.text = "Heal 3 damage.";
   basicHeal.requirement = function(){return true};
   basicHeal.effect = function(target,self){
@@ -76,7 +76,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  * @type {Ability}
  */
    let groupAttack = {};
-   groupAttack.name = "GroupAttack";
+   groupAttack.name = "Group Attack";
    groupAttack.text = "Deal 1 damage to all enemies.";
    groupAttack.requirement = function(){return true};
    groupAttack.effect = function(target, self){
@@ -106,7 +106,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  * @type {Ability}
  */
  let heavyAttack = {};
- heavyAttack.name = "heavyAttack";
+ heavyAttack.name = "Heavy Attack";
  heavyAttack.text = "Deal 8 damage.";
  heavyAttack.requirement = function(){return true};
  heavyAttack.effect = function(target, self){
@@ -122,7 +122,7 @@ BELOW HERE, I DEFINE ALL ABILITIES AS GLOBAL VARIABLES.
  * @type {Ability}
  */
   let selfHeal = {};
-  selfHeal.name = "selfHeal";
+  selfHeal.name = "Self Heal";
   selfHeal.text = "Heal 5 damage.";
   selfHeal.requirement = function(){return true};
   selfHeal.effect = function(target,self){

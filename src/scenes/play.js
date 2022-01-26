@@ -195,8 +195,12 @@ class Play extends Phaser.Scene {
         let enemyC = new Enemy(this, 1100, 360, 'circle', 0, "Enemy 3", null, [basicAttack,groupAttack,heavyAttack], 25);
 
         enemyA.hoverText = "this is the first enemy";
+        enemyB.hoverText = "this is the second enemy";
+        enemyC.hoverText = "this is the third enemy";
 
         this.addHoverText(enemyA);
+        this.addHoverText(enemyB);
+        this.addHoverText(enemyC);
 
         // Give each enemy an onclick behavior that returns them as a target
         j = 0;
@@ -794,7 +798,7 @@ class Play extends Phaser.Scene {
 
         this.circleHoverText += "\nFatigue: " + this.totalUnits[0].fatigue;
         
-        this.circleHoverText += "\nStatuses: " + this.generateStatusHoverText(0);
+        this.circleHoverText += "\nStatuses: " + this.generateStatusHoverText(0,0);
 
         this.circleSprite.hoverText = this.circleHoverText;
 
@@ -803,7 +807,7 @@ class Play extends Phaser.Scene {
 
         this.triangleHoverText += "\nFatigue: " + this.totalUnits[2].fatigue;
         
-        this.triangleHoverText += "\nStatuses: " + this.generateStatusHoverText(2);
+        this.triangleHoverText += "\nStatuses: " + this.generateStatusHoverText(2,0);
 
         this.triangleSprite.hoverText = this.triangleHoverText;
 
@@ -812,7 +816,7 @@ class Play extends Phaser.Scene {
 
         this.squareHoverText += "\nFatigue: " + this.totalUnits[4].fatigue;
         
-        this.squareHoverText += "\nStatuses: " + this.generateStatusHoverText(4);
+        this.squareHoverText += "\nStatuses: " + this.generateStatusHoverText(4,0);
 
         this.squareSprite.hoverText = this.squareHoverText;
 
@@ -821,7 +825,7 @@ class Play extends Phaser.Scene {
 
         this.hexagonHoverText += "\nFatigue: " + this.totalUnits[3].fatigue;
         
-        this.hexagonHoverText += "\nStatuses: " + this.generateStatusHoverText(3);
+        this.hexagonHoverText += "\nStatuses: " + this.generateStatusHoverText(3,0);
 
         this.hexagonSprite.hoverText = this.hexagonHoverText;
 
@@ -830,25 +834,69 @@ class Play extends Phaser.Scene {
 
         this.starHoverText += "\nFatigue: " + this.totalUnits[1].fatigue;
         
-        this.starHoverText += "\nStatuses: " + this.generateStatusHoverText(1);
+        this.starHoverText += "\nStatuses: " + this.generateStatusHoverText(1,0);
 
         this.starSprite.hoverText = this.starHoverText;
+
+
+        this.enemyAHoverText = "Enemy 1\nHP:" + this.enemyUnits[0].hp + "/" + this.enemyUnits[0].maxHP;
+
+        this.enemyAHoverText += "\nSpeed: " + this.enemyUnits[0].queuedAction.speed;
+
+        this.enemyAHoverText += "\nStatuses: " + this.generateStatusHoverText(0,1);
+        
+        this.enemyUnits[0].hoverText = this.enemyAHoverText
+
+
+
+        this.enemyBHoverText = "Enemy 2\nHP:" + this.enemyUnits[1].hp + "/" + this.enemyUnits[1].maxHP;
+
+        this.enemyBHoverText += "\nSpeed: " + this.enemyUnits[1].queuedAction.speed;
+
+        this.enemyBHoverText += "\nStatuses: " + this.generateStatusHoverText(1,1);
+
+        this.enemyUnits[1].hoverText = this.enemyBHoverText
+
+
+        this.enemyCHoverText = "Enemy 3\nHP:" + this.enemyUnits[2].hp + "/" + this.enemyUnits[2].maxHP;
+
+        this.enemyCHoverText += "\nSpeed: " + this.enemyUnits[2].queuedAction.speed;
+
+        this.enemyCHoverText += "\nStatuses: " + this.generateStatusHoverText(2,1);
+
+        this.enemyUnits[2].hoverText = this.enemyCHoverText
+
     }
 
-    generateStatusHoverText(n) {
+    generateStatusHoverText(n,type) {
         // this is kind of dense but that is just how strings are honestly
         this.statusLabel = "";
-        if (this.totalUnits[n].statuses.health.status != "None") {
-            this.statusLabel += this.totalUnits[n].statuses.health.status;
+        if(type == 0){
+            if (this.totalUnits[n].statuses.health.status != "None") {
+                this.statusLabel += this.totalUnits[n].statuses.health.status;
+            }
+            if (this.totalUnits[n].statuses.buff.status != "None") {
+                if (this.statusLabel != "") this.statusLabel += ",";
+                this.statusLabel += " " + this.totalUnits[n].statuses.buff.status;
+            }
+            if (this.totalUnits[n].statuses.debuff.status != "None") {
+                if (this.statusLabel != "") this.statusLabel += ",";
+                this.statusLabel += " " + this.totalUnits[n].statuses.debuff.status;
+            }
+        }else if(type==1){
+            if (this.enemyUnits[n].statuses.health.status != "None") {
+                this.statusLabel += this.enemyUnits[n].statuses.health.status;
+            }
+            if (this.enemyUnits[n].statuses.buff.status != "None") {
+                if (this.statusLabel != "") this.statusLabel += ",";
+                this.statusLabel += " " + this.enemyUnits[n].statuses.buff.status;
+            }
+            if (this.enemyUnits[n].statuses.debuff.status != "None") {
+                if (this.statusLabel != "") this.statusLabel += ",";
+                this.statusLabel += " " + this.enemyUnits[n].statuses.debuff.status;
+            }
         }
-        if (this.totalUnits[n].statuses.buff.status != "None") {
-            if (this.statusLabel != "") this.statusLabel += ",";
-            this.statusLabel += " " + this.totalUnits[n].statuses.buff.status;
-        }
-        if (this.totalUnits[n].statuses.debuff.status != "None") {
-            if (this.statusLabel != "") this.statusLabel += ",";
-            this.statusLabel += " " + this.totalUnits[n].statuses.debuff.status;
-        }
+
         if (this.statusLabel == "") this.statusLabel = "None";
 
         return this.statusLabel;
